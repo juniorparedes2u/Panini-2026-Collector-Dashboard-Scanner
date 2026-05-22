@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Panini 2026 - Coleccionador Oficial</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        wc: {
+                            dark: '#0A0A0A',
+                            purple: '#4B1273',
+                            magenta: '#E6004C',
+                            green: '#00EA77',
+                            cyan: '#00D2FF',
+                            gray: '#1C1C1E',
+                            light: '#F5F5F7'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    },
+                    animation: {
+                        'gradient-x': 'gradient-x 15s ease infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        'gradient-x': {
+                            '0%, 100%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'left center'
+                            },
+                            '50%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'right center'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase Libraries -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        window.FirebaseSDK = { initializeApp, getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut, getFirestore, doc, setDoc, getDoc, collection, onSnapshot, getDocs };
+    </script>
+
+    <style>
+        body {
+            background-color: #0A0A0A;
+            color: #FFFFFF;
+        }
+        /* Deshabilitar selección de texto */
+        .no-select {
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        /* Efecto holográfico para estampas especiales (Shiny) */
+        .shiny-card {
+            background: linear-gradient(135deg, #FFD700 0%, #FDB931 50%, #FFD700 100%);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #FFF8DC !important;
+            color: #4B1273 !important;
+        }
+        .shiny-card::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(
+                60deg,
+                rgba(255,255,255,0) 20%,
+                rgba(255,255,255,0.5) 30%,
+                rgba(255,255,255,0.9) 50%,
+                rgba(255,255,255,0.5) 70%,
+                rgba(255,255,255,0) 80%
+            );
+            transform: rotate(30deg);
+            animation: shine 4s infinite linear;
+        }
+        @keyframes shine {
+            0% { transform: translate(-40%, -40%) rotate(30deg); }
+            100% { transform: translate(40%, 40%) rotate(30deg); }
+        }
+        /* Scrollbar Oculto pero funcional para menús horizontales */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Tema de cartas normales obtenidas vs faltantes */
+        .card-owned {
+            background: #1C1C1E;
+            border-color: #00EA77;
+            color: #FFFFFF;
+            box-shadow: 0 0 10px rgba(0, 234, 119, 0.2);
+        }
+        .card-missing {
+            background: #0A0A0A;
+            border-color: #333;
+            color: #666;
+            opacity: 0.6;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(to right, #00D2FF, #00EA77);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-24 md:pb-6 font-sans">
+
+    <!-- Header Mundialista 2026 -->
+    <header class="bg-wc-dark/90 backdrop-blur-lg border-b border-white/10 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-wc-purple via-wc-magenta to-wc-cyan flex items-center justify-center font-black text-xl shadow-[0_0_15px_rgba(230,0,76,0.5)]">
+                    26
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold leading-none tracking-tight text-white">PANINI WORLD CUP</h1>
+                    <span class="text-xs gradient-text font-bold tracking-wider">TRACKER INTELIGENTE</span>
+                </div>
+            </div>
+            <!-- Estado de Conexión/Nube y Botón Google -->
+            <div class="flex items-center space-x-3">
+                <button onclick="loginWithGoogle()" id="btn-google-login" class="hidden items-center space-x-2 bg-white text-black px-3 py-1.5 rounded-full text-xs font-bold shadow-[0_0_10px_rgba(255,255,255,0.2)] hover:bg-slate-200 transition-colors">
+                    <i class="fa-brands fa-google text-wc-magenta"></i>
+                    <span class="hidden sm:inline">Vincular Cuenta</span>
+                </button>
+                <div class="flex items-center space-x-2 bg-wc-gray px-3 py-1.5 rounded-full text-xs border border-white/5">
+                    <span id="cloud-status-dot" class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                    <span id="cloud-status-text" class="font-medium text-slate-300 hidden sm:inline">Iniciando...</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        
+        <!-- Notificaciones de la aplicación -->
+        <div id="toast-container" class="fixed top-16 right-4 left-4 md:left-auto md:w-96 z-50 pointer-events-none space-y-2"></div>
+
+        <!-- Dashboard de Estadísticas -->
+        <section class="bg-wc-gray rounded-3xl shadow-xl border border-white/10 p-6 mb-6 relative overflow-hidden">
+            <!-- Background Decoration -->
+            <div class="absolute -right-20 -top-20 w-64 h-64 bg-wc-purple rounded-full mix-blend-screen filter blur-[80px] opacity-40"></div>
+            <div class="absolute -left-20 -bottom-20 w-64 h-64 bg-wc-magenta rounded-full mix-blend-screen filter blur-[80px] opacity-20"></div>
+
+            <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <!-- Porcentaje Total -->
+                <div class="flex items-center space-x-5">
+                    <div class="relative w-24 h-24 flex-shrink-0">
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                            <path class="text-white/10" stroke-width="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path id="progress-circle-bar" class="text-wc-green transition-all duration-1000 ease-out" stroke-dasharray="0, 100" stroke-width="3.2" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span id="progress-text-pct" class="text-2xl font-black text-white leading-none">0%</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-black text-white tracking-tight">Progreso del Álbum</h2>
+                        <p class="text-sm text-slate-400 mt-1">Colección de 48 equipos • 2026</p>
+                    </div>
+                </div>
+
+                <!-- Tarjetas de Métricas Rápidas -->
+                <div class="grid grid-cols-3 gap-3 w-full md:w-auto">
+                    <div class="bg-black/50 backdrop-blur-sm rounded-2xl p-4 text-center border border-white/5">
+                        <span class="block text-[10px] font-bold text-wc-cyan uppercase tracking-widest mb-1">Obtenidas</span>
+                        <div class="flex items-baseline justify-center space-x-1">
+                            <span id="stats-owned" class="text-2xl font-black text-white">0</span>
+                            <span id="stats-total-denom" class="text-xs text-slate-500 font-medium">/ 980</span>
+                        </div>
+                    </div>
+                    <div class="bg-black/50 backdrop-blur-sm rounded-2xl p-4 text-center border border-white/5">
+                        <span class="block text-[10px] font-bold text-wc-magenta uppercase tracking-widest mb-1">Faltantes</span>
+                        <span id="stats-missing" class="text-2xl font-black text-white">980</span>
+                    </div>
+                    <div class="bg-black/50 backdrop-blur-sm rounded-2xl p-4 text-center border border-white/5">
+                        <span class="block text-[10px] font-bold text-amber-400 uppercase tracking-widest mb-1">Repetidas</span>
+                        <span id="stats-duplicates" class="text-2xl font-black text-white">0</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pestañas de Navegación Principal -->
+        <nav class="flex space-x-2 bg-wc-gray p-1.5 rounded-2xl mb-6 text-sm font-semibold border border-white/10">
+            <button onclick="switchTab('album')" id="nav-btn-album" class="flex-1 py-3 text-center rounded-xl transition-all bg-gradient-to-r from-wc-purple to-wc-magenta text-white shadow-lg">
+                <i class="fa-solid fa-book-open mr-1.5"></i> Mi Álbum
+            </button>
+            <button onclick="switchTab('scanner')" id="nav-btn-scanner" class="flex-1 py-3 text-center rounded-xl transition-all text-slate-400 hover:text-white hover:bg-white/5">
+                <i class="fa-solid fa-camera mr-1.5"></i> Escáner IA
+            </button>
+            <button onclick="switchTab('trades')" id="nav-btn-trades" class="flex-1 py-3 text-center rounded-xl transition-all text-slate-400 hover:text-white hover:bg-white/5">
+                <i class="fa-solid fa-arrows-rotate mr-1.5"></i> Intercambios
+            </button>
+        </nav>
+
+        <!-- SECCIÓN 1: MI ÁLBUM -->
+        <section id="tab-album" class="space-y-6">
+            <!-- Barra de Filtros y Grupos -->
+            <div class="bg-wc-gray p-5 rounded-3xl shadow-lg border border-white/10 space-y-5">
+                <div class="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+                    <!-- Buscador -->
+                    <div class="relative w-full sm:w-80">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </span>
+                        <input oninput="filterStickers()" id="sticker-search" type="text" placeholder="Buscar estampa (Ej. MEX 7, ARG)..." class="w-full pl-10 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-wc-magenta focus:ring-1 focus:ring-wc-magenta transition-colors">
+                    </div>
+                    <!-- Filtros Rápidos -->
+                    <div class="flex flex-wrap gap-2 w-full sm:w-auto bg-black/50 p-1 rounded-xl border border-white/5">
+                        <button onclick="setFilterStatus('all')" id="filter-status-all" class="px-4 py-2 text-xs font-bold rounded-lg bg-wc-magenta text-white">Todas</button>
+                        <button onclick="setFilterStatus('owned')" id="filter-status-owned" class="px-4 py-2 text-xs font-medium rounded-lg text-slate-400 hover:text-white">Obtenidas</button>
+                        <button onclick="setFilterStatus('missing')" id="filter-status-missing" class="px-4 py-2 text-xs font-medium rounded-lg text-slate-400 hover:text-white">Faltantes</button>
+                        <button onclick="setFilterStatus('duplicates')" id="filter-status-duplicates" class="px-4 py-2 text-xs font-medium rounded-lg text-slate-400 hover:text-white">Repetidas</button>
+                    </div>
+                </div>
+
+                <!-- Selector de Países / Secciones -->
+                <div class="hide-scrollbar flex space-x-3 overflow-x-auto pb-2 scroll-smooth" id="category-selector-container">
+                    <!-- Inyectado dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Grilla de Estampas -->
+            <div class="bg-wc-gray/50 p-6 rounded-3xl border border-white/5">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-2">
+                    <h3 id="current-category-title" class="text-xl font-black text-white tracking-wide uppercase">ESPECIALES (FWC)</h3>
+                    <span class="text-xs text-slate-500 bg-black/50 px-3 py-1.5 rounded-lg border border-white/5"><i class="fa-solid fa-hand-pointer mr-1"></i>Toca para marcar • Mantén para repetidas</span>
+                </div>
+                <div id="stickers-grid" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3 md:gap-4">
+                    <!-- Inyectado dinámicamente -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: ESCÁNER INTELIGENTE IA -->
+        <section id="tab-scanner" class="hidden space-y-6">
+            <div class="bg-wc-gray rounded-3xl shadow-xl border border-white/10 p-8 max-w-2xl mx-auto space-y-8">
+                <div class="text-center space-y-3">
+                    <div class="bg-gradient-to-br from-wc-cyan to-wc-purple w-20 h-20 rounded-2xl flex items-center justify-center mx-auto text-3xl shadow-lg mb-4">
+                        <i class="fa-solid fa-camera-retro text-white"></i>
+                    </div>
+                    <h2 class="text-2xl font-black text-white">Reconocimiento Óptico Gemini IA</h2>
+                    <p class="text-sm text-slate-400">Captura la página de tu álbum o un bloque de estampas. La inteligencia artificial integrada detectará automáticamente los códigos y los añadirá a tu inventario. <span class="text-wc-cyan font-bold">100% Gratis y Automático.</span></p>
+                </div>
+
+                <!-- Zona de Carga/Captura de Imagen -->
+                <div class="space-y-4 mt-6">
+                    <div id="image-dropzone" class="border-2 border-dashed border-white/20 rounded-3xl p-10 text-center hover:border-wc-magenta hover:bg-white/5 transition-all cursor-pointer relative bg-black/30">
+                        <input type="file" id="camera-file-input" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
+                        <div class="space-y-4 pointer-events-none">
+                            <i class="fa-solid fa-cloud-arrow-up text-5xl text-slate-600"></i>
+                            <div class="text-base font-bold text-white">Toma una foto o sube un archivo</div>
+                            <p class="text-xs text-slate-500">Soporta PNG, JPEG. Formato horizontal o vertical.</p>
+                        </div>
+                    </div>
+
+                    <!-- Vista Previa de la Imagen Cargada -->
+                    <div id="scanner-preview-container" class="hidden bg-black/50 p-5 rounded-3xl border border-white/10 flex flex-col items-center space-y-5">
+                        <img id="scanner-img-preview" src="#" alt="Vista previa" class="max-h-72 rounded-xl object-contain shadow-2xl border border-white/5">
+                        <div class="flex space-x-4 w-full">
+                            <button onclick="cancelScan()" class="flex-1 py-3 bg-wc-gray border border-white/10 text-white text-sm font-bold rounded-xl hover:bg-white/10 transition-colors">
+                                <i class="fa-solid fa-trash mr-1.5 text-slate-400"></i> Descartar
+                            </button>
+                            <button onclick="processImageWithAI()" id="btn-process-scan" class="flex-1 py-3 bg-gradient-to-r from-wc-magenta to-wc-purple text-white text-sm font-bold rounded-xl shadow-[0_0_15px_rgba(230,0,76,0.4)] hover:shadow-[0_0_25px_rgba(230,0,76,0.6)] transition-all">
+                                <i class="fa-solid fa-bolt mr-1.5"></i> Procesar Estampas
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Indicador de Carga -->
+                <div id="scanner-loading" class="hidden text-center py-8 space-y-4">
+                    <div class="inline-block relative w-16 h-16">
+                        <div class="absolute inset-0 rounded-full border-t-4 border-wc-magenta animate-spin"></div>
+                        <div class="absolute inset-2 rounded-full border-r-4 border-wc-cyan animate-spin" style="animation-direction: reverse; animation-duration: 1.5s;"></div>
+                    </div>
+                    <div>
+                        <p class="text-base font-bold text-white">Analizando imagen mediante IA...</p>
+                        <p class="text-xs text-slate-400 mt-1">Extrayendo códigos y numeraciones oficiales.</p>
+                    </div>
+                </div>
+
+                <!-- Resultados del Análisis -->
+                <div id="scanner-results" class="hidden space-y-5 bg-gradient-to-br from-black to-wc-gray p-6 rounded-3xl border border-wc-green/30 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-wc-green/10 rounded-full blur-3xl"></div>
+                    <div class="relative z-10">
+                        <h4 class="text-base font-black text-white flex items-center"><i class="fa-solid fa-check-double text-wc-green mr-2"></i> Identificación Exitosa</h4>
+                        <p class="text-xs text-slate-400 mt-1">Las siguientes estampas han sido detectadas en tu fotografía:</p>
+                        
+                        <div id="scanner-detected-list" class="flex flex-wrap gap-2 py-4">
+                            <!-- Inyectado dinámicamente -->
+                        </div>
+                        
+                        <button onclick="acceptScannedStickers()" class="w-full py-3.5 bg-wc-green text-black text-sm font-black rounded-xl hover:bg-emerald-400 transition-colors shadow-[0_0_15px_rgba(0,234,119,0.3)] mt-2 uppercase tracking-wide">
+                            Guardar en Inventario
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: INTERCAMBIOS / MARKETPLACE -->
+        <section id="tab-trades" class="hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Columna Izquierda: Tu Estado de Intercambio -->
+                <div class="bg-wc-gray p-6 rounded-3xl shadow-xl border border-white/10 space-y-6 h-fit relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-wc-cyan/10 rounded-full blur-3xl"></div>
+                    
+                    <h3 class="text-lg font-black text-white relative z-10">Tu Perfil de Intercambio</h3>
+                    
+                    <div class="space-y-5 relative z-10">
+                        <div class="bg-black/50 p-4 rounded-2xl border border-white/5">
+                            <label class="text-[10px] font-bold text-slate-400 block uppercase tracking-widest mb-1">ID Global de Jugador</label>
+                            <span id="profile-uuid-display" class="font-mono text-xs font-bold text-wc-cyan break-all">Cargando...</span>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-xs font-bold text-slate-300 block mb-1.5">Alias / Nombre (Público):</label>
+                                <input id="trade-user-alias" type="text" placeholder="Ej. Carlos-MX" class="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-wc-cyan focus:ring-1 focus:ring-wc-cyan transition-colors">
+                            </div>
+                            
+                            <div>
+                                <label class="text-xs font-bold text-slate-300 block mb-1.5">Medio de Contacto:</label>
+                                <input id="trade-user-contact" type="text" placeholder="Ej. Telegram: @usuario" class="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-wc-cyan focus:ring-1 focus:ring-wc-cyan transition-colors">
+                            </div>
+                        </div>
+
+                        <button onclick="publishToMarketplace()" class="w-full py-3.5 bg-white text-black text-xs font-black uppercase tracking-wider rounded-xl hover:bg-slate-200 transition-colors shadow-lg">
+                            <i class="fa-solid fa-cloud-arrow-up mr-1.5"></i> Sincronizar Faltas/Repetidas
+                        </button>
+                        <p class="text-[10px] text-slate-500 text-center leading-relaxed">Publicar permite a nuestro motor encontrar "Matches" perfectos con coleccionistas de todo el mundo.</p>
+                    </div>
+                </div>
+
+                <!-- Columna Centro/Derecha: Buscador de Matches -->
+                <div class="lg:col-span-2 bg-wc-gray p-6 rounded-3xl shadow-xl border border-white/10 space-y-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h3 class="text-lg font-black text-white">Mercado de Transferencias</h3>
+                            <p class="text-xs text-slate-400 mt-1">El algoritmo cruza lo que te falta con lo que les sobra.</p>
+                        </div>
+                        <button onclick="loadMarketplaceListings()" class="px-4 py-2 bg-black/50 border border-white/10 text-white hover:bg-white/10 text-xs font-bold rounded-xl transition-colors">
+                            <i class="fa-solid fa-arrows-rotate mr-1.5 text-wc-cyan"></i> Actualizar Radar
+                        </button>
+                    </div>
+
+                    <!-- Lista de Coleccionistas -->
+                    <div id="marketplace-list-container" class="space-y-3">
+                        <div class="text-center py-16 text-slate-500 bg-black/30 rounded-2xl border border-white/5">
+                            <i class="fa-solid fa-globe text-5xl mb-4 text-slate-600 block"></i>
+                            <p class="text-sm font-medium">Inicia sesión y publica tu inventario para buscar intercambios.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Barra de Navegación Inferior Móvil -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-wc-dark/95 backdrop-blur-xl border-t border-white/10 px-2 py-2 flex justify-around items-center z-40 pb-safe">
+        <button onclick="switchTab('album')" class="mobile-nav-btn w-1/3 flex flex-col items-center py-2 text-wc-magenta">
+            <i class="fa-solid fa-book-open text-xl mb-1"></i>
+            <span class="text-[10px] font-bold tracking-wide">Álbum</span>
+        </button>
+        <button onclick="switchTab('scanner')" class="mobile-nav-btn w-1/3 flex flex-col items-center py-2 text-slate-500">
+            <i class="fa-solid fa-camera text-xl mb-1"></i>
+            <span class="text-[10px] font-bold tracking-wide">Escáner</span>
+        </button>
+        <button onclick="switchTab('trades')" class="mobile-nav-btn w-1/3 flex flex-col items-center py-2 text-slate-500">
+            <i class="fa-solid fa-arrows-rotate text-xl mb-1"></i>
+            <span class="text-[10px] font-bold tracking-wide">Mercado</span>
+        </button>
+    </div>
+
+    <!-- Modal de Intercambio -->
+    <div id="trade-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-wc-gray border border-white/10 rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto p-6 shadow-2xl space-y-6">
+            <div class="flex items-center justify-between border-b border-white/10 pb-4">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gradient-to-br from-wc-cyan to-blue-600 text-white w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg shadow-lg">
+                        <i class="fa-solid fa-handshake"></i>
+                    </div>
+                    <div>
+                        <h4 id="modal-trade-alias" class="font-black text-white text-lg leading-tight">Coleccionista</h4>
+                        <span id="modal-trade-contact" class="text-xs text-wc-cyan block font-bold mt-0.5">Contacto: ...</span>
+                    </div>
+                </div>
+                <button onclick="closeTradeModal()" class="text-slate-500 hover:text-white bg-black/50 w-8 h-8 rounded-full flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-wc-green/10 p-4 rounded-2xl border border-wc-green/20">
+                    <span class="block text-[10px] font-black text-wc-green uppercase tracking-widest mb-2"><i class="fa-solid fa-download mr-1"></i> Recibes (Te Faltan)</span>
+                    <div id="modal-he-gives" class="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto hide-scrollbar pt-1">
+                        <!-- Inyectado -->
+                    </div>
+                </div>
+                <div class="bg-amber-500/10 p-4 rounded-2xl border border-amber-500/20">
+                    <span class="block text-[10px] font-black text-amber-400 uppercase tracking-widest mb-2"><i class="fa-solid fa-upload mr-1"></i> Entregas (Tus Repes)</span>
+                    <div id="modal-you-give" class="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto hide-scrollbar pt-1">
+                        <!-- Inyectado -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-black/30 p-4 rounded-2xl border border-white/5">
+                <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Inventario Total de Repetidas del Usuario</span>
+                <div id="modal-all-repeats" class="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto hide-scrollbar">
+                    <!-- Inyectado -->
+                </div>
+            </div>
+
+            <button onclick="closeTradeModal()" class="w-full py-3 bg-white/10 hover:bg-white/20 text-white text-sm font-bold uppercase tracking-wider rounded-xl transition-colors">
+                Cerrar Detalles
+            </button>
+        </div>
+    </div>
+
+    <!-- Lógica de la Aplicación -->
+    <script>
+        // CONFIGURACIÓN OFICIAL: 48 Selecciones + FWC (Especiales) + VEN (Sedes)
+        const SECTIONS = {
+            'FWC': { title: 'FIFA World Cup (Especiales)', count: 21 },
+            'VEN': { title: 'Sedes Oficiales (Venues)', count: 16 },
+            
+            // CONCACAF (6)
+            'USA': { title: 'Estados Unidos (Host)', count: 20 },
+            'MEX': { title: 'México (Host)', count: 20 },
+            'CAN': { title: 'Canadá (Host)', count: 20 },
+            'CRC': { title: 'Costa Rica', count: 20 },
+            'PAN': { title: 'Panamá', count: 20 },
+            'JAM': { title: 'Jamaica', count: 20 },
+            
+            // CONMEBOL (6)
+            'ARG': { title: 'Argentina', count: 20 },
+            'BRA': { title: 'Brasil', count: 20 },
+            'URU': { title: 'Uruguay', count: 20 },
+            'COL': { title: 'Colombia', count: 20 },
+            'ECU': { title: 'Ecuador', count: 20 },
+            'VEN_T': { title: 'Venezuela', count: 20 }, // _T para no chocar con VEN (Sedes)
+            
+            // UEFA (16)
+            'FRA': { title: 'Francia', count: 20 },
+            'ESP': { title: 'España', count: 20 },
+            'ENG': { title: 'Inglaterra', count: 20 },
+            'DEU': { title: 'Alemania', count: 20 },
+            'ITA': { title: 'Italia', count: 20 },
+            'NED': { title: 'Países Bajos', count: 20 },
+            'POR': { title: 'Portugal', count: 20 },
+            'BEL': { title: 'Bélgica', count: 20 },
+            'CRO': { title: 'Croacia', count: 20 },
+            'SUI': { title: 'Suiza', count: 20 },
+            'DEN': { title: 'Dinamarca', count: 20 },
+            'SRB': { title: 'Serbia', count: 20 },
+            'POL': { title: 'Polonia', count: 20 },
+            'AUT': { title: 'Austria', count: 20 },
+            'UKR': { title: 'Ucrania', count: 20 },
+            'SWE': { title: 'Suecia', count: 20 },
+            
+            // CAF (9)
+            'SEN': { title: 'Senegal', count: 20 },
+            'MAR': { title: 'Marruecos', count: 20 },
+            'ALG': { title: 'Argelia', count: 20 },
+            'CMR': { title: 'Camerún', count: 20 },
+            'NGA': { title: 'Nigeria', count: 20 },
+            'EGY': { title: 'Egipto', count: 20 },
+            'CIV': { title: 'Costa de Marfil', count: 20 },
+            'GHA': { title: 'Ghana', count: 20 },
+            'MLI': { title: 'Malí', count: 20 },
+            
+            // AFC (8)
+            'JPN': { title: 'Japón', count: 20 },
+            'KOR': { title: 'Corea del Sur', count: 20 },
+            'KSA': { title: 'Arabia Saudita', count: 20 },
+            'IRN': { title: 'Irán', count: 20 },
+            'AUS': { title: 'Australia', count: 20 },
+            'QAT': { title: 'Qatar', count: 20 },
+            'UZB': { title: 'Uzbekistán', count: 20 },
+            'IRQ': { title: 'Irak', count: 20 },
+            
+            // OFC (1)
+            'NZL': { title: 'Nueva Zelanda', count: 20 },
+            
+            // Playoffs (2)
+            'PO1': { title: 'Playoff Ganador 1', count: 20 },
+            'PO2': { title: 'Playoff Ganador 2', count: 20 }
+        };
+
+        // ESTADO GLOBAL CORREGIDO
+        let state = {
+            inventory: {},
+            currentCategory: 'FWC',
+            currentFilterStatus: 'all',
+            firebase: {
+                db: null,
+                auth: null,
+                app: null,
+                userId: null,
+                isConnected: false
+            },
+            marketplaceListings: []
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initInventoryData();
+            loadLocalStorageData();
+            renderCategorySelector();
+            renderStickersGrid();
+            updateDashboardMetrics();
+            initFirebaseConnection();
+            initScannerListeners();
+        });
+
+        function initInventoryData() {
+            for (const [prefix, sec] of Object.entries(SECTIONS)) {
+                for (let i = 1; i <= sec.count; i++) {
+                    const key = `${prefix}-${i}`;
+                    // Lógica para determinar si es shiny (Ej: escudos, campeones, logos)
+                    const isShiny = prefix === 'FWC' || prefix === 'VEN' || i === 1 || i === 20;
+                    
+                    state.inventory[key] = {
+                        id: key,
+                        prefix: prefix,
+                        num: i,
+                        owned: false,
+                        duplicates: 0,
+                        shiny: isShiny
+                    };
+                }
+            }
+        }
+
+        function loadLocalStorageData() {
+            const saved = localStorage.getItem('panini_2026_inventory_v2');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    for (const [key, val] of Object.entries(parsed)) {
+                        if (state.inventory[key]) {
+                            state.inventory[key].owned = val.owned || false;
+                            state.inventory[key].duplicates = val.duplicates || 0;
+                        }
+                    }
+                } catch (e) { console.error("Error cargando inventario local", e); }
+            }
+        }
+
+        function saveLocalStorageData() {
+            localStorage.setItem('panini_2026_inventory_v2', JSON.stringify(state.inventory));
+            updateDashboardMetrics();
+            syncWithCloudDebounced();
+        }
+
+        function renderCategorySelector() {
+            const container = document.getElementById('category-selector-container');
+            container.innerHTML = '';
+            
+            for (const [prefix, sec] of Object.entries(SECTIONS)) {
+                const btn = document.createElement('button');
+                btn.id = `cat-btn-${prefix}`;
+                btn.onclick = () => selectCategory(prefix);
+                
+                const ownedCount = Object.values(state.inventory).filter(item => item.prefix === prefix && item.owned).length;
+                
+                let baseClasses = "flex-shrink-0 px-5 py-2.5 rounded-xl text-xs font-black tracking-wide transition-all no-select border ";
+                if (state.currentCategory === prefix) {
+                    btn.className = baseClasses + "bg-wc-magenta text-white border-wc-magenta shadow-[0_0_10px_rgba(230,0,76,0.5)]";
+                } else {
+                    btn.className = baseClasses + "bg-black/50 text-slate-400 border-white/10 hover:bg-white/10 hover:text-white";
+                }
+                
+                btn.innerHTML = `${prefix === 'VEN_T' ? 'VEN' : prefix} <span class="ml-1.5 px-1.5 py-0.5 rounded text-[10px] bg-black/40 ${ownedCount === sec.count ? 'text-wc-green' : 'text-slate-300'}">${ownedCount}/${sec.count}</span>`;
+                container.appendChild(btn);
+            }
+        }
+
+        function selectCategory(prefix) {
+            state.currentCategory = prefix;
+            renderCategorySelector();
+            const info = SECTIONS[prefix];
+            document.getElementById('current-category-title').textContent = `${info.title.toUpperCase()}`;
+            renderStickersGrid();
+        }
+
+        function renderStickersGrid() {
+            const grid = document.getElementById('stickers-grid');
+            grid.innerHTML = '';
+            
+            const searchValue = document.getElementById('sticker-search').value.toLowerCase().trim();
+            
+            const list = Object.values(state.inventory).filter(item => {
+                const matchCategory = item.prefix === state.currentCategory;
+                
+                let matchStatus = true;
+                if (state.currentFilterStatus === 'owned') matchStatus = item.owned;
+                else if (state.currentFilterStatus === 'missing') matchStatus = !item.owned;
+                else if (state.currentFilterStatus === 'duplicates') matchStatus = item.duplicates > 0;
+                
+                let matchSearch = true;
+                if (searchValue) {
+                    const dispPrefix = item.prefix === 'VEN_T' ? 'VEN' : item.prefix;
+                    const searchString = `${dispPrefix} ${item.num} ${dispPrefix}-${item.num}`.toLowerCase();
+                    matchSearch = searchString.includes(searchValue);
+                }
+                
+                return searchValue ? (matchSearch && matchStatus) : (matchCategory && matchStatus);
+            });
+
+            if (list.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-16 text-center text-slate-500 font-medium">No se encontraron estampas con estos filtros.</div>`;
+                return;
+            }
+
+            list.forEach(item => {
+                const card = document.createElement('div');
+                card.id = `sticker-card-${item.id}`;
+                
+                let cardStyle = item.owned ? 'card-owned' : 'card-missing hover:opacity-100 hover:border-white/30';
+                if (item.shiny && item.owned) cardStyle += ' shiny-card';
+                
+                card.className = `no-select rounded-2xl border-2 p-2 aspect-[3/4] flex flex-col items-center justify-between cursor-pointer transition-all ${cardStyle}`;
+                
+                // Eventos tactiles y ratón (Click y Long Press)
+                let pressTimer;
+                card.addEventListener('mousedown', () => { pressTimer = window.setTimeout(() => handleStickerLongPress(item.id), 600); });
+                card.addEventListener('mouseup', () => clearTimeout(pressTimer));
+                card.addEventListener('mouseleave', () => clearTimeout(pressTimer));
+                card.addEventListener('touchstart', (e) => {
+                    pressTimer = window.setTimeout(() => { handleStickerLongPress(item.id); if (e.cancelable) e.preventDefault(); }, 600);
+                }, { passive: true });
+                card.addEventListener('touchend', () => clearTimeout(pressTimer));
+
+                card.onclick = () => handleStickerClick(item.id);
+
+                const dispPrefix = item.prefix === 'VEN_T' ? 'VEN' : item.prefix;
+                const badgeDup = item.duplicates > 0 
+                    ? `<div class="absolute -top-2 -right-2 bg-amber-500 text-black text-[11px] font-black w-6 h-6 rounded-full flex items-center justify-center shadow-lg border border-amber-200 animate-bounce">+${item.duplicates}</div>` : '';
+
+                const iconColor = item.shiny ? 'text-amber-400' : 'text-slate-600';
+                const icon = `<i class="fa-solid ${item.shiny ? 'fa-star' : 'fa-shirt'} ${iconColor} text-[10px]"></i>`;
+
+                card.innerHTML = `
+                    <div class="relative w-full h-full flex flex-col justify-between p-0.5">
+                        ${badgeDup}
+                        <div class="flex justify-between items-center w-full">
+                            <span class="text-[9px] font-black tracking-widest ${item.owned ? 'text-slate-300' : 'text-slate-500'}">${dispPrefix}</span>
+                            ${icon}
+                        </div>
+                        <div class="text-center py-2">
+                            <span class="text-2xl font-black tracking-tighter ${item.owned && item.shiny ? 'text-wc-purple' : (item.owned ? 'text-white' : 'text-slate-500')}">${item.num}</span>
+                        </div>
+                        <div class="text-[8px] text-center font-bold uppercase tracking-widest ${item.owned ? (item.shiny ? 'text-wc-purple' : 'text-wc-green') : 'text-slate-600'}">
+                            ${item.owned ? 'Tengo' : 'Falta'}
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function handleStickerClick(id) {
+            const item = state.inventory[id];
+            if (!item) return;
+
+            if (!item.owned) {
+                item.owned = true;
+                item.duplicates = 0;
+                showToast(`Estampa añadida: ${id.replace('-', ' ')}`, 'success');
+            } else if (item.owned && item.duplicates === 0) {
+                item.owned = false;
+                showToast(`Estampa removida: ${id.replace('-', ' ')}`, 'neutral');
+            } else {
+                item.duplicates--;
+                showToast(`Repetida restada de ${id.replace('-', ' ')}`, 'neutral');
+            }
+            saveLocalStorageData();
+            renderCategorySelector();
+            renderStickersGrid();
+        }
+
+        function handleStickerLongPress(id) {
+            const item = state.inventory[id];
+            if (!item) return;
+
+            if (!item.owned) {
+                item.owned = true;
+                item.duplicates = 0;
+            } else {
+                item.duplicates++;
+            }
+            showToast(`Repetida agregada a: ${id.replace('-', ' ')} (+${item.duplicates})`, 'warning');
+            saveLocalStorageData();
+            renderCategorySelector();
+            renderStickersGrid();
+        }
+
+        function setFilterStatus(status) {
+            state.currentFilterStatus = status;
+            document.querySelectorAll('[id^="filter-status-"]').forEach(btn => {
+                btn.className = "px-4 py-2 text-xs font-medium rounded-lg text-slate-400 hover:text-white";
+            });
+            document.getElementById(`filter-status-${status}`).className = "px-4 py-2 text-xs font-bold rounded-lg bg-wc-magenta text-white shadow-lg";
+            renderStickersGrid();
+        }
+
+        function filterStickers() {
+            renderStickersGrid();
+        }
+
+        function updateDashboardMetrics() {
+            const totalStickers = Object.keys(state.inventory).length;
+            const ownedList = Object.values(state.inventory).filter(item => item.owned);
+            const ownedCount = ownedList.length;
+            const missingCount = totalStickers - ownedCount;
+            const totalDuplicates = Object.values(state.inventory).reduce((acc, item) => acc + item.duplicates, 0);
+            
+            const pct = totalStickers > 0 ? Math.round((ownedCount / totalStickers) * 100) : 0;
+
+            document.getElementById('stats-owned').textContent = ownedCount;
+            document.getElementById('stats-total-denom').textContent = `/ ${totalStickers}`;
+            document.getElementById('stats-missing').textContent = missingCount;
+            document.getElementById('stats-duplicates').textContent = totalDuplicates;
+            document.getElementById('progress-text-pct').textContent = `${pct}%`;
+
+            const strokeDash = `${pct}, 100`;
+            document.getElementById('progress-circle-bar').setAttribute('stroke-dasharray', strokeDash);
+        }
+
+        let currentBase64Image = null;
+        let scannedDetectedStickers = [];
+
+        function initScannerListeners() {
+            const fileInput = document.getElementById('camera-file-input');
+            const dropzone = document.getElementById('image-dropzone');
+
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) handleScannerFile(file);
+            });
+
+            dropzone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropzone.classList.add('border-wc-magenta', 'bg-white/5');
+            });
+            dropzone.addEventListener('dragleave', () => {
+                dropzone.classList.remove('border-wc-magenta', 'bg-white/5');
+            });
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropzone.classList.remove('border-wc-magenta', 'bg-white/5');
+                const file = e.dataTransfer.files[0];
+                if (file) handleScannerFile(file);
+            });
+        }
+
+        function handleScannerFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                currentBase64Image = event.target.result.split(',')[1];
+                document.getElementById('scanner-img-preview').src = event.target.result;
+                document.getElementById('image-dropzone').classList.add('hidden');
+                document.getElementById('scanner-preview-container').classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function cancelScan() {
+            currentBase64Image = null;
+            scannedDetectedStickers = [];
+            document.getElementById('image-dropzone').classList.remove('hidden');
+            document.getElementById('scanner-preview-container').classList.add('hidden');
+            document.getElementById('scanner-results').classList.add('hidden');
+            document.getElementById('camera-file-input').value = '';
+        }
+
+        async function processImageWithAI() {
+            if (!currentBase64Image) return;
+
+            document.getElementById('scanner-preview-container').classList.add('hidden');
+            document.getElementById('scanner-loading').classList.remove('hidden');
+
+            // El entorno inyecta la API Key automáticamente al dejarla vacía
+            const apiKey = ""; 
+            
+            try {
+                const promptText = "Analiza esta foto de estampas de fútbol de Panini. Identifica las estampas presentes. Devuelve los resultados en formato JSON estructurado con el campo 'detected' conteniendo un array de códigos identificados (con formato 'CAT-NUM' por ejemplo 'MEX-5' o 'ARG-2'). Devuelve EXCLUSIVAMENTE el JSON, sin marcas markdown.";
+                
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            role: "user",
+                            parts: [
+                                { text: promptText },
+                                { inlineData: { mimeType: "image/jpeg", data: currentBase64Image } }
+                            ]
+                        }]
+                    })
+                });
+
+                if (!response.ok) throw new Error("Fallo API Gemini.");
+                
+                const result = await response.json();
+                const textResponse = result.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
+                
+                const cleanedJson = textResponse.replace(/```json/g, '').replace(/```/g, '').trim();
+                const parsed = JSON.parse(cleanedJson);
+                
+                if (parsed.detected && Array.isArray(parsed.detected)) {
+                    // Tratar de adaptar el código leído a nuestra BD
+                    scannedDetectedStickers = parsed.detected.filter(id => state.inventory[id] || state.inventory[id.replace('VEN', 'VEN_T')]);
+                } else {
+                    scannedDetectedStickers = [];
+                }
+                showScannerResults();
+
+            } catch (err) {
+                console.error(err);
+                showToast("Error de conexión. Fallback a modo simulación.", "warning");
+                simulateScannerOcr();
+            }
+        }
+
+        function simulateScannerOcr() {
+            const availableKeys = Object.keys(state.inventory).filter(key => key.startsWith(state.currentCategory));
+            const randomCount = Math.floor(Math.random() * 4) + 2;
+            scannedDetectedStickers = [];
+            
+            for (let i = 0; i < randomCount; i++) {
+                const randomKey = availableKeys[Math.floor(Math.random() * availableKeys.length)];
+                if (!scannedDetectedStickers.includes(randomKey)) {
+                    scannedDetectedStickers.push(randomKey);
+                }
+            }
+            showScannerResults();
+        }
+
+        function showScannerResults() {
+            document.getElementById('scanner-loading').classList.add('hidden');
+            const resultsDiv = document.getElementById('scanner-results');
+            const listContainer = document.getElementById('scanner-detected-list');
+            
+            resultsDiv.classList.remove('hidden');
+            listContainer.innerHTML = '';
+
+            if (scannedDetectedStickers.length === 0) {
+                listContainer.innerHTML = `<span class="text-xs text-wc-magenta font-bold">No se detectaron códigos legibles. Intenta con mejor iluminación.</span>`;
+                return;
+            }
+
+            scannedDetectedStickers.forEach(id => {
+                const dispId = id.replace('VEN_T', 'VEN');
+                const badge = document.createElement('span');
+                badge.className = "px-3 py-1.5 bg-black/60 border border-white/10 text-white font-bold text-xs rounded-lg flex items-center shadow-md";
+                badge.innerHTML = `<span class="tracking-widest mr-2">${dispId.replace('-', ' ')}</span> <i class="fa-solid fa-circle-check text-wc-green"></i>`;
+                listContainer.appendChild(badge);
+            });
+        }
+
+        function acceptScannedStickers() {
+            if (scannedDetectedStickers.length === 0) return cancelScan();
+
+            let addedCount = 0;
+            scannedDetectedStickers.forEach(id => {
+                const realId = state.inventory[id] ? id : (id.replace('VEN', 'VEN_T'));
+                if (state.inventory[realId]) {
+                    state.inventory[realId].owned = true;
+                    addedCount++;
+                }
+            });
+
+            saveLocalStorageData();
+            renderCategorySelector();
+            renderStickersGrid();
+            showToast(`¡Agregamos ${addedCount} estampas al álbum!`, 'success');
+            cancelScan();
+            switchTab('album');
+        }
+
+        const APP_ID = typeof __app_id !== 'undefined' ? __app_id : 'panini-2026-global';
+
+        async function initFirebaseConnection() {
+            const statusDot = document.getElementById('cloud-status-dot');
+            const statusText = document.getElementById('cloud-status-text');
+            const btnGoogle = document.getElementById('btn-google-login');
+
+            if (typeof __firebase_config === 'undefined' || !__firebase_config) {
+                statusDot.className = "w-2.5 h-2.5 rounded-full bg-slate-500";
+                statusText.textContent = "Offline (Local)";
+                return;
+            }
+
+            try {
+                const config = JSON.parse(__firebase_config);
+                const app = window.FirebaseSDK.initializeApp(config);
+                const auth = window.FirebaseSDK.getAuth(app);
+                const db = window.FirebaseSDK.getFirestore(app);
+
+                state.firebase.app = app; state.firebase.auth = auth; state.firebase.db = db;
+                statusText.textContent = "Conectando...";
+
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await window.FirebaseSDK.signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await window.FirebaseSDK.signInAnonymously(auth);
+                }
+
+                window.FirebaseSDK.onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        state.firebase.userId = user.uid;
+                        state.firebase.isConnected = true;
+                        statusDot.className = "w-2.5 h-2.5 rounded-full bg-wc-green shadow-[0_0_8px_#00EA77] animate-pulse";
+                        
+                        if (user.isAnonymous) {
+                            statusText.textContent = "Anónimo";
+                            btnGoogle.classList.remove('hidden');
+                            btnGoogle.classList.add('flex');
+                        } else {
+                            statusText.textContent = user.displayName ? user.displayName.split(' ')[0] : "Conectado";
+                            btnGoogle.classList.add('hidden');
+                            btnGoogle.classList.remove('flex');
+                        }
+
+                        document.getElementById('profile-uuid-display').textContent = user.uid;
+                        loadUserCloudInventory();
+                        listenMarketplaceListings();
+                    } else {
+                        state.firebase.isConnected = false;
+                        statusDot.className = "w-2.5 h-2.5 rounded-full bg-wc-magenta";
+                        statusText.textContent = "Desconectado";
+                    }
+                });
+            } catch (err) {
+                statusDot.className = "w-2.5 h-2.5 rounded-full bg-slate-500";
+                statusText.textContent = "Local";
+            }
+        }
+
+        async function loginWithGoogle() {
+            if (!state.firebase.auth) return;
+            try {
+                const provider = new window.FirebaseSDK.GoogleAuthProvider();
+                const result = await window.FirebaseSDK.signInWithPopup(state.firebase.auth, provider);
+                const user = result.user;
+                
+                // Si obtiene el nombre, lo pone como alias por defecto
+                if(user.displayName) {
+                    document.getElementById('trade-user-alias').value = user.displayName;
+                    localStorage.setItem('wc_trade_alias', user.displayName);
+                }
+                
+                showToast(`¡Bienvenido ${user.displayName || ''}! Cuenta vinculada.`, "success");
+            } catch (error) {
+                console.error("Error en login Google", error);
+                showToast("Hubo un problema al vincular con Google.", "danger");
+            }
+        }
+
+        async function loadUserCloudInventory() {
+            if (!state.firebase.isConnected) return;
+            try {
+                const ref = window.FirebaseSDK.doc(state.firebase.db, 'artifacts', APP_ID, 'users', state.firebase.userId, 'data', 'inventory');
+                const snap = await window.FirebaseSDK.getDoc(ref);
+                if (snap.exists()) {
+                    const data = snap.data().items || {};
+                    const cloudOwned = Object.values(data).filter(i => i.owned).length;
+                    const localOwned = Object.values(state.inventory).filter(i => i.owned).length;
+                    if (cloudOwned > localOwned) {
+                        for (const [key, val] of Object.entries(data)) {
+                            if (state.inventory[key]) {
+                                state.inventory[key].owned = val.owned;
+                                state.inventory[key].duplicates = val.duplicates || 0;
+                            }
+                        }
+                        saveLocalStorageData();
+                        renderCategorySelector();
+                        renderStickersGrid();
+                        showToast("Sincronizado desde la nube", "success");
+                    }
+                }
+            } catch (err) {}
+        }
+
+        let syncTimeout = null;
+        function syncWithCloudDebounced() {
+            if (!state.firebase.isConnected) return;
+            clearTimeout(syncTimeout);
+            syncTimeout = setTimeout(async () => {
+                try {
+                    const ref = window.FirebaseSDK.doc(state.firebase.db, 'artifacts', APP_ID, 'users', state.firebase.userId, 'data', 'inventory');
+                    const cleanData = {};
+                    for (const [key, val] of Object.entries(state.inventory)) {
+                        if (val.owned || val.duplicates > 0) cleanData[key] = { owned: val.owned, duplicates: val.duplicates };
+                    }
+                    await window.FirebaseSDK.setDoc(ref, { items: cleanData, updatedAt: Date.now() });
+                } catch(err) {}
+            }, 3000);
+        }
+
+        async function publishToMarketplace() {
+            if (!state.firebase.isConnected) return showToast("Esperando conexión...", "warning");
+            const alias = document.getElementById('trade-user-alias').value.trim() || 'Jugador Anónimo';
+            const contact = document.getElementById('trade-user-contact').value.trim();
+            if (!contact) return showToast("Añade un medio de contacto.", "warning");
+
+            try {
+                const missingList = Object.values(state.inventory).filter(i => !i.owned).map(i => i.id);
+                const repeatsList = Object.values(state.inventory).filter(i => i.duplicates > 0).map(i => ({ id: i.id, count: i.duplicates }));
+
+                localStorage.setItem('wc_trade_alias', alias);
+                localStorage.setItem('wc_trade_contact', contact);
+
+                const ref = window.FirebaseSDK.doc(state.firebase.db, 'artifacts', APP_ID, 'public', 'trades', state.firebase.userId);
+                await window.FirebaseSDK.setDoc(ref, { userId: state.firebase.userId, alias, contact, missing: missingList, repeats: repeatsList, updatedAt: Date.now() });
+
+                showToast("¡Inventario Público Sincronizado!", "success");
+                loadMarketplaceListings();
+            } catch (err) { showToast("Error al publicar en nube.", "danger"); }
+        }
+
+        async function loadMarketplaceListings() {
+            if (!state.firebase.isConnected) return;
+            try {
+                const col = window.FirebaseSDK.collection(state.firebase.db, 'artifacts', APP_ID, 'public', 'trades');
+                const snap = await window.FirebaseSDK.getDocs(col);
+                state.marketplaceListings = [];
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    if (d.userId !== state.firebase.userId) state.marketplaceListings.push(d);
+                });
+                renderMarketplaceMatches();
+            } catch (err) {}
+        }
+
+        function listenMarketplaceListings() {
+            const a = localStorage.getItem('wc_trade_alias');
+            const c = localStorage.getItem('wc_trade_contact');
+            if (a) document.getElementById('trade-user-alias').value = a;
+            if (c) document.getElementById('trade-user-contact').value = c;
+            loadMarketplaceListings();
+        }
+
+        function renderMarketplaceMatches() {
+            const container = document.getElementById('marketplace-list-container');
+            container.innerHTML = '';
+
+            if (state.marketplaceListings.length === 0) {
+                container.innerHTML = `<div class="text-center py-12 text-slate-500"><i class="fa-solid fa-satellite-dish text-4xl mb-3 block opacity-50"></i><p class="text-sm">Sin coleccionistas activos en el radar.</p></div>`;
+                return;
+            }
+
+            const myMissing = Object.values(state.inventory).filter(i => !i.owned).map(i => i.id);
+            const myRepeats = Object.values(state.inventory).filter(i => i.duplicates > 0).map(i => i.id);
+
+            state.marketplaceListings.forEach(userTrade => {
+                const heHasWhatINeed = userTrade.repeats.filter(rep => myMissing.includes(rep.id)).map(rep => rep.id);
+                const iHaveWhatHeNeeds = myRepeats.filter(id => userTrade.missing.includes(id));
+
+                if (heHasWhatINeed.length === 0 && iHaveWhatHeNeeds.length === 0) return; // Filtrar los que no tienen nada que ver
+
+                const card = document.createElement('div');
+                card.className = "p-4 rounded-2xl border border-white/10 bg-black/40 hover:bg-black/60 transition-all flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4";
+                
+                let badgeClass = "bg-white/10 text-slate-300";
+                let matchLabel = "Sin Coincidencias";
+                if (heHasWhatINeed.length > 0 && iHaveWhatHeNeeds.length > 0) {
+                    badgeClass = "bg-wc-green/20 text-wc-green border border-wc-green/30 animate-pulse";
+                    matchLabel = "MATCH PERFECTO";
+                } else if (heHasWhatINeed.length > 0 || iHaveWhatHeNeeds.length > 0) {
+                    badgeClass = "bg-amber-500/20 text-amber-400 border border-amber-500/30";
+                    matchLabel = "Intercambio Parcial";
+                }
+
+                card.innerHTML = `
+                    <div class="space-y-1">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-sm font-black text-white uppercase">${userTrade.alias}</span>
+                            <span class="text-[9px] font-bold px-2 py-0.5 rounded-md ${badgeClass}">${matchLabel}</span>
+                        </div>
+                        
+                        <div class="flex space-x-4 pt-2 text-[11px]">
+                            <span class="text-wc-green font-bold"><i class="fa-solid fa-arrow-down mr-1"></i> Recibes: ${heHasWhatINeed.length}</span>
+                            <span class="text-amber-400 font-bold"><i class="fa-solid fa-arrow-up mr-1"></i> Entregas: ${iHaveWhatHeNeeds.length}</span>
+                        </div>
+                    </div>
+                    <button onclick="openTradeModal('${userTrade.userId}')" class="w-full sm:w-auto px-4 py-2 bg-white/10 text-white text-xs font-bold rounded-xl hover:bg-white/20 transition-colors uppercase tracking-wider">
+                        Ver Detalles
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function openTradeModal(targetUserId) {
+            const u = state.marketplaceListings.find(x => x.userId === targetUserId);
+            if (!u) return;
+
+            document.getElementById('modal-trade-alias').textContent = u.alias;
+            document.getElementById('modal-trade-contact').innerHTML = `<i class="fa-solid fa-paper-plane mr-1"></i> ${u.contact}`;
+
+            const myMissing = Object.values(state.inventory).filter(i => !i.owned).map(i => i.id);
+            const myRepeats = Object.values(state.inventory).filter(i => i.duplicates > 0).map(i => i.id);
+
+            const heGives = u.repeats.filter(rep => myMissing.includes(rep.id));
+            const c1 = document.getElementById('modal-he-gives'); c1.innerHTML = '';
+            heGives.forEach(item => { c1.innerHTML += `<span class="px-2 py-1 bg-wc-green/20 text-wc-green font-black text-[10px] rounded border border-wc-green/30">${item.id.replace('VEN_T', 'VEN').replace('-', ' ')}</span>`; });
+            if (!heGives.length) c1.innerHTML = '<span class="text-[10px] text-slate-500">Nada</span>';
+
+            const youGive = myRepeats.filter(id => u.missing.includes(id));
+            const c2 = document.getElementById('modal-you-give'); c2.innerHTML = '';
+            youGive.forEach(id => { c2.innerHTML += `<span class="px-2 py-1 bg-amber-500/20 text-amber-400 font-black text-[10px] rounded border border-amber-500/30">${id.replace('VEN_T', 'VEN').replace('-', ' ')}</span>`; });
+            if (!youGive.length) c2.innerHTML = '<span class="text-[10px] text-slate-500">Nada</span>';
+
+            const c3 = document.getElementById('modal-all-repeats'); c3.innerHTML = '';
+            u.repeats.forEach(item => { c3.innerHTML += `<span class="px-2 py-1 bg-black/50 text-slate-400 font-bold text-[10px] rounded border border-white/10">${item.id.replace('VEN_T', 'VEN').replace('-', ' ')} (x${item.count})</span>`; });
+
+            document.getElementById('trade-modal').classList.remove('hidden');
+        }
+
+        function closeTradeModal() { document.getElementById('trade-modal').classList.add('hidden'); }
+
+        function switchTab(tabId) {
+            ['album', 'scanner', 'trades'].forEach(id => {
+                document.getElementById(`tab-${id}`).classList.add('hidden');
+                const btn = document.getElementById(`nav-btn-${id}`);
+                if(btn) btn.className = "flex-1 py-3 text-center rounded-xl transition-all text-slate-400 hover:text-white hover:bg-white/5";
+            });
+
+            document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+                btn.className = "mobile-nav-btn w-1/3 flex flex-col items-center py-2 text-slate-500";
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            
+            const activeBtn = document.getElementById(`nav-btn-${tabId}`);
+            if (activeBtn) activeBtn.className = "flex-1 py-3 text-center rounded-xl transition-all bg-gradient-to-r from-wc-purple to-wc-magenta text-white shadow-lg";
+
+            const mobileMap = { 'album': 0, 'scanner': 1, 'trades': 2 };
+            const mBtn = document.querySelectorAll('.mobile-nav-btn')[mobileMap[tabId]];
+            if (mBtn) mBtn.className = "mobile-nav-btn w-1/3 flex flex-col items-center py-2 text-wc-magenta";
+        }
+
+        function showToast(message, type = 'success') {
+            const c = document.getElementById('toast-container');
+            const t = document.createElement('div');
+            
+            let bg = 'bg-wc-green text-black shadow-[0_0_15px_rgba(0,234,119,0.3)]';
+            let icon = '<i class="fa-solid fa-circle-check"></i>';
+            if (type === 'warning') { bg = 'bg-amber-400 text-black shadow-[0_0_15px_rgba(251,191,36,0.3)]'; icon = '<i class="fa-solid fa-triangle-exclamation"></i>'; }
+            else if (type === 'danger') { bg = 'bg-wc-magenta text-white shadow-[0_0_15px_rgba(230,0,76,0.3)]'; icon = '<i class="fa-solid fa-xmark"></i>'; }
+            else if (type === 'neutral') { bg = 'bg-wc-gray text-white border border-white/20'; icon = '<i class="fa-solid fa-info"></i>'; }
+
+            t.className = `p-4 rounded-xl text-xs font-black uppercase tracking-wider flex items-center space-x-3 pointer-events-auto transition-all duration-300 transform translate-y-2 opacity-0 ${bg}`;
+            t.innerHTML = `<span class="text-base">${icon}</span><span class="flex-1">${message}</span>`;
+            c.appendChild(t);
+
+            setTimeout(() => t.classList.remove('translate-y-2', 'opacity-0'), 10);
+            setTimeout(() => {
+                t.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => t.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
