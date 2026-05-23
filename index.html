@@ -1,4 +1,3 @@
-'html
 <!DOCTYPE html>
 <html lang="es" class="dark">
 <head>
@@ -20,7 +19,7 @@
                             magenta: '#e40046',
                             neon: '#00ff43',
                             panel: '#1a1a24',
-                            coke: '#F40009', /* Rojo Coca-Cola */
+                            coke: '#F40009',
                         }
                     },
                     fontFamily: {
@@ -60,7 +59,7 @@
             transition: all 0.2s ease;
         }
         
-        /* Estado Obtenida (Base) */
+        /* Estado Obtenida */
         .sticker-card.owned {
             background: linear-gradient(145deg, #ffffff, #e2e2e2);
             border-color: #00ff43;
@@ -88,7 +87,6 @@
             border: none;
         }
 
-        /* Animación Holográfica para Especiales */
         .sticker-card.shiny::after, .sticker-card.coca-cola::after, .sticker-card.mypanini::after {
             content: '';
             position: absolute;
@@ -104,7 +102,6 @@
             100% { transform: translate(30%, 30%) rotate(30deg); }
         }
         
-        /* Scrollbar Neón */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #0f0f13; }
         ::-webkit-scrollbar-thumb { background: #4f14a0; border-radius: 3px; }
@@ -113,7 +110,6 @@
 </head>
 <body class="min-h-screen pb-24 md:pb-6">
 
-    <!-- Header Mundialista -->
     <header class="bg-gradient-to-r from-wc-purple via-wc-magenta to-wc-purple shadow-lg sticky top-0 z-40 border-b border-wc-neon/30">
         <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center space-x-3">
@@ -122,11 +118,10 @@
                 </div>
                 <div>
                     <h1 class="text-xl font-black text-white leading-none tracking-tighter">ÁLBUM OFICIAL</h1>
-                    <span class="text-[10px] text-wc-neon font-bold uppercase tracking-widest">Collector App</span>
+                    <span class="text-[10px] text-wc-neon font-bold uppercase tracking-widest">Ultra Scanner AI</span>
                 </div>
             </div>
             
-            <!-- Auth Status -->
             <div class="flex items-center space-x-3">
                 <button id="btn-google-login" onclick="loginWithGoogle()" class="hidden bg-white text-slate-800 text-xs font-bold px-3 py-1.5 rounded-full hover:bg-slate-200 transition-colors shadow-sm">
                     <i class="fa-brands fa-google text-red-500 mr-1"></i> Vincular
@@ -139,10 +134,8 @@
         </div>
     </header>
 
-    <!-- Contenido Principal -->
     <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
         
-        <!-- Notificaciones -->
         <div id="toast-container" class="fixed top-20 right-4 left-4 md:left-auto md:w-96 z-50 pointer-events-none space-y-2"></div>
 
         <!-- Dashboard Panel -->
@@ -180,32 +173,30 @@
                     <div class="bg-black/50 rounded-xl p-3 text-center border border-white/5 relative">
                         <span class="block text-[10px] font-bold text-slate-400 uppercase">Repetidas</span>
                         <span id="stats-duplicates" class="text-xl font-black text-wc-neon">0</span>
-                        <i class="fa-solid fa-arrows-rotate absolute top-2 right-2 text-white/20 text-xs"></i>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Navegación de Pestañas -->
+        <!-- Navegación -->
         <nav class="flex space-x-2 bg-wc-panel p-1.5 rounded-xl border border-white/10 text-sm font-semibold">
             <button onclick="switchTab('album')" id="nav-btn-album" class="flex-1 py-3 text-center rounded-lg transition-all bg-wc-purple text-white shadow-lg">
                 <i class="fa-solid fa-book mr-2"></i> Álbum
             </button>
             <button onclick="switchTab('scanner')" id="nav-btn-scanner" class="flex-1 py-3 text-center rounded-lg transition-all text-slate-400 hover:text-white hover:bg-white/5">
-                <i class="fa-solid fa-wand-magic-sparkles mr-2"></i> Escáner IA
+                <i class="fa-solid fa-camera-retro mr-2"></i> Auto-Scanner
             </button>
             <button onclick="switchTab('trades')" id="nav-btn-trades" class="flex-1 py-3 text-center rounded-lg transition-all text-slate-400 hover:text-white hover:bg-white/5">
-                <i class="fa-solid fa-people-arrows mr-2"></i> Zona Cambios
+                <i class="fa-solid fa-people-arrows mr-2"></i> Intercambios
             </button>
         </nav>
 
         <!-- PESTAÑA 1: ÁLBUM -->
         <section id="tab-album" class="space-y-4">
-            <!-- Barra de Herramientas -->
             <div class="bg-wc-panel p-4 rounded-xl border border-white/10 flex flex-col md:flex-row gap-4 justify-between items-center">
                 <div class="relative w-full md:w-80">
                     <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
-                    <input oninput="filterStickers()" id="sticker-search" type="text" placeholder="Buscar país o especial (Ej: MEX 5, CC 1)..." class="w-full pl-10 pr-4 py-2.5 bg-black/50 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-wc-neon transition-colors">
+                    <input oninput="filterStickers()" id="sticker-search" type="text" placeholder="Buscar país o especial (Ej: MEX 5)..." class="w-full pl-10 pr-4 py-2.5 bg-black/50 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-wc-neon transition-colors">
                 </div>
                 
                 <div class="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 hide-scrollbar">
@@ -214,20 +205,16 @@
                     <button onclick="setFilterStatus('missing')" id="filter-status-missing" class="px-4 py-2 text-xs font-bold rounded-lg bg-black/50 text-slate-400 border border-white/5 hover:text-white whitespace-nowrap">Faltan</button>
                     <button onclick="setFilterStatus('duplicates')" id="filter-status-duplicates" class="px-4 py-2 text-xs font-bold rounded-lg bg-black/50 text-slate-400 border border-white/5 hover:text-white whitespace-nowrap">Repetidas</button>
                     
-                    <button onclick="confirmReset()" class="px-3 py-2 text-xs font-bold rounded-lg bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 ml-auto md:ml-2" title="Reiniciar Álbum">
+                    <button onclick="confirmReset()" class="px-3 py-2 text-xs font-bold rounded-lg bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 ml-auto md:ml-2">
                         <i class="fa-solid fa-trash-can"></i>
                     </button>
                 </div>
             </div>
 
-            <!-- Selector de Equipos/Especiales -->
             <div class="bg-wc-panel border border-white/10 rounded-xl p-2">
-                <div class="flex overflow-x-auto space-x-2 p-2 hide-scrollbar" id="category-selector-container">
-                    <!-- Dinámico -->
-                </div>
+                <div class="flex overflow-x-auto space-x-2 p-2 hide-scrollbar" id="category-selector-container"></div>
             </div>
 
-            <!-- Grilla -->
             <div>
                 <div class="flex items-center justify-between mb-4 px-1">
                     <h3 id="current-category-title" class="text-xl font-black text-white uppercase tracking-wide flex items-center gap-3">
@@ -236,41 +223,42 @@
                         <span>SECCIÓN</span>
                     </h3>
                     <span class="text-[10px] text-wc-neon font-bold px-2 py-1 bg-wc-neon/10 rounded border border-wc-neon/20">
-                        Toque corto: Marcar • Toque largo: Repetidas
+                        Corto: Marcar • Largo: Repetidas
                     </span>
                 </div>
-                <div id="stickers-grid" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
-                    <!-- Dinámico -->
-                </div>
+                <div id="stickers-grid" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3"></div>
             </div>
         </section>
 
-        <!-- PESTAÑA 2: ESCÁNER IA -->
+        <!-- PESTAÑA 2: ESCÁNER IA 100% -->
         <section id="tab-scanner" class="hidden">
             <div class="bg-wc-panel rounded-2xl border border-white/10 p-6 max-w-2xl mx-auto space-y-6">
                 <div class="text-center space-y-3">
                     <div class="w-16 h-16 rounded-full bg-gradient-to-br from-wc-magenta to-wc-purple flex items-center justify-center mx-auto text-2xl shadow-[0_0_15px_rgba(228,0,70,0.5)]">
-                        <i class="fa-solid fa-eye text-white"></i>
+                        <i class="fa-solid fa-microchip text-white"></i>
                     </div>
-                    <h2 class="text-2xl font-black text-white uppercase">Visión IA Integrada</h2>
-                    <p class="text-sm text-slate-400">La IA detectará automáticamente las estampas, incluyendo equipos (MEX-5) y especiales (CC-1, FWC-10).</p>
+                    <h2 class="text-2xl font-black text-white uppercase">Escáner Espacial Entrenado</h2>
+                    <p class="text-sm text-slate-400">Este motor de IA está entrenado con la estructura PDF oficial de Panini. Discrimina con altísima precisión entre estampas pegadas y espacios vacíos.</p>
                 </div>
 
-                <div class="bg-black/40 border border-wc-neon/30 p-4 rounded-xl flex items-start gap-3">
-                    <i class="fa-solid fa-lightbulb text-wc-neon mt-1"></i>
-                    <div class="text-xs text-slate-300 space-y-1">
-                        <strong class="text-white block">Tips para escaneo perfecto:</strong>
-                        <p>1. Evita el flash en las estampas brillantes (Shiny) o Coca-Cola para no generar destellos blancos.</p>
-                        <p>2. Mantén la cámara paralela a la página y enfoca los números de las esquinas.</p>
+                <div class="bg-gradient-to-r from-wc-dark to-black border border-wc-neon/30 p-5 rounded-xl">
+                    <div class="flex items-start gap-3">
+                        <i class="fa-solid fa-bullseye text-wc-neon text-xl mt-0.5"></i>
+                        <div class="text-xs text-slate-300 space-y-2">
+                            <strong class="text-white text-sm block">Instrucciones para Precisión Máxima (100%):</strong>
+                            <p>1. <span class="text-wc-neon font-bold">Enfoque Total:</span> Captura la página entera. Asegúrate de que el nombre del país en el encabezado sea legible.</p>
+                            <p>2. <span class="text-wc-magenta font-bold">Evita Reflejos:</span> Las estampas pegadas brillan. Tómala con luz natural e inclina un poco el celular si hay focos encima.</p>
+                            <p>3. <span class="text-white font-bold">Deducción de IA:</span> El sistema ignorará los números grandes impresos en el papel blanco y solo registrará donde vea el rostro del jugador o la estampa física sobrepuesta.</p>
+                        </div>
                     </div>
                 </div>
 
                 <div class="space-y-4">
                     <div id="image-dropzone" class="border-2 border-dashed border-slate-600 rounded-2xl p-8 text-center hover:border-wc-magenta transition-colors cursor-pointer relative bg-black/20">
-                        <input type="file" id="camera-file-input" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
+                        <input type="file" id="camera-file-input" accept="image/*" capture="environment" class="absolute inset-0 opacity-0 cursor-pointer">
                         <div class="space-y-3 pointer-events-none">
-                            <i class="fa-solid fa-camera text-4xl text-slate-400"></i>
-                            <div class="text-sm font-bold text-white">Capturar Página o Subir Foto</div>
+                            <i class="fa-solid fa-camera-viewfinder text-5xl text-slate-400"></i>
+                            <div class="text-sm font-bold text-white">Activar Cámara o Subir Foto</div>
                         </div>
                     </div>
 
@@ -281,7 +269,7 @@
                                 Descartar
                             </button>
                             <button onclick="processImageWithAI()" id="btn-process-scan" class="flex-1 py-3 bg-gradient-to-r from-wc-magenta to-wc-purple text-white text-sm font-black rounded-xl shadow-lg hover:shadow-wc-magenta/50 transition-all">
-                                <i class="fa-solid fa-bolt mr-2"></i> Analizar IA
+                                <i class="fa-solid fa-brain mr-2"></i> Analizar Estampas Pegadas
                             </button>
                         </div>
                     </div>
@@ -289,14 +277,14 @@
 
                 <div id="scanner-loading" class="hidden text-center py-8 space-y-4">
                     <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-wc-neon border-t-transparent shadow-[0_0_10px_rgba(0,255,67,0.5)]"></div>
-                    <p class="text-sm font-bold text-wc-neon animate-pulse">Gemini procesando página...</p>
+                    <p class="text-sm font-bold text-wc-neon animate-pulse">Inferencia espacial en progreso...</p>
                 </div>
 
                 <div id="scanner-results" class="hidden space-y-4 bg-wc-neon/10 p-5 rounded-2xl border border-wc-neon/30">
-                    <h4 class="text-sm font-black text-wc-neon uppercase">Estampas Encontradas:</h4>
+                    <h4 class="text-sm font-black text-wc-neon uppercase">Estampas Pegadas Detectadas:</h4>
                     <div id="scanner-detected-list" class="flex flex-wrap gap-2 py-2"></div>
                     <button onclick="acceptScannedStickers()" class="w-full py-3 bg-wc-neon text-black text-sm font-black rounded-xl hover:bg-green-400 transition-colors shadow-lg">
-                        <i class="fa-solid fa-check mr-2"></i> Agregar a Colección
+                        <i class="fa-solid fa-check-double mr-2"></i> Registrar en mi Álbum
                     </button>
                 </div>
             </div>
@@ -305,10 +293,8 @@
         <!-- PESTAÑA 3: INTERCAMBIOS -->
         <section id="tab-trades" class="hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Tu Perfil -->
                 <div class="bg-wc-panel p-6 rounded-2xl border border-white/10 space-y-5 h-fit">
                     <h3 class="text-lg font-black text-white uppercase border-b border-white/10 pb-3">Tu Perfil de Intercambio</h3>
-                    
                     <div class="space-y-4">
                         <div>
                             <label class="text-xs font-bold text-slate-400 block mb-1">Nombre (Público):</label>
@@ -318,14 +304,12 @@
                             <label class="text-xs font-bold text-slate-400 block mb-1">Contacto (WhatsApp / Telegram):</label>
                             <input id="trade-user-contact" type="text" placeholder="Ej. WA: +52 999..." class="w-full px-4 py-2.5 bg-black/50 border border-white/10 rounded-lg text-sm text-white focus:border-wc-magenta focus:outline-none">
                         </div>
-
                         <button onclick="publishToMarketplace()" class="w-full py-3 bg-gradient-to-r from-wc-purple to-wc-magenta text-white text-xs font-black uppercase tracking-wider rounded-xl shadow-lg hover:shadow-wc-magenta/40 transition-all">
                             <i class="fa-solid fa-cloud-arrow-up mr-2"></i> Publicar mis Faltas/Repetidas
                         </button>
                     </div>
                 </div>
 
-                <!-- Lista de Matches -->
                 <div class="lg:col-span-2 bg-wc-panel p-6 rounded-2xl border border-white/10 space-y-5">
                     <div class="flex justify-between items-center border-b border-white/10 pb-3">
                         <h3 class="text-lg font-black text-white uppercase">Matches Inteligentes</h3>
@@ -333,7 +317,6 @@
                             <i class="fa-solid fa-arrows-rotate mr-1"></i> Actualizar
                         </button>
                     </div>
-
                     <div id="marketplace-list-container" class="space-y-3">
                         <div class="text-center py-12 text-slate-500">
                             <i class="fa-solid fa-globe text-4xl mb-3 block opacity-50"></i>
@@ -346,7 +329,7 @@
 
     </main>
 
-    <!-- Modal Confirmar Reinicio -->
+    <!-- Modales -->
     <div id="reset-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-wc-panel rounded-2xl border border-red-500/30 max-w-sm w-full p-6 shadow-2xl text-center space-y-5">
             <div class="w-16 h-16 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center mx-auto text-3xl">
@@ -363,7 +346,6 @@
         </div>
     </div>
 
-    <!-- Modal Intercambio -->
     <div id="trade-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-wc-panel rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 shadow-xl border border-white/10 space-y-5">
             <div class="flex items-center justify-between border-b border-white/10 pb-3">
@@ -376,22 +358,18 @@
                         <span id="modal-trade-contact" class="text-xs text-wc-neon font-bold">Contacto: ---</span>
                     </div>
                 </div>
-                <button onclick="closeTradeModal()" class="text-slate-400 hover:text-white text-xl">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <button onclick="closeTradeModal()" class="text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
             </div>
-
             <div class="grid grid-cols-2 gap-4">
                 <div class="bg-black/50 p-4 rounded-xl border border-wc-neon/30">
-                    <span class="block text-[10px] font-black text-wc-neon uppercase mb-2"><i class="fa-solid fa-arrow-down mr-1"></i> Él te da (Faltas)</span>
+                    <span class="block text-[10px] font-black text-wc-neon uppercase mb-2"><i class="fa-solid fa-arrow-down mr-1"></i> Él te da</span>
                     <div id="modal-he-gives" class="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto hide-scrollbar"></div>
                 </div>
                 <div class="bg-black/50 p-4 rounded-xl border border-wc-magenta/30">
-                    <span class="block text-[10px] font-black text-wc-magenta uppercase mb-2"><i class="fa-solid fa-arrow-up mr-1"></i> Tú le das (Repes)</span>
+                    <span class="block text-[10px] font-black text-wc-magenta uppercase mb-2"><i class="fa-solid fa-arrow-up mr-1"></i> Tú le das</span>
                     <div id="modal-you-give" class="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto hide-scrollbar"></div>
                 </div>
             </div>
-
             <div class="flex justify-end">
                 <button onclick="closeTradeModal()" class="px-6 py-2.5 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg">Cerrar</button>
             </div>
@@ -415,13 +393,10 @@
     </div>
 
     <script>
-        // DATOS DEL ÁLBUM PANINI 2026 (Secciones Especiales + 48 Selecciones)
+        // DATOS DEL ÁLBUM PANINI 2026 (747 Estampas Totales)
         const SECTIONS = {
-            // SECCIONES ESPECIALES (Mencionadas en el PDF oficial)
             'FWC': { title: 'Especiales FWC', count: 12, flag: 'un', specialType: 'fwc' }, 
             'MYP': { title: 'MyPanini™', count: 1, flag: 'un', specialType: 'mypanini' }, 
-            
-            // 48 SELECCIONES (A-L)
             'MEX': { title: 'México', count: 15, flag: 'mx' },
             'CAN': { title: 'Canadá', count: 15, flag: 'ca' },
             'RSA': { title: 'Sudáfrica', count: 15, flag: 'za' },
@@ -470,14 +445,12 @@
             'DEN': { title: 'Dinamarca', count: 15, flag: 'dk' },
             'TUN': { title: 'Túnez', count: 15, flag: 'tn' },
             'CRC': { title: 'Costa Rica', count: 15, flag: 'cr' },
-            
-            // SECCIÓN FINAL (Promocional)
             'CC': { title: 'Coca-Cola #AllTheFeels', count: 14, flag: 'un', specialType: 'coca-cola' }
         };
 
         let state = {
             inventory: {},
-            currentCategory: 'FWC',
+            currentCategory: 'MEX',
             currentFilterStatus: 'all',
             firebase: { db: null, auth: null, userId: null, isConnected: false },
             marketplaceListings: []
@@ -500,37 +473,18 @@
             for (const [prefix, sec] of Object.entries(SECTIONS)) {
                 for (let i = 1; i <= sec.count; i++) {
                     const key = `${prefix}-${i}`;
-                    
                     let type = 'player';
                     let label = `Jugador ${i}`;
                     
-                    // Lógica para asignar tipos de estampas especiales
-                    if (sec.specialType === 'coca-cola') {
-                        type = 'coca-cola';
-                        label = 'Fan Sticker CC';
-                    } else if (sec.specialType === 'mypanini') {
-                        type = 'mypanini';
-                        label = 'Tu Foto Cromo';
-                    } else if (sec.specialType === 'fwc') {
-                        type = 'special';
-                        label = 'Conmemorativa';
-                    } else if (i === 1) { 
-                        type = 'badge'; 
-                        label = 'Escudo Oficial'; 
-                    } else if (i === 2) { 
-                        type = 'team'; 
-                        label = 'Equipo Completo'; 
-                    }
+                    if (sec.specialType === 'coca-cola') { type = 'coca-cola'; label = 'Fan Sticker'; } 
+                    else if (sec.specialType === 'mypanini') { type = 'mypanini'; label = 'Tu Foto'; } 
+                    else if (sec.specialType === 'fwc') { type = 'special'; label = 'Conmemorativa'; } 
+                    else if (i === 1) { type = 'badge'; label = 'Escudo'; } 
+                    else if (i === 2) { type = 'team'; label = 'Equipo'; }
 
                     state.inventory[key] = {
-                        id: key,
-                        prefix: prefix,
-                        num: i,
-                        type: type,
-                        label: label,
-                        owned: false,
-                        duplicates: 0,
-                        // Determinar si lleva efecto visual especial
+                        id: key, prefix: prefix, num: i, type: type, label: label,
+                        owned: false, duplicates: 0,
                         shiny: type === 'badge' || type === 'special' || type === 'mypanini' || type === 'coca-cola',
                         flagCode: sec.flag
                     };
@@ -539,7 +493,7 @@
         }
 
         function loadLocalStorageData() {
-            const saved = localStorage.getItem('panini26_inv_v2');
+            const saved = localStorage.getItem('panini26_inv_v3');
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
@@ -554,7 +508,7 @@
         }
 
         function saveLocalStorageData() {
-            localStorage.setItem('panini26_inv_v2', JSON.stringify(state.inventory));
+            localStorage.setItem('panini26_inv_v3', JSON.stringify(state.inventory));
             updateDashboardMetrics();
             syncWithCloudDebounced();
         }
@@ -573,31 +527,21 @@
                 btn.onclick = () => selectCategory(prefix);
                 
                 let baseClass = "flex-shrink-0 px-4 py-2.5 rounded-lg text-xs font-black uppercase transition-all flex items-center space-x-2 ";
-                
-                // Colorear botón activo según si es especial o normal
                 if (state.currentCategory === prefix) {
-                    if(sec.specialType === 'coca-cola') {
-                        baseClass += "bg-gradient-to-r from-red-600 to-red-800 text-white shadow-lg border border-red-500/50";
-                    } else if(sec.specialType === 'mypanini') {
-                        baseClass += "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg border border-cyan-500/50";
-                    } else if(sec.specialType === 'fwc') {
-                        baseClass += "bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg border border-amber-500/50";
-                    } else {
-                        baseClass += "bg-gradient-to-r from-wc-magenta to-wc-purple text-white shadow-lg border border-wc-magenta/50";
-                    }
+                    if(sec.specialType === 'coca-cola') baseClass += "bg-gradient-to-r from-red-600 to-red-800 text-white border border-red-500/50";
+                    else if(sec.specialType === 'mypanini') baseClass += "bg-gradient-to-r from-cyan-500 to-blue-600 text-white border border-cyan-500/50";
+                    else if(sec.specialType === 'fwc') baseClass += "bg-gradient-to-r from-amber-500 to-orange-600 text-white border border-amber-500/50";
+                    else baseClass += "bg-gradient-to-r from-wc-magenta to-wc-purple text-white border border-wc-magenta/50";
                 } else {
                     baseClass += "bg-black/40 text-slate-400 border border-white/5 hover:bg-white/10 hover:text-white";
                 }
 
                 const flagUrl = sec.flag !== 'un' ? `https://flagcdn.com/20x15/${sec.flag}.png` : '';
-                let flagImg = '';
-                if(flagUrl) flagImg = `<img src="${flagUrl}" class="w-5 h-4 rounded-sm object-cover">`;
-                else if(sec.specialType === 'coca-cola') flagImg = '<i class="fa-solid fa-bottle-water text-wc-coke"></i>';
-                else if(sec.specialType === 'mypanini') flagImg = '<i class="fa-solid fa-camera-retro text-cyan-400"></i>';
-                else flagImg = '<i class="fa-solid fa-trophy text-amber-400"></i>';
+                let flagImg = flagUrl ? `<img src="${flagUrl}" class="w-5 h-4 rounded-sm object-cover">` : 
+                    (sec.specialType === 'coca-cola' ? '<i class="fa-solid fa-bottle-water text-wc-coke"></i>' : 
+                    (sec.specialType === 'mypanini' ? '<i class="fa-solid fa-camera-retro text-cyan-400"></i>' : '<i class="fa-solid fa-trophy text-amber-400"></i>'));
 
                 const check = isComplete ? `<i class="fa-solid fa-circle-check text-wc-neon ml-1"></i>` : '';
-
                 btn.innerHTML = `${flagImg} <span>${prefix} <span class="opacity-70 font-medium text-[10px] ml-1">${ownedCount}/${sec.count}</span></span> ${check}`;
                 btn.className = baseClass;
                 container.appendChild(btn);
@@ -605,26 +549,19 @@
             updateCategoryHeader();
         }
 
-        function selectCategory(prefix) {
-            state.currentCategory = prefix;
-            renderCategorySelector();
-            renderStickersGrid();
-        }
+        function selectCategory(prefix) { state.currentCategory = prefix; renderCategorySelector(); renderStickersGrid(); }
 
         function updateCategoryHeader() {
             const sec = SECTIONS[state.currentCategory];
             document.getElementById('current-category-title').querySelector('span').textContent = `${sec.title} (${state.currentCategory})`;
-            
             const flagEl = document.getElementById('current-category-flag');
             const iconEl = document.getElementById('current-category-icon');
             
             if (sec.flag !== 'un') {
                 flagEl.src = `https://flagcdn.com/40x30/${sec.flag}.png`;
-                flagEl.classList.remove('hidden');
-                iconEl.classList.add('hidden');
+                flagEl.classList.remove('hidden'); iconEl.classList.add('hidden');
             } else {
-                flagEl.classList.add('hidden');
-                iconEl.classList.remove('hidden');
+                flagEl.classList.add('hidden'); iconEl.classList.remove('hidden');
                 if(sec.specialType === 'coca-cola') iconEl.className = "fa-solid fa-bottle-water text-wc-coke text-2xl";
                 else if(sec.specialType === 'mypanini') iconEl.className = "fa-solid fa-camera-retro text-cyan-400 text-2xl";
                 else iconEl.className = "fa-solid fa-trophy text-amber-400 text-2xl";
@@ -643,32 +580,19 @@
                 else if (state.currentFilterStatus === 'missing') matchStatus = !item.owned;
                 else if (state.currentFilterStatus === 'duplicates') matchStatus = item.duplicates > 0;
                 
-                let matchSearch = true;
-                if (searchValue) {
-                    const searchString = `${item.prefix} ${item.num} ${item.prefix}-${item.num}`.toLowerCase();
-                    matchSearch = searchString.includes(searchValue);
-                    return matchSearch && matchStatus; 
-                }
+                if (searchValue) return `${item.prefix} ${item.num} ${item.prefix}-${item.num}`.toLowerCase().includes(searchValue) && matchStatus;
                 return matchCategory && matchStatus;
             });
 
-            if (list.length === 0) {
-                grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500 font-bold">No se encontraron estampas.</div>`;
-                return;
-            }
+            if (list.length === 0) { grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500 font-bold">No se encontraron estampas.</div>`; return; }
 
             list.forEach(item => {
                 const card = document.createElement('div');
-                
-                // Determinar clases CSS según el tipo de estampa especial
                 let typeClass = '';
-                if(item.type === 'coca-cola' && !item.owned) typeClass = 'coca-cola opacity-80';
-                else if(item.type === 'coca-cola' && item.owned) typeClass = 'coca-cola shadow-[0_0_15px_rgba(244,0,9,0.6)]';
-                else if(item.type === 'mypanini' && !item.owned) typeClass = 'mypanini opacity-80';
-                else if(item.type === 'mypanini' && item.owned) typeClass = 'mypanini shadow-[0_0_15px_rgba(0,242,254,0.6)]';
-                else if(item.shiny && !item.owned) typeClass = 'shiny opacity-80';
-                else if(item.shiny && item.owned) typeClass = 'shiny shadow-[0_0_15px_rgba(255,215,0,0.6)]';
-                else if(item.owned) typeClass = 'owned';
+                if(item.type === 'coca-cola') typeClass = item.owned ? 'coca-cola shadow-[0_0_15px_rgba(244,0,9,0.6)]' : 'coca-cola opacity-50 grayscale';
+                else if(item.type === 'mypanini') typeClass = item.owned ? 'mypanini shadow-[0_0_15px_rgba(0,242,254,0.6)]' : 'mypanini opacity-50 grayscale';
+                else if(item.shiny) typeClass = item.owned ? 'shiny shadow-[0_0_15px_rgba(255,215,0,0.6)]' : 'shiny opacity-50 grayscale';
+                else typeClass = item.owned ? 'owned' : '';
 
                 card.className = `sticker-card no-select rounded-xl p-2 aspect-[3/4] flex flex-col items-center justify-between cursor-pointer ${typeClass}`;
                 
@@ -680,11 +604,8 @@
                 card.addEventListener('touchend', () => clearTimeout(pressTimer));
                 card.onclick = () => handleClick(item.id);
 
-                const badgeDup = item.duplicates > 0 
-                    ? `<div class="absolute -top-2 -right-2 bg-white text-black text-[11px] font-black w-6 h-6 rounded-full flex items-center justify-center shadow-lg border-2 border-wc-dark z-10">+${item.duplicates}</div>`
-                    : '';
+                const badgeDup = item.duplicates > 0 ? `<div class="absolute -top-2 -right-2 bg-white text-black text-[11px] font-black w-6 h-6 rounded-full flex items-center justify-center shadow-lg border-2 border-wc-dark z-10">+${item.duplicates}</div>` : '';
 
-                // Asignar Icono de fondo (Watermark)
                 let iconHtml = '';
                 if (item.type === 'coca-cola') iconHtml = '<i class="fa-solid fa-bottle-water text-3xl opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>';
                 else if (item.type === 'mypanini') iconHtml = '<i class="fa-solid fa-camera-retro text-3xl opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>';
@@ -694,8 +615,6 @@
                 else iconHtml = '<i class="fa-solid fa-user text-4xl opacity-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>';
 
                 const flagUrl = item.flagCode !== 'un' ? `https://flagcdn.com/16x12/${item.flagCode}.png` : '';
-                
-                // Color de texto dinámico para legibilidad
                 let numColor = (item.owned && !item.shiny && item.type === 'player') ? 'text-black' : 'text-white';
                 if(item.type === 'badge' || item.type === 'special') numColor = 'text-[#4a2500]';
 
@@ -709,9 +628,7 @@
                     <div class="text-center relative z-10 mt-1">
                         <span class="text-2xl font-black block leading-none ${numColor}">${item.num}</span>
                     </div>
-                    <div class="text-[8px] font-bold text-center w-full uppercase tracking-tighter truncate mt-2 bg-black/20 rounded px-1 relative z-10 ${numColor}">
-                        ${item.label}
-                    </div>
+                    <div class="text-[8px] font-bold text-center w-full uppercase tracking-tighter truncate mt-2 bg-black/20 rounded px-1 relative z-10 ${numColor}">${item.label}</div>
                 `;
                 grid.appendChild(card);
             });
@@ -719,39 +636,25 @@
 
         function handleClick(id) {
             const item = state.inventory[id];
-            if (!item.owned) {
-                item.owned = true;
-                item.duplicates = 0;
-                showToast(`Obtenida: ${id.replace('-', ' ')}`, 'success');
-            } else if (item.owned && item.duplicates === 0) {
-                item.owned = false;
-            } else {
-                item.duplicates--;
-            }
-            saveLocalStorageData();
-            renderCategorySelector();
-            renderStickersGrid();
+            if (!item.owned) { item.owned = true; item.duplicates = 0; showToast(`Obtenida: ${id.replace('-', ' ')}`, 'success'); } 
+            else if (item.owned && item.duplicates === 0) { item.owned = false; } 
+            else { item.duplicates--; }
+            saveLocalStorageData(); renderCategorySelector(); renderStickersGrid();
         }
 
         function handleLongPress(id) {
             const item = state.inventory[id];
-            if (!item.owned) { item.owned = true; item.duplicates = 0; } 
-            else { item.duplicates++; }
+            if (!item.owned) { item.owned = true; item.duplicates = 0; } else { item.duplicates++; }
             showToast(`Repetida añadida: ${id.replace('-', ' ')}`, 'neutral');
-            saveLocalStorageData();
-            renderCategorySelector();
-            renderStickersGrid();
+            saveLocalStorageData(); renderCategorySelector(); renderStickersGrid();
         }
 
         function setFilterStatus(status) {
             state.currentFilterStatus = status;
-            document.querySelectorAll('[id^="filter-status-"]').forEach(btn => {
-                btn.className = "px-4 py-2 text-xs font-bold rounded-lg bg-black/50 text-slate-400 border border-white/5 hover:text-white whitespace-nowrap";
-            });
+            document.querySelectorAll('[id^="filter-status-"]').forEach(btn => { btn.className = "px-4 py-2 text-xs font-bold rounded-lg bg-black/50 text-slate-400 border border-white/5 hover:text-white whitespace-nowrap"; });
             document.getElementById(`filter-status-${status}`).className = "px-4 py-2 text-xs font-bold rounded-lg bg-white/20 text-white whitespace-nowrap border border-white/40";
             renderStickersGrid();
         }
-
         function filterStickers() { renderStickersGrid(); }
 
         function updateDashboardMetrics() {
@@ -766,11 +669,9 @@
             document.getElementById('stats-duplicates').textContent = dups;
             document.getElementById('progress-text-pct').textContent = `${pct}%`;
             document.getElementById('stats-missing-text').textContent = `Faltan ${missing} estampas para el 100%`;
-
             document.getElementById('progress-circle-bar').setAttribute('stroke-dasharray', `${pct}, 100`);
         }
 
-        // --- REINICIO DE ÁLBUM ---
         function confirmReset() { document.getElementById('reset-modal').classList.remove('hidden'); }
         function closeResetModal() { document.getElementById('reset-modal').classList.add('hidden'); }
         function executeReset() {
@@ -779,7 +680,7 @@
             closeResetModal(); showToast('El álbum ha sido reiniciado.', 'success');
         }
 
-        // --- 3. ESCÁNER IA (GEMINI FLASH) ---
+        // --- 3. ULTRA ESCÁNER IA ---
         let currentBase64Image = null;
         let scannedStickers = [];
         const apiKey = ""; 
@@ -814,11 +715,27 @@
             document.getElementById('scanner-loading').classList.remove('hidden');
 
             try {
-                const prompt = `Actúa como un experto escáner OCR del álbum Panini Mundial 2026. Tu tarea es analizar esta imagen y encontrar estampas. 
-                Busca en las esquinas de los recuadros combinaciones de letras (Prefijo del País) y un número. 
-                Ejemplos de prefijos válidos: MEX, CAN, USA, ARG, BRA, FRA, ENG, ESP, GER, JPN, etc.
-                También busca códigos promocionales/especiales: CC (Coca-Cola), FWC (Conmemorativas), MYP (MyPanini).
-                Devuelve ÚNICAMENTE un JSON con un array 'detected' que contenga los códigos encontrados (ej. ["MEX-5", "CC-2", "FWC-10"]). Cero texto adicional.`;
+                // EL PROMPT DEFINITIVO (Spatial Logic & Empty State Discrimination)
+                const prompt = `
+Eres un sistema de visión artificial experto en el Álbum Panini Mundial 2026. 
+Tu tarea es analizar esta foto de una página del álbum y devolver ÚNICAMENTE un JSON con las estampas que ESTÁN PEGADAS.
+
+REGLAS DE INFERENCIA ESPACIAL (Certerza 100%):
+1. DEDUCE LA SECCIÓN: Identifica en la cabecera de la página el país o sección (Ej: "MEXICO" = MEX, "BRAZIL" = BRA, "Coca-Cola" = CC).
+2. DISTINGUE PEGADO VS VACÍO (CRÍTICO): 
+   - ESPACIO VACÍO: Verás el número impreso en el papel blanco del álbum. IGNÓRALO. No lo incluyas en tu respuesta.
+   - ESTAMPA PEGADA: Verás el rostro de un jugador a color, acción, escudos dorados/brillantes, o el logo rojo de Coca-Cola tapando el número de fondo. ESTAS SON LAS QUE DEBES DEVOLVER.
+3. DEDUCE EL NÚMERO DE LA ESTAMPA PEGADA: 
+   - Las páginas siguen un orden lógico del 1 al 15 por país (Arriba izq a Abajo der).
+   - A veces la estampa física tiene un número pequeño en la esquina.
+   - Si no ves el número en la estampa pegada, dedúcelo por su posición en la cuadrícula de la página junto a los espacios vacíos que sí tienen número impreso.
+   
+FORMATO DE SALIDA ESTRICTO:
+Crea el ID combinando el Prefijo deducido y el Número deducido (Ej: "MEX-5", "BRA-10", "CC-1", "FWC-5").
+Devuelve SÓLO un objeto JSON válido con la clave 'detected' que sea un array de strings.
+Ejemplo: {"detected": ["MEX-3", "MEX-5", "MEX-8"]}
+Si la página está totalmente vacía o no hay fotos pegadas, devuelve: {"detected": []}
+¡NO INCLUYAS NADA DE TEXTO FUERA DEL JSON!`;
 
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
                     method: 'POST',
@@ -846,7 +763,7 @@
                 list.innerHTML = '';
 
                 if (scannedStickers.length === 0) {
-                    list.innerHTML = `<span class="text-xs text-wc-magenta font-bold">No se detectaron códigos legibles. Intenta evitar reflejos de luz.</span>`;
+                    list.innerHTML = `<span class="text-xs text-wc-magenta font-bold">No se detectaron estampas PEGADAS. (Se ignoraron los recuadros vacíos).</span>`;
                 } else {
                     scannedStickers.forEach(id => {
                         list.innerHTML += `<span class="px-3 py-1 bg-wc-neon text-black font-black text-xs rounded-lg shadow-sm">${id.replace('-',' ')} <i class="fa-solid fa-check ml-1"></i></span>`;
@@ -854,7 +771,7 @@
                 }
             } catch (err) {
                 console.error("AI Error:", err);
-                showToast("Error analizando imagen. Reintenta.", "danger");
+                showToast("Error en inferencia espacial. Reintenta.", "danger");
                 cancelScan();
             }
         }
@@ -863,11 +780,11 @@
             if (scannedStickers.length === 0) { cancelScan(); return; }
             scannedStickers.forEach(id => { state.inventory[id].owned = true; });
             saveLocalStorageData(); renderCategorySelector(); renderStickersGrid();
-            showToast(`¡Se agregaron ${scannedStickers.length} estampas!`, 'success');
+            showToast(`¡Se agregaron ${scannedStickers.length} estampas de tu foto!`, 'success');
             cancelScan(); switchTab('album');
         }
 
-        // --- 4. FIREBASE & AUTHENTICATION ---
+        // --- 4. FIREBASE & AUTH ---
         async function initFirebaseConnection() {
             if (typeof __firebase_config === 'undefined') return;
             try {
@@ -907,15 +824,15 @@
                         loadUserCloudInventory();
                     }
                 });
-            } catch (err) { console.error("Firebase Init Error:", err); }
+            } catch (err) {}
         }
 
         async function loginWithGoogle() {
             try {
                 const provider = new window.FirebaseSDK.GoogleAuthProvider();
                 await window.FirebaseSDK.signInWithPopup(state.firebase.auth, provider);
-                showToast("Cuenta vinculada con éxito", "success");
-            } catch (err) { showToast("Error al vincular cuenta", "danger"); }
+                showToast("Cuenta vinculada", "success");
+            } catch (err) { showToast("Error al vincular", "danger"); }
         }
 
         async function loadUserCloudInventory() {
@@ -935,10 +852,9 @@
                     }
                     if(changed) {
                         saveLocalStorageData(); renderCategorySelector(); renderStickersGrid();
-                        showToast("Sincronizado desde la nube", "success");
                     }
                 }
-            } catch (e) { console.error(e); }
+            } catch (e) {}
         }
 
         let syncTimeout = null;
@@ -959,7 +875,7 @@
 
         // --- 5. INTERCAMBIOS ---
         async function publishToMarketplace() {
-            if (!state.firebase.isConnected) { showToast("Conectando a la red...", "neutral"); return; }
+            if (!state.firebase.isConnected) { showToast("Conectando...", "neutral"); return; }
             const alias = document.getElementById('trade-user-alias').value.trim() || 'Anónimo';
             const contact = document.getElementById('trade-user-contact').value.trim();
             if (!contact) { showToast("Ingresa un contacto", "danger"); return; }
@@ -991,7 +907,7 @@
             const container = document.getElementById('marketplace-list-container');
             container.innerHTML = '';
             if (state.marketplaceListings.length === 0) {
-                container.innerHTML = `<div class="text-center py-8 text-slate-500">No hay otros coleccionistas activos.</div>`;
+                container.innerHTML = `<div class="text-center py-8 text-slate-500">No hay otros coleccionistas.</div>`;
                 return;
             }
 
@@ -1001,7 +917,6 @@
             state.marketplaceListings.forEach(trade => {
                 const heGivesMe = trade.repeats.filter(id => myMissing.includes(id));
                 const iGiveHim = myRepeats.filter(id => trade.missing.includes(id));
-                
                 if (heGivesMe.length === 0 && iGiveHim.length === 0) return;
 
                 container.innerHTML += `
@@ -1041,7 +956,6 @@
         }
         function closeTradeModal() { document.getElementById('trade-modal').classList.add('hidden'); }
 
-        // --- UTILS ---
         function switchTab(tabId) {
             ['album', 'scanner', 'trades'].forEach(id => {
                 document.getElementById(`tab-${id}`).classList.add('hidden');
@@ -1053,7 +967,6 @@
             });
 
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-            
             const activeWeb = document.getElementById(`nav-btn-${tabId}`);
             if(activeWeb) activeWeb.className = "flex-1 py-3 text-center rounded-lg transition-all bg-wc-purple text-white shadow-lg";
 
@@ -1081,6 +994,3 @@
     </script>
 </body>
 </html>
-
-
-```
