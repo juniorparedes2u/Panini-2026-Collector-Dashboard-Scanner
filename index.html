@@ -332,7 +332,7 @@
     </div>
 
     <script>
-        // DATOS DEL ÁLBUM PANINI 2026 CORREGIDOS (987 Estampas Totales - 48 Equipos Reales)
+        // DATOS DEL ÁLBUM PANINI 2026
         const SECTIONS = {
             'FWC': { title: 'Especiales FWC', count: 12, flag: 'un', specialType: 'fwc' }, 
             'MYP': { title: 'MyPanini™', count: 1, flag: 'un', specialType: 'mypanini' }, 
@@ -388,7 +388,7 @@
             'CC': { title: 'Coca-Cola #AllTheFeels', count: 14, flag: 'un', specialType: 'coca-cola' }
         };
 
-        // Rosters validados y estructurados con 18 jugadores exactos (Slots 3 al 20)
+        // Arrays de 18 jugadores por selección
         const ROSTERS = {
             'MEX': 'Ochoa,Malagón,Montes,Vásquez,J. Sánchez,Arteaga,Gallardo,Romo,E. Álvarez,Chávez,É. Sánchez,Pineda,Alvarado,Antuna,Quiñones,Lozano,Giménez,Martín',
             'ARG': 'D.Martínez,Rulli,Molina,Romero,Otamendi,Li.Martínez,Tagliafico,De Paul,Paredes,Mac Allister,Fernández,Lo Celso,Di María,Messi,Dybala,La.Martínez,J.Álvarez,Garnacho',
@@ -418,13 +418,14 @@
             marketplaceListings: []
         };
 
-        const APP_ID = typeof __app_id !== 'undefined' ? __app_id : 'panini-2026-master-v1';
+        const APP_ID = typeof __app_id !== 'undefined' ? __app_id : 'panini-2026-master-v2';
 
         window.addEventListener('DOMContentLoaded', () => {
             initInventoryData(); loadLocalStorageData(); renderCategorySelector(); renderStickersGrid();
             updateDashboardMetrics(); initFirebaseConnection(); initScannerListeners();
         });
 
+        // NUEVO ORDEN DE ESTAMPAS: 1 Escudo, 2 al 12 Jugadores, 13 Equipo, 14 al 20 Jugadores
         function initInventoryData() {
             for (const [prefix, sec] of Object.entries(SECTIONS)) {
                 for (let i = 1; i <= sec.count; i++) {
@@ -435,8 +436,12 @@
                     else if (sec.specialType === 'mypanini') { type = 'mypanini'; label = 'Tu Foto'; } 
                     else if (sec.specialType === 'fwc') { type = 'special'; label = 'Conmemorativa'; } 
                     else if (i === 1) { type = 'badge'; label = 'Escudo Oficial'; } 
-                    else if (i === 2) { type = 'team'; label = 'Equipo Completo'; }
-                    else { label = getPlayerName(prefix, i - 3); }
+                    else if (i === 13) { type = 'team'; label = 'Foto de Equipo'; }
+                    else { 
+                        // Mapeo lógico: índice de jugador basado en el slot
+                        let playerIndex = i < 13 ? i - 2 : i - 3;
+                        label = getPlayerName(prefix, playerIndex); 
+                    }
 
                     state.inventory[key] = {
                         id: key, prefix: prefix, num: i, type: type, label: label,
@@ -449,7 +454,7 @@
         }
 
         function loadLocalStorageData() {
-            const saved = localStorage.getItem('panini26_master');
+            const saved = localStorage.getItem('panini26_master_v2');
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
@@ -464,7 +469,7 @@
         }
 
         function saveLocalStorageData() {
-            localStorage.setItem('panini26_master', JSON.stringify(state.inventory));
+            localStorage.setItem('panini26_master_v2', JSON.stringify(state.inventory));
             updateDashboardMetrics(); syncWithCloudDebounced();
         }
 
@@ -535,7 +540,6 @@
 
                 card.className = `sticker-card no-select rounded-xl p-2 aspect-[3/4.2] flex flex-col items-center justify-between cursor-pointer ${typeClass}`;
                 
-                // LÓGICA TOUCH ROBUSTA: Cancela si el dedo se mueve (hace scroll) o si se levanta antes de 2 segs.
                 let pressTimer;
                 let isDragging = false;
                 let startX = 0; let startY = 0;
@@ -691,7 +695,7 @@
         }
 
         // --- 3. ULTRA ESCÁNER IA MASIVO (LOTE) ---
-        let currentFilesBase64 = []; 
+        let currentFilesData = []; 
         let scannedStickers = []; 
         const apiKey = ""; 
 
@@ -699,20 +703,23 @@
             const input = document.getElementById('camera-file-input');
             input.addEventListener('change', (e) => {
                 if (e.target.files && e.target.files.length > 0) {
-                    currentFilesBase64 = [];
+                    currentFilesData = [];
                     const files = Array.from(e.target.files);
                     let loaded = 0;
 
                     files.forEach(file => {
                         const reader = new FileReader();
                         reader.onload = (event) => {
-                            currentFilesBase64.push(event.target.result.split(',')[1]);
+                            // Guardamos tanto el mimeType real (soporta HEIC nativo) como el base64
+                            currentFilesData.push({
+                                mimeType: file.type || "image/jpeg",
+                                data: event.target.result.split(',')[1]
+                            });
                             loaded++;
                             if(loaded === files.length) {
                                 // Mostrar la primera foto como preview
-                                document.getElementById('scanner-img-preview').src = 'data:image/jpeg;base64,' + currentFilesBase64[0];
+                                document.getElementById('scanner-img-preview').src = 'data:' + currentFilesData[0].mimeType + ';base64,' + currentFilesData[0].data;
                                 
-                                // Mostrar badge si hay múltiples
                                 const badge = document.getElementById('scanner-img-count');
                                 if(files.length > 1) {
                                     badge.textContent = `+${files.length - 1} Fotos`;
@@ -732,7 +739,7 @@
         }
 
         function cancelScan() {
-            currentFilesBase64 = []; scannedStickers = [];
+            currentFilesData = []; scannedStickers = [];
             document.getElementById('image-dropzone').classList.remove('hidden'); 
             document.getElementById('scanner-preview-container').classList.add('hidden'); 
             document.getElementById('scanner-results').classList.add('hidden'); 
@@ -740,40 +747,61 @@
         }
 
         async function processImageWithAI() {
-            if (currentFilesBase64.length === 0) return;
+            if (currentFilesData.length === 0) return;
             document.getElementById('scanner-preview-container').classList.add('hidden'); 
             document.getElementById('scanner-loading').classList.remove('hidden');
 
             try {
+                // Prompt simplificado y más estricto
                 const promptText = `
-Eres un sistema de visión artificial experto en el Álbum Panini Mundial 2026. 
-Analiza TODAS las imágenes adjuntas del álbum y devuelve ÚNICAMENTE un JSON con las estampas que ESTÁN PEGADAS.
+Eres un asistente experto en visión artificial para el Álbum Panini Mundial 2026.
+Tu tarea es identificar qué espacios del álbum ya tienen una estampa pegada y cuáles están vacíos.
+Los espacios vacíos son blancos con un número impreso muy grande en el centro.
+Los espacios con estampa pegada muestran el rostro de un jugador, una foto de equipo o un escudo que tapa el fondo blanco.
 
-REGLAS:
-1. DEDUCE LA SECCIÓN: Identifica en la cabecera el país (Ej: MEX, BRA, NZL). Las páginas tienen 20 espacios (1 al 20).
-2. DISTINGUE PEGADO VS VACÍO: Ignora los números grandes impresos en los fondos blancos vacíos. Solo cuenta rostros, fotos o escudos tapando los números.
-3. DEDUCE EL NÚMERO: Si no ves el número en la estampa física, dedúcelo por su posición en la página.
-   
-Crea el ID combinando Prefijo y Número (Ej: "MEX-18", "NZL-5", "CC-14").
-Agrupa los hallazgos de TODAS las imágenes en un solo array.
-Devuelve SÓLO un JSON válido: {"detected": ["MEX-3", "MEX-5", "BRA-2", "NZL-10"]}`;
+Identifica el prefijo del país (ej. MEX para México, ARG para Argentina) mirando el encabezado de la página.
+Agrupa los hallazgos de TODAS las imágenes adjuntas.
+Devuelve los identificadores exactos de las estampas PEGADAS combinando Prefijo y Número (ej. MEX-1, MEX-14, ARG-3). NO incluyas espacios vacíos.`;
 
-                // Construir el payload con todas las imágenes
                 const promptParts = [{ text: promptText }];
-                currentFilesBase64.forEach(b64 => {
-                    promptParts.push({ inlineData: { mimeType: "image/jpeg", data: b64 } });
+                currentFilesData.forEach(fileObj => {
+                    promptParts.push({ inlineData: fileObj });
                 });
+
+                // Uso forzado de JSON Schema para evitar que la IA alucine texto extra
+                const payload = {
+                    contents: [{ role: "user", parts: promptParts }],
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                detected: {
+                                    type: "ARRAY",
+                                    items: { type: "STRING" }
+                                }
+                            }
+                        }
+                    }
+                };
 
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ role: "user", parts: promptParts }] })
+                    body: JSON.stringify(payload)
                 });
 
                 const result = await response.json(); 
-                const jsonStr = (result.candidates?.[0]?.content?.parts?.[0]?.text || "{}").replace(/```json/g, '').replace(/```/g, '').trim();
-                const parsed = JSON.parse(jsonStr);
+                
+                // Con JSON schema, siempre devolverá un JSON limpio y válido
+                let parsed = { detected: [] };
+                try {
+                    const rawText = result.candidates[0].content.parts[0].text;
+                    parsed = JSON.parse(rawText);
+                } catch (e) {
+                    console.error("Error procesando JSON de Gemini:", e);
+                }
 
-                // Filtrar solo IDs válidos y eliminar duplicados en la lectura
+                // Filtrar solo IDs que existan en el inventario real de la app
                 const validScanned = (parsed.detected && Array.isArray(parsed.detected)) ? parsed.detected.filter(id => state.inventory[id]) : [];
                 scannedStickers = [...new Set(validScanned)];
                 
@@ -782,11 +810,15 @@ Devuelve SÓLO un JSON válido: {"detected": ["MEX-3", "MEX-5", "BRA-2", "NZL-10
                 const list = document.getElementById('scanner-detected-list'); list.innerHTML = '';
 
                 if (scannedStickers.length === 0) { 
-                    list.innerHTML = `<span class="text-xs text-wc-magenta font-bold">No se detectaron estampas PEGADAS. (Se ignoraron vacíos).</span>`;
+                    list.innerHTML = `<span class="text-xs text-wc-magenta font-bold">No detecté ninguna estampa PEGADA en estas fotos.</span>`;
                 } else { 
                     scannedStickers.forEach(id => { list.innerHTML += `<span class="px-3 py-1 bg-wc-neon text-black font-black text-xs rounded-lg shadow-sm">${id.replace('-',' ')} <i class="fa-solid fa-check ml-1"></i></span>`; }); 
                 }
-            } catch (err) { showToast("Error en inferencia espacial. Reintenta.", "danger"); cancelScan(); }
+            } catch (err) { 
+                console.error("AI Error:", err);
+                showToast("Error en inferencia espacial. Reintenta.", "danger"); 
+                cancelScan(); 
+            }
         }
 
         function acceptScannedStickers() {
