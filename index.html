@@ -224,11 +224,16 @@
             <div class="bg-wc-gray p-5 rounded-3xl shadow-lg border border-white/10 space-y-5">
                 <div class="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
                     <!-- Buscador -->
-                    <div class="relative w-full sm:w-80">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </span>
-                        <input oninput="filterStickers()" id="sticker-search" type="text" placeholder="Buscar estampa (Ej. MEX 7, ARG)..." class="w-full pl-10 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-wc-magenta focus:ring-1 focus:ring-wc-magenta transition-colors">
+                    <div class="relative w-full sm:w-80 flex gap-2">
+                        <div class="relative flex-1">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </span>
+                            <input oninput="filterStickers()" id="sticker-search" type="text" placeholder="Buscar estampa (Ej. MEX 7, ARG)..." class="w-full pl-10 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-wc-magenta focus:ring-1 focus:ring-wc-magenta transition-colors">
+                        </div>
+                        <button onclick="promptResetInventory()" class="px-4 py-3 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 rounded-xl text-sm font-bold transition-colors shadow-sm" title="Reiniciar Álbum">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
                     </div>
                     <!-- Filtros Rápidos -->
                     <div class="flex flex-wrap gap-2 w-full sm:w-auto bg-black/50 p-1 rounded-xl border border-white/5">
@@ -266,6 +271,16 @@
                     </div>
                     <h2 class="text-2xl font-black text-white">Reconocimiento Óptico Gemini IA</h2>
                     <p class="text-sm text-slate-400">Captura la página de tu álbum o un bloque de estampas. La inteligencia artificial integrada detectará automáticamente los códigos y los añadirá a tu inventario. <span class="text-wc-cyan font-bold">100% Gratis y Automático.</span></p>
+                </div>
+
+                <!-- Consejos de Escaneo -->
+                <div class="bg-black/40 p-4 rounded-2xl border border-white/5 text-xs text-slate-300">
+                    <h4 class="font-bold text-white mb-2 flex items-center"><i class="fa-solid fa-lightbulb text-amber-400 mr-2 text-base"></i> Consejos para un escaneo 100% preciso:</h4>
+                    <ul class="list-disc pl-5 space-y-1.5 opacity-80">
+                        <li>Asegúrate de tener <strong>buena iluminación</strong> y evita reflejos del flash sobre las estampas brillantes.</li>
+                        <li>Trata de que los <strong>números y países (esquinas)</strong> sean legibles en la foto.</li>
+                        <li>Toma la foto a la página completa del álbum o junta tus repetidas en una mesa.</li>
+                    </ul>
                 </div>
 
                 <!-- Zona de Carga/Captura de Imagen -->
@@ -444,6 +459,21 @@
         </div>
     </div>
 
+    <!-- Modal de Confirmación de Reinicio -->
+    <div id="confirm-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-wc-gray border border-white/10 rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 text-center transform transition-all">
+            <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-2">
+                <i class="fa-solid fa-triangle-exclamation text-3xl text-wc-magenta animate-pulse"></i>
+            </div>
+            <h3 class="text-xl font-black text-white" id="confirm-title">¿Borrar todo el Álbum?</h3>
+            <p class="text-sm text-slate-400" id="confirm-text">Se perderán todas tus estampas obtenidas y repetidas. Esta acción no se puede deshacer.</p>
+            <div class="flex space-x-3 mt-6">
+                <button onclick="closeConfirmModal()" class="flex-1 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-bold transition-colors">Cancelar</button>
+                <button id="confirm-action-btn" class="flex-1 py-3 bg-wc-magenta hover:bg-red-600 text-white rounded-xl font-bold shadow-[0_0_15px_rgba(230,0,76,0.4)] transition-all">Sí, Reiniciar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Lógica de la Aplicación -->
     <script>
         // CONFIGURACIÓN OFICIAL: 48 Selecciones + FWC (Especiales) + VEN (Sedes)
@@ -546,10 +576,18 @@
                     // Lógica para determinar si es shiny (Ej: escudos, campeones, logos)
                     const isShiny = prefix === 'FWC' || prefix === 'VEN' || i === 1 || i === 20;
                     
+                    // Asignación de Nombres Simulados/Oficiales
+                    let stickerName = `Jugador ${i}`;
+                    if (prefix === 'FWC') stickerName = `Especial ${i}`;
+                    else if (prefix === 'VEN' || (prefix === 'VEN_T' && i > 15)) stickerName = `Sede ${i}`;
+                    else if (i === 1) stickerName = "Escudo Oficial";
+                    else if (i === 2) stickerName = "Formación / Equipo";
+                    
                     state.inventory[key] = {
                         id: key,
                         prefix: prefix,
                         num: i,
+                        name: stickerName,
                         owned: false,
                         duplicates: 0,
                         shiny: isShiny
@@ -662,23 +700,34 @@
 
                 const dispPrefix = item.prefix === 'VEN_T' ? 'VEN' : item.prefix;
                 const badgeDup = item.duplicates > 0 
-                    ? `<div class="absolute -top-2 -right-2 bg-amber-500 text-black text-[11px] font-black w-6 h-6 rounded-full flex items-center justify-center shadow-lg border border-amber-200 animate-bounce">+${item.duplicates}</div>` : '';
+                    ? `<div class="absolute -top-2 -right-2 bg-amber-500 text-black text-[11px] font-black w-6 h-6 rounded-full flex items-center justify-center shadow-lg border border-amber-200 animate-bounce z-10">+${item.duplicates}</div>` : '';
 
-                const iconColor = item.shiny ? 'text-amber-400' : 'text-slate-600';
-                const icon = `<i class="fa-solid ${item.shiny ? 'fa-star' : 'fa-shirt'} ${iconColor} text-[10px]"></i>`;
+                const isShield = item.num === 1;
+                const topIconColor = item.shiny ? 'text-amber-400' : 'text-slate-600';
+                const topIcon = `<i class="fa-solid ${item.shiny ? 'fa-star' : 'fa-shirt'} ${topIconColor} text-[10px]"></i>`;
+                
+                // Icono central (Silueta o Escudo)
+                const centerIconClass = isShield ? 'fa-shield-halved' : (item.prefix === 'FWC' ? 'fa-trophy' : (item.prefix === 'VEN' ? 'fa-building' : 'fa-user'));
+                const centerIconColor = item.owned ? (item.shiny ? 'text-amber-300' : 'text-white') : 'text-slate-600';
 
                 card.innerHTML = `
-                    <div class="relative w-full h-full flex flex-col justify-between p-0.5">
+                    <div class="relative w-full h-full flex flex-col justify-between p-1">
                         ${badgeDup}
-                        <div class="flex justify-between items-center w-full">
+                        <div class="flex justify-between items-center w-full z-10">
                             <span class="text-[9px] font-black tracking-widest ${item.owned ? 'text-slate-300' : 'text-slate-500'}">${dispPrefix}</span>
-                            ${icon}
+                            ${topIcon}
                         </div>
-                        <div class="text-center py-2">
-                            <span class="text-2xl font-black tracking-tighter ${item.owned && item.shiny ? 'text-wc-purple' : (item.owned ? 'text-white' : 'text-slate-500')}">${item.num}</span>
+                        
+                        <div class="flex-1 flex flex-col items-center justify-center py-1 relative z-0">
+                            <i class="fa-solid ${centerIconClass} text-3xl mb-1 opacity-40 ${centerIconColor}"></i>
+                            <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-3xl font-black tracking-tighter mix-blend-overlay ${item.owned && item.shiny ? 'text-wc-purple' : (item.owned ? 'text-white' : 'text-slate-500')} opacity-90">${item.num}</span>
                         </div>
-                        <div class="text-[8px] text-center font-bold uppercase tracking-widest ${item.owned ? (item.shiny ? 'text-wc-purple' : 'text-wc-green') : 'text-slate-600'}">
-                            ${item.owned ? 'Tengo' : 'Falta'}
+                        
+                        <div class="text-center z-10">
+                            <span class="block text-[8px] font-bold truncate px-1 mb-1 ${item.owned ? 'text-slate-200' : 'text-slate-600'}">${item.name}</span>
+                            <div class="text-[8px] text-center font-bold uppercase tracking-widest ${item.owned ? (item.shiny ? 'text-wc-purple' : 'text-wc-green') : 'text-slate-600'} bg-black/40 rounded-full py-0.5 w-full">
+                                ${item.owned ? 'Tengo' : 'Falta'}
+                            </div>
                         </div>
                     </div>
                 `;
@@ -754,6 +803,25 @@
             document.getElementById('progress-circle-bar').setAttribute('stroke-dasharray', strokeDash);
         }
 
+        function promptResetInventory() {
+            document.getElementById('confirm-modal').classList.remove('hidden');
+            document.getElementById('confirm-action-btn').onclick = () => {
+                for (let key in state.inventory) {
+                    state.inventory[key].owned = false;
+                    state.inventory[key].duplicates = 0;
+                }
+                saveLocalStorageData();
+                renderCategorySelector();
+                renderStickersGrid();
+                showToast("Álbum reiniciado correctamente", "success");
+                closeConfirmModal();
+            };
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal').classList.add('hidden');
+        }
+
         let currentBase64Image = null;
         let scannedDetectedStickers = [];
 
@@ -811,7 +879,17 @@
             const apiKey = ""; 
             
             try {
-                const promptText = "Analiza esta foto de estampas de fútbol de Panini. Identifica las estampas presentes. Devuelve los resultados en formato JSON estructurado con el campo 'detected' conteniendo un array de códigos identificados (con formato 'CAT-NUM' por ejemplo 'MEX-5' o 'ARG-2'). Devuelve EXCLUSIVAMENTE el JSON, sin marcas markdown.";
+                const promptText = `Eres un sistema avanzado de Visión Artificial especializado en leer el álbum y las estampas oficiales de Panini del Mundial de Fútbol. 
+Analiza esta imagen cuidadosamente. Puede contener una o varias estampas (cromos) pegadas en el álbum o sueltas. Tu objetivo es encontrar la NUMERACIÓN EXACTA de cada estampa. 
+
+REGLAS ESTRICTAS:
+1. Las estampas tienen códigos compuestos por un código de país (3 letras) y un número. Ejemplos: 'MEX 1', 'ARG 12', 'FWC 5', 'ESP 18', 'BRA 2'.
+2. Busca los números en las esquinas inferiores o superiores de los recuadros de las estampas impresas.
+3. INFERENCIA INTELIGENTE: Si logras distinguir claramente la página de un país (ej. México) y ves casillas numeradas con '1', '2', '10', asume los códigos 'MEX-1', 'MEX-2', 'MEX-10'.
+4. El escudo del equipo suele ser el número 1.
+5. Devuelve ÚNICAMENTE un JSON válido con la propiedad 'detected'. Esta propiedad debe ser un arreglo de strings con el formato normalizado 'PREFIJO-NUMERO' (ej. 'MEX-1', 'USA-15').
+6. Maximiza la detección. Ignora cualquier otro texto, nombres de jugadores o descripciones. Solo quiero los códigos.
+7. Devuelve EXCLUSIVAMENTE el JSON, sin formato markdown ni texto adicional.`;
                 
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`, {
                     method: 'POST',
