@@ -67,6 +67,23 @@
         ::-webkit-scrollbar-track { background: #0f0f13; }
         ::-webkit-scrollbar-thumb { background: #4f14a0; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #e40046; }
+
+        /* Estilo para las fotos de jugadores */
+        .player-photo {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85%;
+            height: 70%;
+            object-fit: cover;
+            opacity: 0.15;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .sticker-card.owned .player-photo {
+            opacity: 1; /* Al tenerla, se ve a todo color */
+        }
     </style>
 </head>
 <body class="min-h-screen pb-24 md:pb-6">
@@ -79,7 +96,7 @@
                 </div>
                 <div>
                     <h1 class="text-xl font-black text-white leading-none tracking-tighter">ÁLBUM OFICIAL</h1>
-                    <span class="text-[10px] text-wc-neon font-bold uppercase tracking-widest">Modo Experto Completo</span>
+                    <span class="text-[10px] text-wc-neon font-bold uppercase tracking-widest">Modo Experto (987 Estampas)</span>
                 </div>
             </div>
             
@@ -117,7 +134,7 @@
                     </div>
                     <div>
                         <h2 class="text-2xl font-black text-white uppercase tracking-tight">Tu Progreso</h2>
-                        <p class="text-sm text-wc-neon font-medium" id="stats-missing-text">Te faltan 1083 estampas</p>
+                        <p class="text-sm text-wc-neon font-medium" id="stats-missing-text">Te faltan 987 estampas</p>
                     </div>
                 </div>
 
@@ -128,7 +145,7 @@
                     </div>
                     <div class="bg-black/50 rounded-xl p-3 text-center border border-white/5">
                         <span class="block text-[10px] font-bold text-slate-400 uppercase">Faltan</span>
-                        <span id="stats-missing" class="text-xl font-black text-wc-magenta">1083</span>
+                        <span id="stats-missing" class="text-xl font-black text-wc-magenta">987</span>
                     </div>
                     <div class="bg-black/50 rounded-xl p-3 text-center border border-white/5 relative">
                         <span class="block text-[10px] font-bold text-slate-400 uppercase">Repetidas</span>
@@ -137,9 +154,9 @@
                 </div>
             </div>
 
-            <!-- TUS LOGROS (NUEVO MÓDULO PDF Pág 62) -->
+            <!-- TUS LOGROS (PDF Pág 62) -->
             <div class="mt-5 pt-4 border-t border-white/10">
-                <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3"><i class="fa-solid fa-medal mr-1"></i> Tus Logros (Pág. 62)</h3>
+                <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3"><i class="fa-solid fa-medal mr-1"></i> Tus Logros</h3>
                 <div class="flex overflow-x-auto space-x-3 pb-2 hide-scrollbar" id="achievements-container">
                     <!-- Dinámico -->
                 </div>
@@ -198,15 +215,15 @@
             </div>
         </section>
 
-        <!-- PESTAÑA 2: ESCÁNER IA 100% -->
+        <!-- PESTAÑA 2: ESCÁNER IA -->
         <section id="tab-scanner" class="hidden">
             <div class="bg-wc-panel rounded-2xl border border-white/10 p-6 max-w-2xl mx-auto space-y-6">
                 <div class="text-center space-y-3">
                     <div class="w-16 h-16 rounded-full bg-gradient-to-br from-wc-magenta to-wc-purple flex items-center justify-center mx-auto text-2xl shadow-[0_0_15px_rgba(228,0,70,0.5)]">
                         <i class="fa-solid fa-microchip text-white"></i>
                     </div>
-                    <h2 class="text-2xl font-black text-white uppercase">Escáner 100% Certeza</h2>
-                    <p class="text-sm text-slate-400">Entrenado con las 1083 estampas oficiales. Detecta nombres, rostros y números ignorando los fondos vacíos del álbum.</p>
+                    <h2 class="text-2xl font-black text-white uppercase">Escáner IA (Modo 20 Slots)</h2>
+                    <p class="text-sm text-slate-400">Entrenado para detectar estampas pegadas discriminando los fondos vacíos del álbum de 20 casillas.</p>
                 </div>
 
                 <div class="space-y-4">
@@ -231,7 +248,7 @@
 
                 <div id="scanner-loading" class="hidden text-center py-8 space-y-4">
                     <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-wc-neon border-t-transparent shadow-[0_0_10px_rgba(0,255,67,0.5)]"></div>
-                    <p class="text-sm font-bold text-wc-neon animate-pulse">Inferencia espacial identificando 22 slots...</p>
+                    <p class="text-sm font-bold text-wc-neon animate-pulse">Analizando slots 1 al 20...</p>
                 </div>
 
                 <div id="scanner-results" class="hidden space-y-4 bg-wc-neon/10 p-5 rounded-2xl border border-wc-neon/30">
@@ -317,79 +334,71 @@
     </div>
 
     <script>
-        // DATOS DEL ÁLBUM PANINI 2026 (1083 Estampas Totales)
-        // Estructura oficial: 48 Equipos x 22 estampas (1 Escudo, 1 Equipo, 20 Jugadores)
-        // Más FWC (12), MyPanini (1), CC (14)
+        // DATOS DEL ÁLBUM PANINI 2026 CORREGIDOS (987 Estampas Totales)
+        // Estructura oficial: 48 Equipos x 20 estampas (1 Escudo, 1 Equipo, 18 Jugadores)
+        // Más FWC (12), MyPanini (1), CC (14) = 960 + 12 + 1 + 14 = 987
         const SECTIONS = {
             'FWC': { title: 'Especiales FWC', count: 12, flag: 'un', specialType: 'fwc' }, 
             'MYP': { title: 'MyPanini™', count: 1, flag: 'un', specialType: 'mypanini' }, 
-            'MEX': { title: 'México', count: 22, flag: 'mx' }, 'CAN': { title: 'Canadá', count: 22, flag: 'ca' },
-            'RSA': { title: 'Sudáfrica', count: 22, flag: 'za' }, 'BIH': { title: 'Bosnia-Herz.', count: 22, flag: 'ba' },
-            'KOR': { title: 'Corea del Sur', count: 22, flag: 'kr' }, 'QAT': { title: 'Qatar', count: 22, flag: 'qa' },
-            'CZE': { title: 'Chequia', count: 22, flag: 'cz' }, 'SUI': { title: 'Suiza', count: 22, flag: 'ch' },
-            'BRA': { title: 'Brasil', count: 22, flag: 'br' }, 'USA': { title: 'Estados Unidos', count: 22, flag: 'us' },
-            'MAR': { title: 'Marruecos', count: 22, flag: 'ma' }, 'PAR': { title: 'Paraguay', count: 22, flag: 'py' },
-            'HAI': { title: 'Haití', count: 22, flag: 'ht' }, 'AUS': { title: 'Australia', count: 22, flag: 'au' },
-            'SCO': { title: 'Escocia', count: 22, flag: 'gb-sct' }, 'TUR': { title: 'Turquía', count: 22, flag: 'tr' },
-            'GER': { title: 'Alemania', count: 22, flag: 'de' }, 'NED': { title: 'Países Bajos', count: 22, flag: 'nl' },
-            'CUW': { title: 'Curazao', count: 22, flag: 'cw' }, 'CIV': { title: 'Costa de Marfil', count: 22, flag: 'ci' },
-            'JPN': { title: 'Japón', count: 22, flag: 'jp' }, 'SWE': { title: 'Suecia', count: 22, flag: 'se' },
-            'ECU': { title: 'Ecuador', count: 22, flag: 'ec' }, 'KSA': { title: 'Arabia Saudita', count: 22, flag: 'sa' },
-            'ARG': { title: 'Argentina', count: 22, flag: 'ar' }, 'ENG': { title: 'Inglaterra', count: 22, flag: 'gb-eng' },
-            'CHI': { title: 'Chile', count: 22, flag: 'cl' }, 'NGA': { title: 'Nigeria', count: 22, flag: 'ng' },
-            'FRA': { title: 'Francia', count: 22, flag: 'fr' }, 'COL': { title: 'Colombia', count: 22, flag: 'co' },
-            'SEN': { title: 'Senegal', count: 22, flag: 'sn' }, 'IRN': { title: 'Irán', count: 22, flag: 'ir' },
-            'ESP': { title: 'España', count: 22, flag: 'es' }, 'URU': { title: 'Uruguay', count: 22, flag: 'uy' },
-            'CMR': { title: 'Camerún', count: 22, flag: 'cm' }, 'SRB': { title: 'Serbia', count: 22, flag: 'rs' },
-            'POR': { title: 'Portugal', count: 22, flag: 'pt' }, 'CRO': { title: 'Croacia', count: 22, flag: 'hr' },
-            'EGY': { title: 'Egipto', count: 22, flag: 'eg' }, 'WAL': { title: 'Gales', count: 22, flag: 'gb-wls' },
-            'ITA': { title: 'Italia', count: 22, flag: 'it' }, 'PER': { title: 'Perú', count: 22, flag: 'pe' },
-            'DZA': { title: 'Argelia', count: 22, flag: 'dz' }, 'POL': { title: 'Polonia', count: 22, flag: 'pl' },
-            'BEL': { title: 'Bélgica', count: 22, flag: 'be' }, 'DEN': { title: 'Dinamarca', count: 22, flag: 'dk' },
-            'TUN': { title: 'Túnez', count: 22, flag: 'tn' }, 'CRC': { title: 'Costa Rica', count: 22, flag: 'cr' },
+            'MEX': { title: 'México', count: 20, flag: 'mx' }, 'CAN': { title: 'Canadá', count: 20, flag: 'ca' },
+            'RSA': { title: 'Sudáfrica', count: 20, flag: 'za' }, 'BIH': { title: 'Bosnia-Herz.', count: 20, flag: 'ba' },
+            'KOR': { title: 'Corea del Sur', count: 20, flag: 'kr' }, 'QAT': { title: 'Qatar', count: 20, flag: 'qa' },
+            'CZE': { title: 'Chequia', count: 20, flag: 'cz' }, 'SUI': { title: 'Suiza', count: 20, flag: 'ch' },
+            'BRA': { title: 'Brasil', count: 20, flag: 'br' }, 'USA': { title: 'Estados Unidos', count: 20, flag: 'us' },
+            'MAR': { title: 'Marruecos', count: 20, flag: 'ma' }, 'PAR': { title: 'Paraguay', count: 20, flag: 'py' },
+            'HAI': { title: 'Haití', count: 20, flag: 'ht' }, 'AUS': { title: 'Australia', count: 20, flag: 'au' },
+            'SCO': { title: 'Escocia', count: 20, flag: 'gb-sct' }, 'TUR': { title: 'Turquía', count: 20, flag: 'tr' },
+            'GER': { title: 'Alemania', count: 20, flag: 'de' }, 'NED': { title: 'Países Bajos', count: 20, flag: 'nl' },
+            'CUW': { title: 'Curazao', count: 20, flag: 'cw' }, 'CIV': { title: 'Costa de Marfil', count: 20, flag: 'ci' },
+            'JPN': { title: 'Japón', count: 20, flag: 'jp' }, 'SWE': { title: 'Suecia', count: 20, flag: 'se' },
+            'ECU': { title: 'Ecuador', count: 20, flag: 'ec' }, 'KSA': { title: 'Arabia Saudita', count: 20, flag: 'sa' },
+            'ARG': { title: 'Argentina', count: 20, flag: 'ar' }, 'ENG': { title: 'Inglaterra', count: 20, flag: 'gb-eng' },
+            'CHI': { title: 'Chile', count: 20, flag: 'cl' }, 'NGA': { title: 'Nigeria', count: 20, flag: 'ng' },
+            'FRA': { title: 'Francia', count: 20, flag: 'fr' }, 'COL': { title: 'Colombia', count: 20, flag: 'co' },
+            'SEN': { title: 'Senegal', count: 20, flag: 'sn' }, 'IRN': { title: 'Irán', count: 20, flag: 'ir' },
+            'ESP': { title: 'España', count: 20, flag: 'es' }, 'URU': { title: 'Uruguay', count: 20, flag: 'uy' },
+            'CMR': { title: 'Camerún', count: 20, flag: 'cm' }, 'SRB': { title: 'Serbia', count: 20, flag: 'rs' },
+            'POR': { title: 'Portugal', count: 20, flag: 'pt' }, 'CRO': { title: 'Croacia', count: 20, flag: 'hr' },
+            'EGY': { title: 'Egipto', count: 20, flag: 'eg' }, 'WAL': { title: 'Gales', count: 20, flag: 'gb-wls' },
+            'ITA': { title: 'Italia', count: 20, flag: 'it' }, 'PER': { title: 'Perú', count: 20, flag: 'pe' },
+            'DZA': { title: 'Argelia', count: 20, flag: 'dz' }, 'POL': { title: 'Polonia', count: 20, flag: 'pl' },
+            'BEL': { title: 'Bélgica', count: 20, flag: 'be' }, 'DEN': { title: 'Dinamarca', count: 20, flag: 'dk' },
+            'TUN': { title: 'Túnez', count: 20, flag: 'tn' }, 'CRC': { title: 'Costa Rica', count: 20, flag: 'cr' },
             'CC': { title: 'Coca-Cola #AllTheFeels', count: 14, flag: 'un', specialType: 'coca-cola' }
         };
 
-        // Generador de Nombres de Jugadores (Top Selecciones reales, otras algorítmicas para mantener tamaño)
+        // Arrays corregidos a exactamente 18 jugadores para cada equipo principal
         const ROSTERS = {
-            'MEX': 'Ochoa,Malagón,Montes,Vasquez,J.Sánchez,Arteaga,Gallardo,Romo,E.Álvarez,Chávez,Pineda,Lozano,Antuna,Quiñones,Giménez,Martín,Vega,Lainez,Huerta,Cortizo',
-            'ARG': 'D.Martínez,Armani,Molina,Montiel,Romero,Otamendi,Li.Martínez,Tagliafico,Acuña,De Paul,Paredes,Mac Allister,Fernández,Lo Celso,Di María,Messi,Dybala,La.Martínez,J.Álvarez,Garnacho',
-            'BRA': 'Alisson,Ederson,Danilo,Marquinhos,Militao,Gabriel,Arana,Casemiro,Guimaraes,Paquetá,Gomes,Luiz,Vinicius Jr,Rodrygo,Raphinha,Martinelli,Endrick,Richarlison,Jesus,Antony',
-            'FRA': 'Maignan,Areola,Pavard,Kounde,Upamecano,Konate,Saliba,T.Hernandez,Tchouameni,Camavinga,Rabiot,Fofana,Griezmann,Mbappe,Dembele,Coman,Thuram,Kolo Muani,Giroud,Barcola',
-            'ENG': 'Pickford,Ramsdale,Walker,Stones,Maguire,Guehi,Trippier,Shaw,Rice,Bellingham,Alexander-Arnold,Gallagher,Foden,Saka,Kane,Watkins,Toney,Palmer,Grealish,Rashford',
-            'ESP': 'Simón,Raya,Carvajal,Navas,Le Normand,Laporte,Nacho,Cucurella,Rodri,Pedri,Ruiz,Merino,Zubimendi,Yamal,Williams,Morata,Olmo,Oyarzabal,Ferran,Joselu',
-            'GER': 'Neuer,Ter Stegen,Kimmich,Rüdiger,Tah,Schlotterbeck,Mittelstädt,Raum,Kroos,Andrich,Gündogan,Gross,Musiala,Wirtz,Sané,Havertz,Füllkrug,Müller,Undav,Beier',
-            'POR': 'Costa,Patricio,Cancelo,Dalot,Dias,Pepe,Inacio,Mendes,Palhinha,Neves,Vitinha,Fernandes,B.Silva,Leao,Felix,Ronaldo,Jota,Ramos,Neto,Conceicao',
-            'USA': 'Turner,Horvath,Dest,Robinson,Richards,Ream,Scally,Carter-Vickers,Adams,McKennie,Musah,Reyna,Cardoso,Pulisic,Weah,Balogun,Pepi,Aaronson,Tillman,Wright'
+            'MEX': 'Ochoa,Montes,Vasquez,Sánchez,Arteaga,Gallardo,Romo,Álvarez,Chávez,Pineda,Lozano,Antuna,Quiñones,Giménez,Martín,Vega,Lainez,Huerta',
+            'ARG': 'D.Martínez,Molina,Romero,Otamendi,Li.Martínez,Tagliafico,De Paul,Paredes,Mac Allister,Fernández,Lo Celso,Di María,Messi,Dybala,La.Martínez,J.Álvarez,Garnacho,Palacios',
+            'BRA': 'Alisson,Danilo,Marquinhos,Militao,Gabriel,Casemiro,Guimaraes,Paquetá,Luiz,Vinicius Jr,Rodrygo,Raphinha,Martinelli,Endrick,Richarlison,Jesus,Antony,Ederson',
+            'FRA': 'Maignan,Pavard,Kounde,Upamecano,Saliba,T.Hernandez,Tchouameni,Camavinga,Rabiot,Griezmann,Mbappe,Dembele,Coman,Thuram,Kolo Muani,Giroud,Barcola,Fofana',
+            'ENG': 'Pickford,Walker,Stones,Maguire,Trippier,Shaw,Rice,Bellingham,Arnold,Gallagher,Foden,Saka,Kane,Watkins,Toney,Palmer,Grealish,Rashford',
+            'ESP': 'Simón,Carvajal,Navas,Le Normand,Laporte,Cucurella,Rodri,Pedri,Ruiz,Merino,Yamal,Williams,Morata,Olmo,Oyarzabal,Ferran,Joselu,Zubimendi',
+            'GER': 'Neuer,Kimmich,Rüdiger,Tah,Schlotterbeck,Mittelstädt,Kroos,Andrich,Gündogan,Musiala,Wirtz,Sané,Havertz,Füllkrug,Müller,Undav,Beier,Ter Stegen',
+            'POR': 'Costa,Cancelo,Dalot,Dias,Pepe,Mendes,Palhinha,Neves,Vitinha,Fernandes,B.Silva,Leao,Felix,Ronaldo,Jota,Ramos,Neto,Conceicao',
+            'USA': 'Turner,Dest,Robinson,Richards,Ream,Scally,Adams,McKennie,Musah,Reyna,Cardoso,Pulisic,Weah,Balogun,Pepi,Aaronson,Tillman,Wright'
         };
 
-        // Función para generar nombres realistas si no están en el top (Ahorro de memoria)
         function getPlayerName(prefix, index) {
             if (ROSTERS[prefix]) {
                 const names = ROSTERS[prefix].split(',');
                 if (names[index]) return names[index];
             }
-            return `Jugador ${index + 1}`; // Fallback genérico para el resto de equipos
+            return `Jugador ${index + 1}`; 
         }
 
         let state = {
-            inventory: {},
-            currentCategory: 'MEX',
-            currentFilterStatus: 'all',
+            inventory: {}, currentCategory: 'MEX', currentFilterStatus: 'all',
             firebase: { db: null, auth: null, userId: null, isConnected: false },
             marketplaceListings: []
         };
 
-        const APP_ID = typeof __app_id !== 'undefined' ? __app_id : 'panini-2026-expert';
+        const APP_ID = typeof __app_id !== 'undefined' ? __app_id : 'panini-2026-expert-v3';
 
         window.addEventListener('DOMContentLoaded', () => {
-            initInventoryData();
-            loadLocalStorageData();
-            renderCategorySelector();
-            renderStickersGrid();
-            updateDashboardMetrics();
-            initFirebaseConnection();
-            initScannerListeners();
+            initInventoryData(); loadLocalStorageData(); renderCategorySelector(); renderStickersGrid();
+            updateDashboardMetrics(); initFirebaseConnection(); initScannerListeners();
         });
 
         // --- 1. DATOS E INVENTARIO ---
@@ -397,18 +406,14 @@
             for (const [prefix, sec] of Object.entries(SECTIONS)) {
                 for (let i = 1; i <= sec.count; i++) {
                     const key = `${prefix}-${i}`;
-                    let type = 'player';
-                    let label = '';
+                    let type = 'player'; let label = '';
                     
                     if (sec.specialType === 'coca-cola') { type = 'coca-cola'; label = 'Fan Sticker'; } 
                     else if (sec.specialType === 'mypanini') { type = 'mypanini'; label = 'Tu Foto'; } 
                     else if (sec.specialType === 'fwc') { type = 'special'; label = 'Conmemorativa'; } 
                     else if (i === 1) { type = 'badge'; label = 'Escudo'; } 
                     else if (i === 2) { type = 'team'; label = 'Equipo'; }
-                    else {
-                        // Jugadores del 3 al 22
-                        label = getPlayerName(prefix, i - 3);
-                    }
+                    else { label = getPlayerName(prefix, i - 3); }
 
                     state.inventory[key] = {
                         id: key, prefix: prefix, num: i, type: type, label: label,
@@ -421,7 +426,7 @@
         }
 
         function loadLocalStorageData() {
-            const saved = localStorage.getItem('panini26_expert');
+            const saved = localStorage.getItem('panini26_exp_v3');
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
@@ -436,23 +441,18 @@
         }
 
         function saveLocalStorageData() {
-            localStorage.setItem('panini26_expert', JSON.stringify(state.inventory));
-            updateDashboardMetrics();
-            syncWithCloudDebounced();
+            localStorage.setItem('panini26_exp_v3', JSON.stringify(state.inventory));
+            updateDashboardMetrics(); syncWithCloudDebounced();
         }
 
         // --- 2. RENDERIZADO VISUAL ---
         function renderCategorySelector() {
-            const container = document.getElementById('category-selector-container');
-            container.innerHTML = '';
+            const container = document.getElementById('category-selector-container'); container.innerHTML = '';
             
             for (const [prefix, sec] of Object.entries(SECTIONS)) {
                 const ownedCount = Object.values(state.inventory).filter(i => i.prefix === prefix && i.owned).length;
                 const isComplete = ownedCount === sec.count;
-                
-                const btn = document.createElement('button');
-                btn.id = `cat-btn-${prefix}`;
-                btn.onclick = () => selectCategory(prefix);
+                const btn = document.createElement('button'); btn.id = `cat-btn-${prefix}`; btn.onclick = () => selectCategory(prefix);
                 
                 let baseClass = "flex-shrink-0 px-4 py-2.5 rounded-lg text-xs font-black uppercase transition-all flex items-center space-x-2 ";
                 if (state.currentCategory === prefix) {
@@ -460,9 +460,7 @@
                     else if(sec.specialType === 'mypanini') baseClass += "bg-gradient-to-r from-cyan-500 to-blue-600 text-white border border-cyan-500/50";
                     else if(sec.specialType === 'fwc') baseClass += "bg-gradient-to-r from-amber-500 to-orange-600 text-white border border-amber-500/50";
                     else baseClass += "bg-gradient-to-r from-wc-magenta to-wc-purple text-white border border-wc-magenta/50";
-                } else {
-                    baseClass += "bg-black/40 text-slate-400 border border-white/5 hover:bg-white/10 hover:text-white";
-                }
+                } else { baseClass += "bg-black/40 text-slate-400 border border-white/5 hover:bg-white/10 hover:text-white"; }
 
                 const flagUrl = sec.flag !== 'un' ? `https://flagcdn.com/20x15/${sec.flag}.png` : '';
                 let flagImg = flagUrl ? `<img src="${flagUrl}" class="w-5 h-4 rounded-sm object-cover">` : 
@@ -471,8 +469,7 @@
 
                 const check = isComplete ? `<i class="fa-solid fa-circle-check text-wc-neon ml-1"></i>` : '';
                 btn.innerHTML = `${flagImg} <span>${prefix} <span class="opacity-70 font-medium text-[10px] ml-1">${ownedCount}/${sec.count}</span></span> ${check}`;
-                btn.className = baseClass;
-                container.appendChild(btn);
+                btn.className = baseClass; container.appendChild(btn);
             }
             updateCategoryHeader();
         }
@@ -482,12 +479,9 @@
         function updateCategoryHeader() {
             const sec = SECTIONS[state.currentCategory];
             document.getElementById('current-category-title').querySelector('span').textContent = `${sec.title} (${state.currentCategory})`;
-            const flagEl = document.getElementById('current-category-flag');
-            const iconEl = document.getElementById('current-category-icon');
+            const flagEl = document.getElementById('current-category-flag'); const iconEl = document.getElementById('current-category-icon');
             
-            if (sec.flag !== 'un') {
-                flagEl.src = `https://flagcdn.com/40x30/${sec.flag}.png`;
-                flagEl.classList.remove('hidden'); iconEl.classList.add('hidden');
+            if (sec.flag !== 'un') { flagEl.src = `https://flagcdn.com/40x30/${sec.flag}.png`; flagEl.classList.remove('hidden'); iconEl.classList.add('hidden');
             } else {
                 flagEl.classList.add('hidden'); iconEl.classList.remove('hidden');
                 if(sec.specialType === 'coca-cola') iconEl.className = "fa-solid fa-bottle-water text-wc-coke text-2xl";
@@ -497,17 +491,12 @@
         }
 
         function renderStickersGrid() {
-            const grid = document.getElementById('stickers-grid');
-            grid.innerHTML = '';
+            const grid = document.getElementById('stickers-grid'); grid.innerHTML = '';
             const searchValue = document.getElementById('sticker-search').value.toLowerCase().trim();
             
             const list = Object.values(state.inventory).filter(item => {
-                const matchCategory = item.prefix === state.currentCategory;
-                let matchStatus = true;
-                if (state.currentFilterStatus === 'owned') matchStatus = item.owned;
-                else if (state.currentFilterStatus === 'missing') matchStatus = !item.owned;
-                else if (state.currentFilterStatus === 'duplicates') matchStatus = item.duplicates > 0;
-                
+                const matchCategory = item.prefix === state.currentCategory; let matchStatus = true;
+                if (state.currentFilterStatus === 'owned') matchStatus = item.owned; else if (state.currentFilterStatus === 'missing') matchStatus = !item.owned; else if (state.currentFilterStatus === 'duplicates') matchStatus = item.duplicates > 0;
                 if (searchValue) return `${item.prefix} ${item.num} ${item.label}`.toLowerCase().includes(searchValue) && matchStatus;
                 return matchCategory && matchStatus;
             });
@@ -520,7 +509,7 @@
                 if(item.type === 'coca-cola') typeClass = item.owned ? 'coca-cola shadow-[0_0_15px_rgba(244,0,9,0.6)]' : 'coca-cola opacity-40 grayscale';
                 else if(item.type === 'mypanini') typeClass = item.owned ? 'mypanini shadow-[0_0_15px_rgba(0,242,254,0.6)]' : 'mypanini opacity-40 grayscale';
                 else if(item.shiny) typeClass = item.owned ? 'shiny shadow-[0_0_15px_rgba(255,215,0,0.6)]' : 'shiny opacity-40 grayscale';
-                else typeClass = item.owned ? 'owned' : '';
+                else typeClass = item.owned ? 'owned bg-white' : '';
 
                 card.className = `sticker-card no-select rounded-xl p-2 aspect-[3/4.2] flex flex-col items-center justify-between cursor-pointer ${typeClass}`;
                 
@@ -532,15 +521,21 @@
                 card.addEventListener('touchend', () => clearTimeout(pressTimer));
                 card.onclick = () => handleClick(item.id);
 
-                const badgeDup = item.duplicates > 0 ? `<div class="absolute -top-2 -right-2 bg-white text-black text-[11px] font-black w-6 h-6 rounded-full flex items-center justify-center shadow-lg border-2 border-wc-dark z-20">+${item.duplicates}</div>` : '';
+                const badgeDup = item.duplicates > 0 ? `<div class="absolute -top-2 -right-2 bg-wc-magenta text-white text-[11px] font-black w-6 h-6 rounded-full flex items-center justify-center shadow-lg border-2 border-wc-dark z-20">+${item.duplicates}</div>` : '';
 
+                // Lógica de "Fotos" autogeneradas (Avatars) en lugar de íconos genéricos
                 let iconHtml = '';
                 if (item.type === 'coca-cola') iconHtml = '<i class="fa-solid fa-bottle-water text-3xl opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>';
                 else if (item.type === 'mypanini') iconHtml = '<i class="fa-solid fa-camera-retro text-3xl opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>';
                 else if (item.type === 'badge') iconHtml = '<i class="fa-solid fa-shield text-3xl opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>';
                 else if (item.type === 'team') iconHtml = '<i class="fa-solid fa-users text-3xl opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>';
                 else if (item.type === 'special') iconHtml = '<i class="fa-solid fa-trophy text-4xl opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>';
-                else iconHtml = '<i class="fa-solid fa-user text-4xl opacity-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>';
+                else {
+                    // Si tienes las fotos subidas a un servidor tuyo, puedes cambiar este src por algo como `https://tuservidor.com/estampas/${item.id}.jpg`
+                    // Por ahora usamos un generador de avatares sofisticado con las iniciales del nombre
+                    const cleanName = item.label.replace('Jugador', 'J');
+                    iconHtml = `<img src="https://ui-avatars.com/api/?name=${cleanName}&background=1a1a24&color=fff&size=150&font-size=0.33" class="player-photo rounded shadow-inner" alt="${item.label}">`;
+                }
 
                 const flagUrl = item.flagCode !== 'un' ? `https://flagcdn.com/16x12/${item.flagCode}.png` : '';
                 let numColor = (item.owned && !item.shiny && item.type === 'player') ? 'text-black' : 'text-white';
@@ -556,7 +551,7 @@
                     <div class="text-center relative z-10 mt-1">
                         <span class="text-3xl font-black block leading-none ${numColor}">${item.num}</span>
                     </div>
-                    <div class="text-[9px] font-bold text-center w-full uppercase tracking-tighter truncate mt-1 bg-black/20 rounded px-1 py-0.5 relative z-10 ${numColor} ${item.owned ? 'shadow-sm' : ''}">${item.label}</div>
+                    <div class="text-[9px] font-bold text-center w-full uppercase tracking-tighter truncate mt-1 bg-black/30 rounded px-1 py-0.5 relative z-10 ${numColor} ${item.owned ? 'shadow-sm' : ''}">${item.label}</div>
                 `;
                 grid.appendChild(card);
             });
@@ -599,27 +594,18 @@
             document.getElementById('stats-missing-text').textContent = `Faltan ${missing} estampas para el 100%`;
             document.getElementById('progress-circle-bar').setAttribute('stroke-dasharray', `${pct}, 100`);
 
-            updateAchievements(); // Llama a la validación de logros
+            updateAchievements(); 
         }
 
-        // --- SISTEMA DE LOGROS (PÁGINA 62) ---
         function updateAchievements() {
-            const container = document.getElementById('achievements-container');
-            container.innerHTML = '';
-
-            const owned = Object.values(state.inventory).filter(i => i.owned).length;
-            const total = Object.keys(state.inventory).length;
-            const pct = owned / total;
-
-            // Calcular selecciones completadas
+            const container = document.getElementById('achievements-container'); container.innerHTML = '';
+            const owned = Object.values(state.inventory).filter(i => i.owned).length; const total = Object.keys(state.inventory).length; const pct = owned / total;
             let completedTeams = 0;
             for (const [prefix, sec] of Object.entries(SECTIONS)) {
-                if (sec.specialType) continue; // Solo cuenta países
+                if (sec.specialType) continue; 
                 const teamOwned = Object.values(state.inventory).filter(i => i.prefix === prefix && i.owned).length;
                 if (teamOwned === sec.count) completedTeams++;
             }
-
-            // Escaneos CC (Simulados con obtener estampas CC)
             const ccOwned = Object.values(state.inventory).filter(i => i.type === 'coca-cola' && i.owned).length;
 
             const achievements = [
@@ -672,79 +658,57 @@
 
         function cancelScan() {
             currentBase64Image = null; scannedStickers = [];
-            document.getElementById('image-dropzone').classList.remove('hidden');
-            document.getElementById('scanner-preview-container').classList.add('hidden');
-            document.getElementById('scanner-results').classList.add('hidden');
-            document.getElementById('camera-file-input').value = '';
+            document.getElementById('image-dropzone').classList.remove('hidden'); document.getElementById('scanner-preview-container').classList.add('hidden'); document.getElementById('scanner-results').classList.add('hidden'); document.getElementById('camera-file-input').value = '';
         }
 
         async function processImageWithAI() {
             if (!currentBase64Image) return;
-            document.getElementById('scanner-preview-container').classList.add('hidden');
-            document.getElementById('scanner-loading').classList.remove('hidden');
+            document.getElementById('scanner-preview-container').classList.add('hidden'); document.getElementById('scanner-loading').classList.remove('hidden');
 
             try {
-                // PROMPT EXPERTO: Entiende la estructura de 22 estampas y discrimina vacíos.
                 const prompt = `
 Eres un sistema de visión artificial experto en el Álbum Panini Mundial 2026. 
 Analiza esta foto de una página del álbum y devuelve ÚNICAMENTE un JSON con las estampas que ESTÁN PEGADAS.
 
 REGLAS DE INFERENCIA ESPACIAL:
-1. DEDUCE LA SECCIÓN: Identifica en la cabecera el país (Ej: MEX, BRA, USA). Ahora las páginas tienen 22 espacios (1 al 22).
+1. DEDUCE LA SECCIÓN: Identifica en la cabecera el país (Ej: MEX, BRA, USA). Ahora las páginas tienen 20 espacios (1 al 20).
 2. DISTINGUE PEGADO VS VACÍO: 
-   - ESPACIO VACÍO: Verás el número grande impreso en el papel blanco del álbum. IGNÓRALO. No lo incluyas en tu respuesta.
-   - ESTAMPA PEGADA: Verás el rostro de un jugador a color, acción, escudos dorados/brillantes, o estampas tapando el número de fondo. ESTAS SON LAS QUE DEBES DEVOLVER.
-3. DEDUCE EL NÚMERO DE LA ESTAMPA PEGADA: 
-   - Si no ves el número pequeño impreso en la estampa física, dedúcelo por su posición en la cuadrícula de la página, guiándote por los espacios vacíos adyacentes.
+   - ESPACIO VACÍO: Verás el número grande impreso en el papel blanco. IGNÓRALO. 
+   - ESTAMPA PEGADA: Verás el rostro de un jugador, escudos brillantes, o estampas tapando el número. SÓLO DEVUELVE ESTAS.
+3. DEDUCE EL NÚMERO: Si no ves el número pequeño impreso en la estampa física, dedúcelo por su posición.
    
-FORMATO ESTRICTO:
-Crea el ID combinando el Prefijo deducido y el Número deducido (Ej: "MEX-18", "BRA-22", "CC-14", "FWC-10").
-Devuelve SÓLO un objeto JSON válido con la clave 'detected' que sea un array de strings.
-Ejemplo: {"detected": ["MEX-3", "MEX-5", "MEX-20"]}
-Si la página está totalmente vacía o no hay fotos pegadas, devuelve: {"detected": []}`;
+Crea el ID combinando el Prefijo y Número (Ej: "MEX-18", "BRA-20", "CC-14").
+Devuelve SÓLO un JSON válido: {"detected": ["MEX-3", "MEX-5"]}`;
 
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }, { inlineData: { mimeType: "image/jpeg", data: currentBase64Image } }] }] })
                 });
 
-                const result = await response.json();
-                const jsonStr = (result.candidates?.[0]?.content?.parts?.[0]?.text || "{}").replace(/```json/g, '').replace(/```/g, '').trim();
+                const result = await response.json(); const jsonStr = (result.candidates?.[0]?.content?.parts?.[0]?.text || "{}").replace(/```json/g, '').replace(/```/g, '').trim();
                 const parsed = JSON.parse(jsonStr);
 
                 scannedStickers = (parsed.detected && Array.isArray(parsed.detected)) ? parsed.detected.filter(id => state.inventory[id]) : [];
-                
-                document.getElementById('scanner-loading').classList.add('hidden');
-                document.getElementById('scanner-results').classList.remove('hidden');
-                const list = document.getElementById('scanner-detected-list');
-                list.innerHTML = '';
+                document.getElementById('scanner-loading').classList.add('hidden'); document.getElementById('scanner-results').classList.remove('hidden');
+                const list = document.getElementById('scanner-detected-list'); list.innerHTML = '';
 
-                if (scannedStickers.length === 0) {
-                    list.innerHTML = `<span class="text-xs text-wc-magenta font-bold">No se detectaron estampas PEGADAS. (Se ignoraron vacíos).</span>`;
-                } else {
-                    scannedStickers.forEach(id => { list.innerHTML += `<span class="px-3 py-1 bg-wc-neon text-black font-black text-xs rounded-lg shadow-sm">${id.replace('-',' ')} <i class="fa-solid fa-check ml-1"></i></span>`; });
-                }
-            } catch (err) {
-                showToast("Error en inferencia espacial. Reintenta.", "danger"); cancelScan();
-            }
+                if (scannedStickers.length === 0) { list.innerHTML = `<span class="text-xs text-wc-magenta font-bold">No se detectaron estampas PEGADAS. (Se ignoraron vacíos).</span>`;
+                } else { scannedStickers.forEach(id => { list.innerHTML += `<span class="px-3 py-1 bg-wc-neon text-black font-black text-xs rounded-lg shadow-sm">${id.replace('-',' ')} <i class="fa-solid fa-check ml-1"></i></span>`; }); }
+            } catch (err) { showToast("Error en inferencia espacial. Reintenta.", "danger"); cancelScan(); }
         }
 
         function acceptScannedStickers() {
             if (scannedStickers.length === 0) { cancelScan(); return; }
             scannedStickers.forEach(id => { state.inventory[id].owned = true; });
             saveLocalStorageData(); renderCategorySelector(); renderStickersGrid();
-            showToast(`¡Se agregaron ${scannedStickers.length} estampas de tu foto!`, 'success');
-            cancelScan(); switchTab('album');
+            showToast(`¡Se agregaron ${scannedStickers.length} estampas!`, 'success'); cancelScan(); switchTab('album');
         }
 
-        // --- 4. FIREBASE & AUTH ---
+        // --- 4. FIREBASE ---
         async function initFirebaseConnection() {
             if (typeof __firebase_config === 'undefined') return;
             try {
-                const config = JSON.parse(__firebase_config);
-                const app = window.FirebaseSDK.initializeApp(config);
-                const auth = window.FirebaseSDK.getAuth(app);
+                const config = JSON.parse(__firebase_config); const app = window.FirebaseSDK.initializeApp(config); const auth = window.FirebaseSDK.getAuth(app);
                 state.firebase = { app, auth, db: window.FirebaseSDK.getFirestore(app), userId: null, isConnected: false };
 
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await window.FirebaseSDK.signInWithCustomToken(auth, __initial_auth_token);
@@ -753,14 +717,10 @@ Si la página está totalmente vacía o no hay fotos pegadas, devuelve: {"detect
                 window.FirebaseSDK.onAuthStateChanged(auth, (user) => {
                     if (user) {
                         state.firebase.userId = user.uid; state.firebase.isConnected = true;
-                        if (user.isAnonymous) {
-                            document.getElementById('btn-google-login').classList.remove('hidden');
-                            document.getElementById('user-profile-badge').classList.add('hidden');
+                        if (user.isAnonymous) { document.getElementById('btn-google-login').classList.remove('hidden'); document.getElementById('user-profile-badge').classList.add('hidden');
                         } else {
-                            document.getElementById('btn-google-login').classList.add('hidden');
-                            document.getElementById('user-profile-badge').classList.remove('hidden');
-                            document.getElementById('user-name').textContent = user.displayName || 'Coleccionista';
-                            document.getElementById('user-avatar').src = user.photoURL || 'https://ui-avatars.com/api/?name=C&background=00ff43&color=000';
+                            document.getElementById('btn-google-login').classList.add('hidden'); document.getElementById('user-profile-badge').classList.remove('hidden');
+                            document.getElementById('user-name').textContent = user.displayName || 'Coleccionista'; document.getElementById('user-avatar').src = user.photoURL || 'https://ui-avatars.com/api/?name=C&background=00ff43&color=000';
                             if(!document.getElementById('trade-user-alias').value) document.getElementById('trade-user-alias').value = user.displayName || '';
                         }
                         loadUserCloudInventory();
@@ -769,12 +729,7 @@ Si la página está totalmente vacía o no hay fotos pegadas, devuelve: {"detect
             } catch (err) {}
         }
 
-        async function loginWithGoogle() {
-            try {
-                await window.FirebaseSDK.signInWithPopup(state.firebase.auth, new window.FirebaseSDK.GoogleAuthProvider());
-                showToast("Cuenta vinculada", "success");
-            } catch (err) { showToast("Error al vincular", "danger"); }
-        }
+        async function loginWithGoogle() { try { await window.FirebaseSDK.signInWithPopup(state.firebase.auth, new window.FirebaseSDK.GoogleAuthProvider()); showToast("Cuenta vinculada", "success"); } catch (err) { showToast("Error al vincular", "danger"); } }
 
         async function loadUserCloudInventory() {
             if (!state.firebase.isConnected) return;
@@ -783,9 +738,7 @@ Si la página está totalmente vacía o no hay fotos pegadas, devuelve: {"detect
                 if (snap.exists()) {
                     const cloudData = snap.data().items || {}; let changed = false;
                     for (const [key, val] of Object.entries(cloudData)) {
-                        if (state.inventory[key] && (!state.inventory[key].owned && val.owned)) {
-                            state.inventory[key].owned = val.owned; state.inventory[key].duplicates = val.duplicates || 0; changed = true;
-                        }
+                        if (state.inventory[key] && (!state.inventory[key].owned && val.owned)) { state.inventory[key].owned = val.owned; state.inventory[key].duplicates = val.duplicates || 0; changed = true; }
                     }
                     if(changed) { saveLocalStorageData(); renderCategorySelector(); renderStickersGrid(); }
                 }
@@ -798,8 +751,7 @@ Si la página está totalmente vacía o no hay fotos pegadas, devuelve: {"detect
             clearTimeout(syncTimeout);
             syncTimeout = setTimeout(async () => {
                 try {
-                    const clean = {};
-                    for (const [k, v] of Object.entries(state.inventory)) { if (v.owned || v.duplicates > 0) clean[k] = { owned: v.owned, duplicates: v.duplicates }; }
+                    const clean = {}; for (const [k, v] of Object.entries(state.inventory)) { if (v.owned || v.duplicates > 0) clean[k] = { owned: v.owned, duplicates: v.duplicates }; }
                     await window.FirebaseSDK.setDoc(window.FirebaseSDK.doc(state.firebase.db, 'artifacts', APP_ID, 'users', state.firebase.userId, 'data', 'inventory'), { items: clean, updated: Date.now() });
                 } catch(e) {}
             }, 3000);
@@ -808,46 +760,31 @@ Si la página está totalmente vacía o no hay fotos pegadas, devuelve: {"detect
         // --- 5. INTERCAMBIOS ---
         async function publishToMarketplace() {
             if (!state.firebase.isConnected) { showToast("Conectando...", "neutral"); return; }
-            const alias = document.getElementById('trade-user-alias').value.trim() || 'Anónimo';
-            const contact = document.getElementById('trade-user-contact').value.trim();
+            const alias = document.getElementById('trade-user-alias').value.trim() || 'Anónimo'; const contact = document.getElementById('trade-user-contact').value.trim();
             if (!contact) { showToast("Ingresa un contacto", "danger"); return; }
-
             try {
-                const missing = Object.values(state.inventory).filter(i => !i.owned).map(i => i.id);
-                const repeats = Object.values(state.inventory).filter(i => i.duplicates > 0).map(i => i.id);
+                const missing = Object.values(state.inventory).filter(i => !i.owned).map(i => i.id); const repeats = Object.values(state.inventory).filter(i => i.duplicates > 0).map(i => i.id);
                 await window.FirebaseSDK.setDoc(window.FirebaseSDK.doc(state.firebase.db, 'artifacts', APP_ID, 'public', 'data', 'trades', state.firebase.userId), { userId: state.firebase.userId, alias, contact, missing, repeats, ts: Date.now() });
-                showToast("¡Publicado en el Marketplace!", "success"); loadMarketplaceListings();
+                showToast("¡Publicado!", "success"); loadMarketplaceListings();
             } catch (e) { showToast("Error al publicar", "danger"); }
         }
-        
-        /* Omitiendo funciones repetitivas de UI de modals de intercambio por espacio, 
-           ya están operativas usando el sistema base previo de la sección de Cambios. */
 
         function switchTab(tabId) {
             ['album', 'scanner', 'trades'].forEach(id => {
-                document.getElementById(`tab-${id}`).classList.add('hidden');
-                document.getElementById(`nav-btn-${id}`).className = "flex-1 py-3 text-center rounded-lg transition-all text-slate-400 hover:text-white hover:bg-white/5";
+                document.getElementById(`tab-${id}`).classList.add('hidden'); document.getElementById(`nav-btn-${id}`).className = "flex-1 py-3 text-center rounded-lg transition-all text-slate-400 hover:text-white hover:bg-white/5";
             });
-            document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
-                btn.classList.replace('text-wc-neon', 'text-slate-500'); btn.querySelector('span').classList.replace('font-black', 'font-bold');
-            });
-
+            document.querySelectorAll('.mobile-nav-btn').forEach(btn => { btn.classList.replace('text-wc-neon', 'text-slate-500'); btn.querySelector('span').classList.replace('font-black', 'font-bold'); });
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-            const activeWeb = document.getElementById(`nav-btn-${tabId}`);
-            if(activeWeb) activeWeb.className = "flex-1 py-3 text-center rounded-lg transition-all bg-wc-purple text-white shadow-lg";
-
-            const mobileBtns = document.querySelectorAll('.mobile-nav-btn');
-            const idx = tabId === 'album' ? 0 : tabId === 'scanner' ? 1 : 2;
+            const activeWeb = document.getElementById(`nav-btn-${tabId}`); if(activeWeb) activeWeb.className = "flex-1 py-3 text-center rounded-lg transition-all bg-wc-purple text-white shadow-lg";
+            const mobileBtns = document.querySelectorAll('.mobile-nav-btn'); const idx = tabId === 'album' ? 0 : tabId === 'scanner' ? 1 : 2;
             if(mobileBtns[idx]) { mobileBtns[idx].classList.replace('text-slate-500', 'text-wc-neon'); mobileBtns[idx].querySelector('span').classList.replace('font-bold', 'font-black'); }
         }
 
         function showToast(msg, type='success') {
             const container = document.getElementById('toast-container'); const toast = document.createElement('div');
             const colors = { success: 'bg-wc-neon text-black', danger: 'bg-red-500 text-white', neutral: 'bg-white text-black' };
-            toast.className = `p-3 rounded-lg shadow-xl font-bold text-xs transform transition-all duration-300 translate-y-2 opacity-0 ${colors[type]}`;
-            toast.textContent = msg; container.appendChild(toast);
-            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
-            setTimeout(() => { toast.classList.add('translate-y-2', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 3000);
+            toast.className = `p-3 rounded-lg shadow-xl font-bold text-xs transform transition-all duration-300 translate-y-2 opacity-0 ${colors[type]}`; toast.textContent = msg; container.appendChild(toast);
+            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10); setTimeout(() => { toast.classList.add('translate-y-2', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 3000);
         }
     </script>
 </body>
