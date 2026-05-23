@@ -172,7 +172,7 @@
             <div class="bg-wc-panel p-4 rounded-xl border border-white/10 flex flex-col md:flex-row gap-4 justify-between items-center">
                 <div class="relative w-full md:w-80">
                     <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
-                    <input oninput="filterStickers()" id="sticker-search" type="text" placeholder="Buscar jugador, país (Ej: MEX 5)..." class="w-full pl-10 pr-4 py-2.5 bg-black/50 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-wc-neon transition-colors">
+                    <input oninput="filterStickers()" id="sticker-search" type="text" placeholder="Buscar estampa, país (Ej: MEX 5)..." class="w-full pl-10 pr-4 py-2.5 bg-black/50 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-wc-neon transition-colors">
                 </div>
                 
                 <div class="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 hide-scrollbar">
@@ -331,14 +331,14 @@
     </div>
 
     <script>
-        // DATOS DEL ÁLBUM PANINI 2026 OFICIALES
+        // DATOS DEL ÁLBUM PANINI 2026 OFICIALES (100% ALINEADOS AL PDF)
         const SECTIONS = {
             'FWC': { title: 'Especiales FWC', count: 12, flag: 'un', specialType: 'fwc' }, 
             'MYP': { title: 'MyPanini™', count: 1, flag: 'un', specialType: 'mypanini' }, 
             
-            // GRUPO A
+            // GRUPO A: Restaurado BIH según PDF
             'MEX': { title: 'México', count: 20, flag: 'mx' }, 'CAN': { title: 'Canadá', count: 20, flag: 'ca' },
-            'RSA': { title: 'Sudáfrica', count: 20, flag: 'za' }, 'NZL': { title: 'Nueva Zelanda', count: 20, flag: 'nz' },
+            'RSA': { title: 'Sudáfrica', count: 20, flag: 'za' }, 'BIH': { title: 'Bosnia-Herzegovina', count: 20, flag: 'ba' },
             
             // GRUPO B
             'KOR': { title: 'Corea del Sur', count: 20, flag: 'kr' }, 'QAT': { title: 'Qatar', count: 20, flag: 'qa' },
@@ -387,60 +387,36 @@
             'CC': { title: 'Coca-Cola #AllTheFeels', count: 14, flag: 'un', specialType: 'coca-cola' }
         };
 
-        // Arrays corregidos y listos (18 jugadores por equipo)
-        const ROSTERS = {
-            'MEX': 'Ochoa,Malagón,Montes,Vásquez,J. Sánchez,Arteaga,Gallardo,Romo,E. Álvarez,Chávez,É. Sánchez,Pineda,Alvarado,Antuna,Quiñones,Lozano,Giménez,Martín',
-            'ARG': 'D.Martínez,Rulli,Molina,Romero,Otamendi,Li.Martínez,Tagliafico,De Paul,Paredes,Mac Allister,Fernández,Lo Celso,Di María,Messi,Dybala,La.Martínez,J.Álvarez,Garnacho',
-            'BRA': 'Alisson,Ederson,Danilo,Marquinhos,Militao,Gabriel,Casemiro,Guimaraes,Paquetá,Luiz,Vinicius Jr,Rodrygo,Raphinha,Martinelli,Endrick,Richarlison,Jesus,Antony',
-            'FRA': 'Maignan,Areola,Pavard,Kounde,Upamecano,Saliba,T.Hernandez,Tchouameni,Camavinga,Rabiot,Griezmann,Mbappe,Dembele,Coman,Thuram,Kolo Muani,Giroud,Barcola',
-            'ENG': 'Pickford,Ramsdale,Walker,Stones,Maguire,Trippier,Shaw,Rice,Bellingham,Arnold,Gallagher,Foden,Saka,Kane,Watkins,Toney,Palmer,Rashford',
-            'ESP': 'Simón,Raya,Carvajal,Le Normand,Laporte,Cucurella,Rodri,Pedri,Ruiz,Merino,Yamal,Williams,Morata,Olmo,Oyarzabal,Ferran,Joselu,Zubimendi',
-            'GER': 'Neuer,Ter Stegen,Kimmich,Rüdiger,Tah,Schlotterbeck,Mittelstädt,Kroos,Andrich,Gündogan,Musiala,Wirtz,Sané,Havertz,Füllkrug,Müller,Undav,Beier',
-            'USA': 'Turner,Horvath,Dest,Robinson,Richards,Ream,Scally,Adams,McKennie,Musah,Reyna,Cardoso,Pulisic,Weah,Balogun,Pepi,Aaronson,Wright',
-            'CAN': 'Crépeau,St.Clair,Johnston,Miller,Vitoria,Davies,Laryea,Buchanan,Eustaquio,Koné,Osorio,Piette,David,Larin,Ugbo,Millar,Hoilett,Cavallini',
-            'COL': 'Vargas,Ospina,Muñoz,Mina,Cuesta,Lucumí,Mojica,Lerma,Ríos,Arias,Rodríguez,Carrascal,Díaz,Sinisterra,Borré,Córdoba,Durán,Asprilla',
-            'URU': 'Rochet,Mele,Nández,Araújo,Giménez,Olivera,Viña,Ugarte,Valverde,Bentancur,De la Cruz,Pellistri,Araujo,Rodríguez,Núñez,Suárez,Canobbio,Olivera',
-            'NZL': 'Marinovic,Sail,Roux,Boxall,Smith,Cacace,Pijnaker,Payne,Bell,Stamenic,Garbett,Rufer,Howieson,Wood,Waine,Greive,Just,Mata'
-        };
-
-        function getPlayerName(prefix, index) {
-            if (ROSTERS[prefix]) {
-                const names = ROSTERS[prefix].split(',');
-                if (names[index]) return names[index];
-            }
-            return `Jugador ${index + 1}`; 
-        }
-
         let state = {
             inventory: {}, currentCategory: 'MEX', currentFilterStatus: 'all',
             firebase: { db: null, auth: null, userId: null, isConnected: false },
             marketplaceListings: []
         };
 
-        // Nuevo App ID para refrescar la base de datos limpia con el nuevo orden
-        const APP_ID = typeof __app_id !== 'undefined' ? __app_id : 'panini-2026-master-v3';
+        // Nuevo App ID para forzar limpieza de memoria y cargar la versión 100% corregida
+        const APP_ID = typeof __app_id !== 'undefined' ? __app_id : 'panini-2026-master-v4';
 
         window.addEventListener('DOMContentLoaded', () => {
             initInventoryData(); loadLocalStorageData(); renderCategorySelector(); renderStickersGrid();
             updateDashboardMetrics(); initFirebaseConnection(); initScannerListeners();
         });
 
-        // NUEVA ESTRUCTURA EXACTA: 1 Escudo, 2 al 12 Jugadores, 13 Equipo, 14 al 20 Jugadores
+        // ESTRUCTURA ESTRICTA, SIN NOMBRES FALSOS: 1 Escudo, 2 al 12 Jugador, 13 Equipo, 14 al 20 Jugador.
         function initInventoryData() {
             for (const [prefix, sec] of Object.entries(SECTIONS)) {
                 for (let i = 1; i <= sec.count; i++) {
                     const key = `${prefix}-${i}`;
-                    let type = 'player'; let label = '';
+                    let type = 'player'; 
+                    let label = '';
                     
                     if (sec.specialType === 'coca-cola') { type = 'coca-cola'; label = 'Fan Sticker'; } 
                     else if (sec.specialType === 'mypanini') { type = 'mypanini'; label = 'Tu Foto'; } 
                     else if (sec.specialType === 'fwc') { type = 'special'; label = 'Conmemorativa'; } 
-                    else if (i === 1) { type = 'badge'; label = 'Escudo Oficial'; } 
-                    else if (i === 13) { type = 'team'; label = 'Foto de Equipo'; }
+                    else if (i === 1) { type = 'badge'; label = 'Escudo'; } 
+                    else if (i === 13) { type = 'team'; label = 'Equipo'; }
                     else { 
-                        // Mapeo lógico: índice de jugador basado en el slot (salta el 1 y el 13)
-                        let playerIndex = i < 13 ? i - 2 : i - 3;
-                        label = getPlayerName(prefix, playerIndex); 
+                        type = 'player';
+                        label = 'Jugador'; // Los nombres inventados han sido removidos totalmente.
                     }
 
                     state.inventory[key] = {
@@ -454,7 +430,7 @@
         }
 
         function loadLocalStorageData() {
-            const saved = localStorage.getItem('panini26_master_v3');
+            const saved = localStorage.getItem('panini26_master_v4');
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
@@ -469,7 +445,7 @@
         }
 
         function saveLocalStorageData() {
-            localStorage.setItem('panini26_master_v3', JSON.stringify(state.inventory));
+            localStorage.setItem('panini26_master_v4', JSON.stringify(state.inventory));
             updateDashboardMetrics(); syncWithCloudDebounced();
         }
 
@@ -590,8 +566,8 @@
                 else if (item.type === 'team') iconHtml = '<i class="fa-solid fa-users text-3xl opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>';
                 else if (item.type === 'special') iconHtml = '<i class="fa-solid fa-trophy text-4xl opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>';
                 else {
-                    const cleanName = item.label.replace('Jugador', 'J');
-                    iconHtml = `<img src="https://ui-avatars.com/api/?name=${cleanName}&background=1a1a24&color=fff&size=150&font-size=0.33" class="player-photo rounded shadow-inner" alt="${item.label}">`;
+                    // Ícono genérico de jugador (sin nombre incrustado para evitar errores)
+                    iconHtml = '<i class="fa-solid fa-user text-3xl opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>';
                 }
 
                 const flagUrl = item.flagCode !== 'un' ? `https://flagcdn.com/16x12/${item.flagCode}.png` : '';
@@ -694,7 +670,7 @@
             closeResetModal(); showToast('El álbum ha sido reiniciado.', 'success');
         }
 
-        // --- 3. ULTRA ESCÁNER IA MASIVO (LOTE CORREGIDO) ---
+        // --- 3. ULTRA ESCÁNER IA MASIVO ---
         let currentFilesData = []; 
         let scannedStickers = []; 
         const apiKey = ""; 
@@ -710,7 +686,6 @@
                     files.forEach(file => {
                         const reader = new FileReader();
                         reader.onload = (event) => {
-                            // Detecta correctamente el MIME, incluyendo HEIC de iPhone
                             currentFilesData.push({
                                 mimeType: file.type || "image/jpeg",
                                 data: event.target.result.split(',')[1]
@@ -751,7 +726,6 @@
             document.getElementById('scanner-loading').classList.remove('hidden');
 
             try {
-                // Nuevo Prompt blindado que le explica a la IA el orden exacto de las páginas
                 const promptText = `
 Eres un asistente experto en el Álbum Panini Mundial 2026.
 La estructura exacta de CADA país es de 20 estampas:
@@ -770,7 +744,6 @@ Devuelve SÓLO los identificadores de las estampas PEGADAS combinando el Prefijo
                     promptParts.push({ inlineData: fileObj });
                 });
 
-                // JSON Schema MANDATORIO. La IA ya no puede devolver texto basura.
                 const payload = {
                     contents: [{ role: "user", parts: promptParts }],
                     generationConfig: {
@@ -802,7 +775,6 @@ Devuelve SÓLO los identificadores de las estampas PEGADAS combinando el Prefijo
                     console.error("Error procesando JSON de Gemini:", e);
                 }
 
-                // Filtrar duplicados y verificar que el ID exista en nuestro inventario oficial
                 const validScanned = (parsed.detected && Array.isArray(parsed.detected)) ? parsed.detected.filter(id => state.inventory[id]) : [];
                 scannedStickers = [...new Set(validScanned)];
                 
