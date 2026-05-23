@@ -214,12 +214,11 @@
                         <i class="fa-solid fa-images text-white"></i>
                     </div>
                     <h2 class="text-2xl font-black text-white uppercase">Carga Masiva IA</h2>
-                    <p class="text-sm text-slate-400">Sube múltiples fotos de tu álbum desde la galería. La IA analizará todas las imágenes en lote de forma simultánea.</p>
+                    <p class="text-sm text-slate-400">Sube múltiples fotos de tu álbum desde la galería. La IA detectará qué estampas ya pegaste, basándose en la estructura oficial.</p>
                 </div>
 
                 <div class="space-y-4">
                     <div id="image-dropzone" class="border-2 border-dashed border-slate-600 rounded-2xl p-8 text-center hover:border-wc-magenta transition-colors cursor-pointer relative bg-black/20">
-                        <!-- EL ATRIBUTO MULTIPLE PERMITE SELECCIONAR VARIAS FOTOS DE LA GALERÍA -->
                         <input type="file" id="camera-file-input" accept="image/*" multiple class="absolute inset-0 opacity-0 cursor-pointer">
                         <div class="space-y-3 pointer-events-none">
                             <i class="fa-solid fa-file-image text-5xl text-slate-400"></i>
@@ -332,7 +331,7 @@
     </div>
 
     <script>
-        // DATOS DEL ÁLBUM PANINI 2026
+        // DATOS DEL ÁLBUM PANINI 2026 OFICIALES
         const SECTIONS = {
             'FWC': { title: 'Especiales FWC', count: 12, flag: 'un', specialType: 'fwc' }, 
             'MYP': { title: 'MyPanini™', count: 1, flag: 'un', specialType: 'mypanini' }, 
@@ -388,7 +387,7 @@
             'CC': { title: 'Coca-Cola #AllTheFeels', count: 14, flag: 'un', specialType: 'coca-cola' }
         };
 
-        // Arrays de 18 jugadores por selección
+        // Arrays corregidos y listos (18 jugadores por equipo)
         const ROSTERS = {
             'MEX': 'Ochoa,Malagón,Montes,Vásquez,J. Sánchez,Arteaga,Gallardo,Romo,E. Álvarez,Chávez,É. Sánchez,Pineda,Alvarado,Antuna,Quiñones,Lozano,Giménez,Martín',
             'ARG': 'D.Martínez,Rulli,Molina,Romero,Otamendi,Li.Martínez,Tagliafico,De Paul,Paredes,Mac Allister,Fernández,Lo Celso,Di María,Messi,Dybala,La.Martínez,J.Álvarez,Garnacho',
@@ -418,14 +417,15 @@
             marketplaceListings: []
         };
 
-        const APP_ID = typeof __app_id !== 'undefined' ? __app_id : 'panini-2026-master-v2';
+        // Nuevo App ID para refrescar la base de datos limpia con el nuevo orden
+        const APP_ID = typeof __app_id !== 'undefined' ? __app_id : 'panini-2026-master-v3';
 
         window.addEventListener('DOMContentLoaded', () => {
             initInventoryData(); loadLocalStorageData(); renderCategorySelector(); renderStickersGrid();
             updateDashboardMetrics(); initFirebaseConnection(); initScannerListeners();
         });
 
-        // NUEVO ORDEN DE ESTAMPAS: 1 Escudo, 2 al 12 Jugadores, 13 Equipo, 14 al 20 Jugadores
+        // NUEVA ESTRUCTURA EXACTA: 1 Escudo, 2 al 12 Jugadores, 13 Equipo, 14 al 20 Jugadores
         function initInventoryData() {
             for (const [prefix, sec] of Object.entries(SECTIONS)) {
                 for (let i = 1; i <= sec.count; i++) {
@@ -438,7 +438,7 @@
                     else if (i === 1) { type = 'badge'; label = 'Escudo Oficial'; } 
                     else if (i === 13) { type = 'team'; label = 'Foto de Equipo'; }
                     else { 
-                        // Mapeo lógico: índice de jugador basado en el slot
+                        // Mapeo lógico: índice de jugador basado en el slot (salta el 1 y el 13)
                         let playerIndex = i < 13 ? i - 2 : i - 3;
                         label = getPlayerName(prefix, playerIndex); 
                     }
@@ -454,7 +454,7 @@
         }
 
         function loadLocalStorageData() {
-            const saved = localStorage.getItem('panini26_master_v2');
+            const saved = localStorage.getItem('panini26_master_v3');
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
@@ -469,7 +469,7 @@
         }
 
         function saveLocalStorageData() {
-            localStorage.setItem('panini26_master_v2', JSON.stringify(state.inventory));
+            localStorage.setItem('panini26_master_v3', JSON.stringify(state.inventory));
             updateDashboardMetrics(); syncWithCloudDebounced();
         }
 
@@ -694,7 +694,7 @@
             closeResetModal(); showToast('El álbum ha sido reiniciado.', 'success');
         }
 
-        // --- 3. ULTRA ESCÁNER IA MASIVO (LOTE) ---
+        // --- 3. ULTRA ESCÁNER IA MASIVO (LOTE CORREGIDO) ---
         let currentFilesData = []; 
         let scannedStickers = []; 
         const apiKey = ""; 
@@ -710,14 +710,13 @@
                     files.forEach(file => {
                         const reader = new FileReader();
                         reader.onload = (event) => {
-                            // Guardamos tanto el mimeType real (soporta HEIC nativo) como el base64
+                            // Detecta correctamente el MIME, incluyendo HEIC de iPhone
                             currentFilesData.push({
                                 mimeType: file.type || "image/jpeg",
                                 data: event.target.result.split(',')[1]
                             });
                             loaded++;
                             if(loaded === files.length) {
-                                // Mostrar la primera foto como preview
                                 document.getElementById('scanner-img-preview').src = 'data:' + currentFilesData[0].mimeType + ';base64,' + currentFilesData[0].data;
                                 
                                 const badge = document.getElementById('scanner-img-count');
@@ -752,23 +751,26 @@
             document.getElementById('scanner-loading').classList.remove('hidden');
 
             try {
-                // Prompt simplificado y más estricto
+                // Nuevo Prompt blindado que le explica a la IA el orden exacto de las páginas
                 const promptText = `
-Eres un asistente experto en visión artificial para el Álbum Panini Mundial 2026.
-Tu tarea es identificar qué espacios del álbum ya tienen una estampa pegada y cuáles están vacíos.
-Los espacios vacíos son blancos con un número impreso muy grande en el centro.
-Los espacios con estampa pegada muestran el rostro de un jugador, una foto de equipo o un escudo que tapa el fondo blanco.
+Eres un asistente experto en el Álbum Panini Mundial 2026.
+La estructura exacta de CADA país es de 20 estampas:
+- 1: Escudo
+- 2 al 12: Jugadores
+- 13: Foto de Equipo
+- 14 al 20: Jugadores
 
-Identifica el prefijo del país (ej. MEX para México, ARG para Argentina) mirando el encabezado de la página.
-Agrupa los hallazgos de TODAS las imágenes adjuntas.
-Devuelve los identificadores exactos de las estampas PEGADAS combinando Prefijo y Número (ej. MEX-1, MEX-14, ARG-3). NO incluyas espacios vacíos.`;
+Tu tarea es identificar qué espacios TIENEN estampa pegada.
+Ignora por completo los recuadros blancos vacíos que solo tienen el número impreso.
+Identifica el país por el escudo o las letras del encabezado (Ej: MEX, BRA, USA).
+Devuelve SÓLO los identificadores de las estampas PEGADAS combinando el Prefijo del país y el Número (ej. MEX-1, MEX-13, ARG-20).`;
 
                 const promptParts = [{ text: promptText }];
                 currentFilesData.forEach(fileObj => {
                     promptParts.push({ inlineData: fileObj });
                 });
 
-                // Uso forzado de JSON Schema para evitar que la IA alucine texto extra
+                // JSON Schema MANDATORIO. La IA ya no puede devolver texto basura.
                 const payload = {
                     contents: [{ role: "user", parts: promptParts }],
                     generationConfig: {
@@ -792,7 +794,6 @@ Devuelve los identificadores exactos de las estampas PEGADAS combinando Prefijo 
 
                 const result = await response.json(); 
                 
-                // Con JSON schema, siempre devolverá un JSON limpio y válido
                 let parsed = { detected: [] };
                 try {
                     const rawText = result.candidates[0].content.parts[0].text;
@@ -801,7 +802,7 @@ Devuelve los identificadores exactos de las estampas PEGADAS combinando Prefijo 
                     console.error("Error procesando JSON de Gemini:", e);
                 }
 
-                // Filtrar solo IDs que existan en el inventario real de la app
+                // Filtrar duplicados y verificar que el ID exista en nuestro inventario oficial
                 const validScanned = (parsed.detected && Array.isArray(parsed.detected)) ? parsed.detected.filter(id => state.inventory[id]) : [];
                 scannedStickers = [...new Set(validScanned)];
                 
