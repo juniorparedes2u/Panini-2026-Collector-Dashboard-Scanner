@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="dark">
+<html lang="es-MX" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -72,7 +72,7 @@
                 </div>
                 <div>
                     <h1 class="text-xl font-black text-white leading-none tracking-tighter">ÁLBUM OFICIAL</h1>
-                    <span class="text-[10px] text-wc-neon font-bold uppercase tracking-widest">Master Edition (987)</span>
+                    <span class="text-[10px] text-wc-neon font-bold uppercase tracking-widest">Edición Maestra (987)</span>
                 </div>
             </div>
             
@@ -167,8 +167,9 @@
                 </div>
             </div>
 
+            <!-- Menú de Categorías y Grupos Clasificados -->
             <div class="bg-wc-panel border border-white/10 rounded-xl p-2">
-                <div class="flex overflow-x-auto space-x-2 p-2 hide-scrollbar" id="category-selector-container"></div>
+                <div class="flex overflow-x-auto p-2 hide-scrollbar items-center" id="category-selector-container"></div>
             </div>
 
             <div>
@@ -201,8 +202,8 @@
                 
                 <div id="marketplace-list-container" class="space-y-3 grid md:grid-cols-2 gap-4">
                     <div class="text-center py-12 text-slate-500 col-span-full">
-                        <i class="fa-solid fa-people-arrows text-4xl mb-3 block opacity-50"></i>
-                        <p class="text-sm">Inicia sesión o sincroniza para buscar intercambios.</p>
+                        <i class="fa-solid fa-cloud-bolt text-4xl mb-3 block opacity-50"></i>
+                        <p class="text-sm">Inicia sesión (Entrar) para conectarte a la base de datos y ver a otros coleccionistas.</p>
                     </div>
                 </div>
             </div>
@@ -255,7 +256,7 @@
                 <!-- Escáner IA Masivo -->
                 <div class="bg-wc-panel p-6 rounded-2xl border border-white/10 md:col-span-2 space-y-5">
                     <h3 class="text-lg font-black text-white uppercase border-b border-white/10 pb-3"><i class="fa-solid fa-camera-retro text-yellow-400 mr-2"></i> Carga Masiva IA</h3>
-                    <p class="text-xs text-slate-400">Sube fotos de tu álbum. La IA detectará automáticamente qué estampas tienes pegadas.</p>
+                    <p class="text-xs text-slate-400">Sube múltiples fotos de tu galería. La IA detectará automáticamente qué estampas tienes pegadas.</p>
                     
                     <div class="space-y-4 mt-4">
                         <div id="image-dropzone" class="border-2 border-dashed border-slate-600 rounded-2xl p-6 text-center hover:border-wc-magenta transition-colors cursor-pointer relative bg-black/20">
@@ -263,6 +264,7 @@
                             <div class="space-y-2 pointer-events-none">
                                 <i class="fa-solid fa-file-image text-4xl text-slate-400"></i>
                                 <div class="text-sm font-bold text-white">Seleccionar Fotos de Galería</div>
+                                <p class="text-[10px] text-slate-500">Puedes elegir varias imágenes</p>
                             </div>
                         </div>
 
@@ -284,14 +286,14 @@
 
                     <div id="scanner-loading" class="hidden text-center py-6 space-y-3">
                         <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-wc-neon border-t-transparent"></div>
-                        <p class="text-xs font-bold text-wc-neon animate-pulse">Procesando lote con IA...</p>
+                        <p class="text-xs font-bold text-wc-neon animate-pulse">Procesando con IA...</p>
                     </div>
 
                     <div id="scanner-results" class="hidden space-y-4 bg-wc-neon/10 p-4 rounded-xl border border-wc-neon/30">
                         <h4 class="text-sm font-black text-wc-neon">Estampas Pegadas Detectadas:</h4>
                         <div id="scanner-detected-list" class="flex flex-wrap gap-2 py-2"></div>
                         <button onclick="acceptScannedStickers()" class="w-full py-2.5 bg-wc-neon text-black text-sm font-black rounded-xl shadow-lg">
-                            <i class="fa-solid fa-check-double mr-2"></i> Agregar a mi Álbum
+                            <i class="fa-solid fa-check-double mr-2"></i> Registrar Todo en Mi Álbum
                         </button>
                     </div>
                 </div>
@@ -344,7 +346,7 @@
             </div>
             <div>
                 <h3 class="text-xl font-black text-white">¿Reiniciar Álbum?</h3>
-                <p class="text-sm text-slate-400 mt-2">Esta acción borrará todas tus estampas obtenidas y repetidas. No se puede deshacer.</p>
+                <p class="text-sm text-slate-400 mt-2">Se borrarán todas tus estampas obtenidas y repetidas. No se puede deshacer.</p>
             </div>
             <div class="flex space-x-3 pt-2">
                 <button onclick="closeResetModal()" class="flex-1 py-2.5 bg-white/10 text-white font-bold rounded-lg hover:bg-white/20">Cancelar</button>
@@ -357,7 +359,7 @@
     <div class="md:hidden fixed bottom-0 left-0 right-0 bg-wc-panel border-t border-white/10 px-4 py-2 flex justify-around items-center z-40 pb-safe shadow-[0_-10px_20px_rgba(0,0,0,0.5)]">
         <button onclick="switchTab('album')" class="mobile-nav-btn text-wc-neon flex flex-col items-center space-y-1 w-20 transition-colors">
             <i class="fa-solid fa-house text-xl"></i>
-            <span class="text-[10px] font-black uppercase">Home</span>
+            <span class="text-[10px] font-black uppercase">Inicio</span>
         </button>
         <button onclick="switchTab('trades')" class="mobile-nav-btn text-slate-500 flex flex-col items-center space-y-1 w-20 transition-colors">
             <i class="fa-solid fa-handshake text-xl"></i>
@@ -370,48 +372,84 @@
     </div>
 
     <script>
-        // DATOS OFICIALES PANINI 2026
+        // DATOS OFICIALES PANINI 2026 (CLASIFICADOS ESTRICTAMENTE POR GRUPOS)
         const SECTIONS = {
-            'FWC': { title: 'Especiales FWC', count: 12, flag: 'un', specialType: 'fwc' }, 
-            'MYP': { title: 'MyPanini™', count: 1, flag: 'un', specialType: 'mypanini' }, 
+            'FWC': { title: 'Especiales FWC', count: 12, flag: 'un', specialType: 'fwc', group: 'Especiales' }, 
+            'MYP': { title: 'MyPanini™', count: 1, flag: 'un', specialType: 'mypanini', group: 'Especiales' }, 
             
-            'MEX': { title: 'México', count: 20, flag: 'mx' }, 'RSA': { title: 'Sudáfrica', count: 20, flag: 'za' },
-            'KOR': { title: 'Corea del Sur', count: 20, flag: 'kr' }, 'CZE': { title: 'Chequia', count: 20, flag: 'cz' },
+            // Grupo A
+            'MEX': { title: 'México', count: 20, flag: 'mx', group: 'A' }, 
+            'RSA': { title: 'Sudáfrica', count: 20, flag: 'za', group: 'A' },
+            'KOR': { title: 'Corea del Sur', count: 20, flag: 'kr', group: 'A' }, 
+            'CZE': { title: 'Chequia', count: 20, flag: 'cz', group: 'A' },
             
-            'CAN': { title: 'Canadá', count: 20, flag: 'ca' }, 'BIH': { title: 'Bosnia y Herzegovina', count: 20, flag: 'ba' },
-            'QAT': { title: 'Qatar', count: 20, flag: 'qa' }, 'SUI': { title: 'Suiza', count: 20, flag: 'ch' },
+            // Grupo B
+            'CAN': { title: 'Canadá', count: 20, flag: 'ca', group: 'B' }, 
+            'BIH': { title: 'Bosnia y Herzegovina', count: 20, flag: 'ba', group: 'B' },
+            'QAT': { title: 'Qatar', count: 20, flag: 'qa', group: 'B' }, 
+            'SUI': { title: 'Suiza', count: 20, flag: 'ch', group: 'B' },
             
-            'BRA': { title: 'Brasil', count: 20, flag: 'br' }, 'MAR': { title: 'Marruecos', count: 20, flag: 'ma' },
-            'HAI': { title: 'Haití', count: 20, flag: 'ht' }, 'SCO': { title: 'Escocia', count: 20, flag: 'gb-sct' },
+            // Grupo C
+            'BRA': { title: 'Brasil', count: 20, flag: 'br', group: 'C' }, 
+            'MAR': { title: 'Marruecos', count: 20, flag: 'ma', group: 'C' },
+            'HAI': { title: 'Haití', count: 20, flag: 'ht', group: 'C' }, 
+            'SCO': { title: 'Escocia', count: 20, flag: 'gb-sct', group: 'C' },
             
-            'USA': { title: 'Estados Unidos', count: 20, flag: 'us' }, 'PAR': { title: 'Paraguay', count: 20, flag: 'py' },
-            'AUS': { title: 'Australia', count: 20, flag: 'au' }, 'TUR': { title: 'Turquía', count: 20, flag: 'tr' },
+            // Grupo D
+            'USA': { title: 'Estados Unidos', count: 20, flag: 'us', group: 'D' }, 
+            'PAR': { title: 'Paraguay', count: 20, flag: 'py', group: 'D' },
+            'AUS': { title: 'Australia', count: 20, flag: 'au', group: 'D' }, 
+            'TUR': { title: 'Turquía', count: 20, flag: 'tr', group: 'D' },
             
-            'GER': { title: 'Alemania', count: 20, flag: 'de' }, 'CUW': { title: 'Curazao', count: 20, flag: 'cw' },
-            'CIV': { title: 'Costa de Marfil', count: 20, flag: 'ci' }, 'ECU': { title: 'Ecuador', count: 20, flag: 'ec' },
+            // Grupo E
+            'GER': { title: 'Alemania', count: 20, flag: 'de', group: 'E' }, 
+            'CUW': { title: 'Curazao', count: 20, flag: 'cw', group: 'E' },
+            'CIV': { title: 'Costa de Marfil', count: 20, flag: 'ci', group: 'E' }, 
+            'ECU': { title: 'Ecuador', count: 20, flag: 'ec', group: 'E' },
             
-            'NED': { title: 'Países Bajos', count: 20, flag: 'nl' }, 'JPN': { title: 'Japón', count: 20, flag: 'jp' },
-            'SWE': { title: 'Suecia', count: 20, flag: 'se' }, 'TUN': { title: 'Túnez', count: 20, flag: 'tn' },
+            // Grupo F
+            'NED': { title: 'Países Bajos', count: 20, flag: 'nl', group: 'F' }, 
+            'JPN': { title: 'Japón', count: 20, flag: 'jp', group: 'F' },
+            'SWE': { title: 'Suecia', count: 20, flag: 'se', group: 'F' }, 
+            'TUN': { title: 'Túnez', count: 20, flag: 'tn', group: 'F' },
             
-            'BEL': { title: 'Bélgica', count: 20, flag: 'be' }, 'EGY': { title: 'Egipto', count: 20, flag: 'eg' },
-            'IRN': { title: 'Irán', count: 20, flag: 'ir' }, 'NZL': { title: 'Nueva Zelanda', count: 20, flag: 'nz' },
+            // Grupo G
+            'BEL': { title: 'Bélgica', count: 20, flag: 'be', group: 'G' }, 
+            'EGY': { title: 'Egipto', count: 20, flag: 'eg', group: 'G' },
+            'IRN': { title: 'Irán', count: 20, flag: 'ir', group: 'G' }, 
+            'NZL': { title: 'Nueva Zelanda', count: 20, flag: 'nz', group: 'G' },
             
-            'ESP': { title: 'España', count: 20, flag: 'es' }, 'CPV': { title: 'Cabo Verde', count: 20, flag: 'cv' },
-            'KSA': { title: 'Arabia Saudita', count: 20, flag: 'sa' }, 'URU': { title: 'Uruguay', count: 20, flag: 'uy' },
+            // Grupo H
+            'ESP': { title: 'España', count: 20, flag: 'es', group: 'H' }, 
+            'CPV': { title: 'Cabo Verde', count: 20, flag: 'cv', group: 'H' },
+            'KSA': { title: 'Arabia Saudita', count: 20, flag: 'sa', group: 'H' }, 
+            'URU': { title: 'Uruguay', count: 20, flag: 'uy', group: 'H' },
             
-            'FRA': { title: 'Francia', count: 20, flag: 'fr' }, 'SEN': { title: 'Senegal', count: 20, flag: 'sn' },
-            'IRQ': { title: 'Irak', count: 20, flag: 'iq' }, 'NOR': { title: 'Noruega', count: 20, flag: 'no' },
+            // Grupo I
+            'FRA': { title: 'Francia', count: 20, flag: 'fr', group: 'I' }, 
+            'SEN': { title: 'Senegal', count: 20, flag: 'sn', group: 'I' },
+            'IRQ': { title: 'Irak', count: 20, flag: 'iq', group: 'I' }, 
+            'NOR': { title: 'Noruega', count: 20, flag: 'no', group: 'I' },
             
-            'ARG': { title: 'Argentina', count: 20, flag: 'ar' }, 'ALG': { title: 'Argelia', count: 20, flag: 'dz' },
-            'AUT': { title: 'Austria', count: 20, flag: 'at' }, 'JOR': { title: 'Jordania', count: 20, flag: 'jo' },
+            // Grupo J
+            'ARG': { title: 'Argentina', count: 20, flag: 'ar', group: 'J' }, 
+            'ALG': { title: 'Argelia', count: 20, flag: 'dz', group: 'J' },
+            'AUT': { title: 'Austria', count: 20, flag: 'at', group: 'J' }, 
+            'JOR': { title: 'Jordania', count: 20, flag: 'jo', group: 'J' },
             
-            'POR': { title: 'Portugal', count: 20, flag: 'pt' }, 'COD': { title: 'RD del Congo', count: 20, flag: 'cd' },
-            'UZB': { title: 'Uzbekistán', count: 20, flag: 'uz' }, 'COL': { title: 'Colombia', count: 20, flag: 'co' },
+            // Grupo K
+            'POR': { title: 'Portugal', count: 20, flag: 'pt', group: 'K' }, 
+            'COD': { title: 'RD del Congo', count: 20, flag: 'cd', group: 'K' },
+            'UZB': { title: 'Uzbekistán', count: 20, flag: 'uz', group: 'K' }, 
+            'COL': { title: 'Colombia', count: 20, flag: 'co', group: 'K' },
             
-            'ENG': { title: 'Inglaterra', count: 20, flag: 'gb-eng' }, 'CRO': { title: 'Croacia', count: 20, flag: 'hr' },
-            'GHA': { title: 'Ghana', count: 20, flag: 'gh' }, 'PAN': { title: 'Panamá', count: 20, flag: 'pa' },
+            // Grupo L
+            'ENG': { title: 'Inglaterra', count: 20, flag: 'gb-eng', group: 'L' }, 
+            'CRO': { title: 'Croacia', count: 20, flag: 'hr', group: 'L' },
+            'GHA': { title: 'Ghana', count: 20, flag: 'gh', group: 'L' }, 
+            'PAN': { title: 'Panamá', count: 20, flag: 'pa', group: 'L' },
             
-            'CC': { title: 'Coca-Cola #AllTheFeels', count: 14, flag: 'un', specialType: 'coca-cola' }
+            'CC': { title: 'Coca-Cola #AllTheFeels', count: 14, flag: 'un', specialType: 'coca-cola', group: 'Especiales' }
         };
 
         let state = {
@@ -420,7 +458,7 @@
             marketplaceListings: []
         };
 
-        const LOCAL_STORAGE_KEY = 'panini26_stampa_engine';
+        const LOCAL_STORAGE_KEY = 'panini_stampa_engine_mx';
         const APP_ID = typeof __app_id !== 'undefined' ? __app_id : 'panini-stampa-engine';
         let currentTradeContact = "";
 
@@ -478,30 +516,62 @@
         }
 
         function renderCategorySelector() {
-            const container = document.getElementById('category-selector-container'); container.innerHTML = '';
+            const container = document.getElementById('category-selector-container'); 
+            container.innerHTML = '';
             
+            // Agrupación de secciones por su propiedad "group"
+            const groups = {};
             for (const [prefix, sec] of Object.entries(SECTIONS)) {
-                const ownedCount = Object.values(state.inventory).filter(i => i.prefix === prefix && i.owned).length;
-                const isComplete = ownedCount === sec.count;
-                const btn = document.createElement('button'); btn.id = `cat-btn-${prefix}`; btn.onclick = () => selectCategory(prefix);
-                
-                let baseClass = "flex-shrink-0 px-4 py-2.5 rounded-lg text-xs font-black uppercase transition-all flex items-center space-x-2 ";
-                if (state.currentCategory === prefix) {
-                    if(sec.specialType === 'coca-cola') baseClass += "bg-gradient-to-r from-red-600 to-red-800 text-white border border-red-500/50";
-                    else if(sec.specialType === 'mypanini') baseClass += "bg-gradient-to-r from-cyan-500 to-blue-600 text-white border border-cyan-500/50";
-                    else if(sec.specialType === 'fwc') baseClass += "bg-gradient-to-r from-amber-500 to-orange-600 text-white border border-amber-500/50";
-                    else baseClass += "bg-gradient-to-r from-wc-magenta to-wc-purple text-white border border-wc-magenta/50";
-                } else { baseClass += "bg-black/40 text-slate-400 border border-white/5 hover:bg-white/10 hover:text-white"; }
-
-                const flagUrl = sec.flag !== 'un' ? `https://flagcdn.com/20x15/${sec.flag}.png` : '';
-                let flagImg = flagUrl ? `<img src="${flagUrl}" class="w-5 h-4 rounded-sm object-cover">` : 
-                    (sec.specialType === 'coca-cola' ? '<i class="fa-solid fa-bottle-water text-wc-coke"></i>' : 
-                    (sec.specialType === 'mypanini' ? '<i class="fa-solid fa-camera-retro text-cyan-400"></i>' : '<i class="fa-solid fa-trophy text-amber-400"></i>'));
-
-                const check = isComplete ? `<i class="fa-solid fa-circle-check text-wc-neon ml-1"></i>` : '';
-                btn.innerHTML = `${flagImg} <span>${prefix} <span class="opacity-70 font-medium text-[10px] ml-1">${ownedCount}/${sec.count}</span></span> ${check}`;
-                btn.className = baseClass; container.appendChild(btn);
+                if (!groups[sec.group]) groups[sec.group] = [];
+                groups[sec.group].push({prefix, sec});
             }
+
+            const groupOrder = ['Especiales', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+
+            groupOrder.forEach(g => {
+                if (!groups[g]) return;
+
+                // Crear el separador visual del Grupo (Ej: GRUPO A)
+                const divider = document.createElement('div');
+                divider.className = "flex-shrink-0 flex items-center px-2 mr-2 border-l-2 border-wc-neon pl-3 h-8";
+                divider.innerHTML = `<span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">${g === 'Especiales' ? 'Especiales' : 'Grupo ' + g}</span>`;
+                container.appendChild(divider);
+
+                // Imprimir los botones de ese grupo
+                groups[g].forEach(item => {
+                    const {prefix, sec} = item;
+                    const ownedCount = Object.values(state.inventory).filter(i => i.prefix === prefix && i.owned).length;
+                    const isComplete = ownedCount === sec.count;
+                    const btn = document.createElement('button'); 
+                    btn.id = `cat-btn-${prefix}`; 
+                    btn.onclick = () => selectCategory(prefix);
+                    
+                    let baseClass = "flex-shrink-0 px-4 py-2.5 rounded-lg text-xs font-black uppercase transition-all flex items-center space-x-2 mr-2 ";
+                    if (state.currentCategory === prefix) {
+                        if(sec.specialType === 'coca-cola') baseClass += "bg-gradient-to-r from-red-600 to-red-800 text-white border border-red-500/50";
+                        else if(sec.specialType === 'mypanini') baseClass += "bg-gradient-to-r from-cyan-500 to-blue-600 text-white border border-cyan-500/50";
+                        else if(sec.specialType === 'fwc') baseClass += "bg-gradient-to-r from-amber-500 to-orange-600 text-white border border-amber-500/50";
+                        else baseClass += "bg-gradient-to-r from-wc-magenta to-wc-purple text-white border border-wc-magenta/50 shadow-[0_0_10px_rgba(228,0,70,0.5)]";
+                    } else { 
+                        baseClass += "bg-black/40 text-slate-400 border border-white/5 hover:bg-white/10 hover:text-white"; 
+                    }
+
+                    const flagUrl = sec.flag !== 'un' ? `https://flagcdn.com/20x15/${sec.flag}.png` : '';
+                    let flagImg = flagUrl ? `<img src="${flagUrl}" class="w-5 h-4 rounded-sm object-cover">` : 
+                        (sec.specialType === 'coca-cola' ? '<i class="fa-solid fa-bottle-water text-wc-coke"></i>' : 
+                        (sec.specialType === 'mypanini' ? '<i class="fa-solid fa-camera-retro text-cyan-400"></i>' : '<i class="fa-solid fa-trophy text-amber-400"></i>'));
+
+                    const check = isComplete ? `<i class="fa-solid fa-circle-check text-wc-neon ml-1 shadow-sm"></i>` : '';
+                    btn.innerHTML = `${flagImg} <span>${prefix} <span class="opacity-70 font-medium text-[10px] ml-1">${ownedCount}/${sec.count}</span></span> ${check}`;
+                    btn.className = baseClass; 
+                    container.appendChild(btn);
+                });
+                
+                // Espaciador final del grupo
+                const spacer = document.createElement('div');
+                spacer.className = "flex-shrink-0 w-1";
+                container.appendChild(spacer);
+            });
             updateCategoryHeader();
         }
 
@@ -509,7 +579,8 @@
 
         function updateCategoryHeader() {
             const sec = SECTIONS[state.currentCategory];
-            document.getElementById('current-category-title').querySelector('span').textContent = `${sec.title} (${state.currentCategory})`;
+            const groupText = sec.group === 'Especiales' ? 'ESPECIALES' : `GRUPO ${sec.group}`;
+            document.getElementById('current-category-title').querySelector('span').innerHTML = `${sec.title} <span class="text-xs text-slate-500 font-bold ml-2">(${groupText})</span>`;
             const flagEl = document.getElementById('current-category-flag'); const iconEl = document.getElementById('current-category-icon');
             
             if (sec.flag !== 'un') { flagEl.src = `https://flagcdn.com/40x30/${sec.flag}.png`; flagEl.classList.remove('hidden'); iconEl.classList.add('hidden');
@@ -827,20 +898,17 @@
             }
         }
 
-        // --- CARGA DE LISTADO DEL MERCADO (FIREBASE / MOCK) ---
+        // --- CARGA DE LISTADO DEL MERCADO (FIREBASE SOLAMENTE, SIN DATOS DE PRUEBA) ---
         async function loadMarketplaceListings() {
             const container = document.getElementById('marketplace-list-container');
             container.innerHTML = '<div class="text-center py-12 col-span-full"><div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-wc-neon border-t-transparent"></div></div>';
 
-            if (!state.firebase.isConnected) {
-                // Mockup en caso de no conectar la Base de Datos para mostrar funcionalidad local
-                setTimeout(() => {
-                    const mockUsers = [
-                        { userId: 'u1', alias: 'Alejandro_MX', contact: 'WA', missing: ['MEX-1', 'ARG-10', 'BRA-2'], repeats: ['USA-5', 'MEX-5', 'GER-1', 'MEX-12', 'BRA-1'] },
-                        { userId: 'u2', alias: 'Sofía_Stampa', contact: 'WA', missing: ['MEX-5', 'GER-1'], repeats: ['ARG-10', 'FRA-3'] }
-                    ];
-                    renderMarketplace(mockUsers);
-                }, 800);
+            if (!state.firebase.isConnected || !state.firebase.userId) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-slate-500 col-span-full">
+                        <i class="fa-solid fa-cloud-bolt text-4xl mb-3 block opacity-50"></i>
+                        <p class="text-sm">Inicia sesión (Entrar) para conectarte a la base de datos y ver a otros coleccionistas reales.</p>
+                    </div>`;
                 return;
             }
 
@@ -859,7 +927,7 @@
         function renderMarketplace(listings) {
             const container = document.getElementById('marketplace-list-container');
             if(listings.length === 0) {
-                container.innerHTML = '<div class="text-center py-12 text-slate-500 col-span-full">No hay coleccionistas activos ahora mismo.</div>';
+                container.innerHTML = '<div class="text-center py-12 text-slate-500 col-span-full">Aún no hay coleccionistas activos en la nube. ¡Sé el primero en publicar!</div>';
                 return;
             }
 
