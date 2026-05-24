@@ -37,26 +37,16 @@
         body { background-color: #0b0b0e; color: #ffffff; overscroll-behavior: none; }
         .no-select { -webkit-tap-highlight-color: transparent; user-select: none; }
         
-        /* Dagiti estilo ti tarheta */
+        /* Estilos Base de Estampas (Colores Dinámicos gestionados por JS) */
         .sticker-card {
-            background: linear-gradient(145deg, #22222d, #1a1a24);
-            border: 1px solid #333346;
             position: relative; overflow: hidden; transition: all 0.2s ease;
             touch-action: pan-y;
         }
         
-        .sticker-card.owned {
-            background: linear-gradient(145deg, #ffffff, #e2e2e2);
-            border-color: #00ff43; color: #000;
-        }
-        
-        .sticker-card.shiny { background: linear-gradient(135deg, #ffd700 0%, #ff8c00 50%, #ffd700 100%); color: #4a2500; border: none; }
-        .sticker-card.coca-cola { background: linear-gradient(135deg, #F40009 0%, #a00000 100%); color: #ffffff; border: 1px solid #ff4d4d; }
-        .sticker-card.mypanini { background: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #00f2fe 100%); color: #002244; border: none; }
-
+        /* Efectos Especiales */
         .sticker-card.shiny::after, .sticker-card.coca-cola::after, .sticker-card.mypanini::after {
             content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(60deg, rgba(255,255,255,0) 20%, rgba(255,255,255,0.6) 30%, rgba(255,255,255,0) 40%);
+            background: linear-gradient(60deg, rgba(255,255,255,0) 20%, rgba(255,255,255,0.4) 30%, rgba(255,255,255,0) 40%);
             transform: rotate(30deg); animation: shine 4s infinite linear; pointer-events: none;
         }
 
@@ -81,18 +71,18 @@
                     26
                 </div>
                 <div>
-                    <h1 class="text-xl font-black text-white leading-none tracking-tighter">OPISIAL NGA ALBUM</h1>
+                    <h1 class="text-xl font-black text-white leading-none tracking-tighter">ÁLBUM OFICIAL</h1>
                     <span class="text-[10px] text-wc-neon font-bold uppercase tracking-widest">Master Edition (987)</span>
                 </div>
             </div>
             
             <div class="flex items-center space-x-3">
                 <button id="btn-google-login" onclick="loginWithGoogle()" class="hidden bg-white text-slate-800 text-xs font-bold px-3 py-1.5 rounded-full hover:bg-slate-200 transition-colors shadow-sm">
-                    <i class="fa-brands fa-google text-red-500 mr-1"></i> Sumrek
+                    <i class="fa-brands fa-google text-red-500 mr-1"></i> Entrar
                 </button>
                 <div id="user-profile-badge" class="hidden bg-black/30 px-3 py-1.5 rounded-full text-xs border border-white/10 flex items-center space-x-2">
                     <img id="user-avatar" src="" class="w-4 h-4 rounded-full" alt="User">
-                    <span id="user-name" class="font-medium text-white truncate max-w-[80px]">Bariweswes</span>
+                    <span id="user-name" class="font-medium text-white truncate max-w-[80px]">Coleccionista</span>
                 </div>
             </div>
         </div>
@@ -119,65 +109,61 @@
                         </div>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-black text-white uppercase tracking-tight">Ti Progresom</h2>
-                        <p class="text-sm text-wc-neon font-medium" id="stats-missing-text">Agkurang ka ti 987 a tarheta</p>
+                        <h2 class="text-2xl font-black text-white uppercase tracking-tight">Tu Progreso</h2>
+                        <p class="text-sm text-wc-neon font-medium" id="stats-missing-text">Te faltan 987 estampas</p>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-3 gap-3 w-full md:w-auto">
-                    <div class="bg-black/50 rounded-xl p-3 text-center border border-white/5">
-                        <span class="block text-[10px] font-bold text-slate-400 uppercase">Adda Kaniak</span>
+                    <div class="bg-black/50 rounded-xl p-3 text-center border-b-[3px] border-wc-neon">
+                        <span class="block text-[10px] font-bold text-slate-400 uppercase">Tengo</span>
                         <span id="stats-owned" class="text-xl font-black text-white">0</span>
                     </div>
-                    <div class="bg-black/50 rounded-xl p-3 text-center border border-white/5">
-                        <span class="block text-[10px] font-bold text-slate-400 uppercase">Kurang</span>
-                        <span id="stats-missing" class="text-xl font-black text-wc-magenta">987</span>
+                    <div class="bg-black/50 rounded-xl p-3 text-center border-b-[3px] border-red-500">
+                        <span class="block text-[10px] font-bold text-slate-400 uppercase">Faltantes</span>
+                        <span id="stats-missing" class="text-xl font-black text-white">987</span>
                     </div>
-                    <div class="bg-black/50 rounded-xl p-3 text-center border border-white/5 relative">
-                        <span class="block text-[10px] font-bold text-slate-400 uppercase">Naulit</span>
-                        <span id="stats-duplicates" class="text-xl font-black text-wc-neon">0</span>
+                    <div class="bg-black/50 rounded-xl p-3 text-center border-b-[3px] border-yellow-400 relative">
+                        <span class="block text-[10px] font-bold text-slate-400 uppercase">Repetidas</span>
+                        <span id="stats-duplicates" class="text-xl font-black text-white">0</span>
                     </div>
                 </div>
             </div>
 
             <div class="mt-5 pt-4 border-t border-white/10">
-                <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3"><i class="fa-solid fa-medal mr-1"></i> Dagiti Naaramidam</h3>
+                <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3"><i class="fa-solid fa-medal mr-1"></i> Tus Logros</h3>
                 <div class="flex overflow-x-auto space-x-3 pb-2 hide-scrollbar" id="achievements-container">
-                    <!-- Dinamiko a linaon -->
+                    <!-- Dinámico -->
                 </div>
             </div>
         </section>
 
-        <!-- Navbar -->
-        <nav class="flex space-x-2 bg-wc-panel p-1.5 rounded-xl border border-white/10 text-sm font-semibold">
+        <!-- Navegación Escritorio -->
+        <nav class="hidden md:flex space-x-2 bg-wc-panel p-1.5 rounded-xl border border-white/10 text-sm font-semibold">
             <button onclick="switchTab('album')" id="nav-btn-album" class="flex-1 py-3 text-center rounded-lg transition-all bg-wc-purple text-white shadow-lg">
-                <i class="fa-solid fa-book mr-2"></i> Album
-            </button>
-            <button onclick="switchTab('scanner')" id="nav-btn-scanner" class="flex-1 py-3 text-center rounded-lg transition-all text-slate-400 hover:text-white hover:bg-white/5">
-                <i class="fa-solid fa-camera-retro mr-2"></i> Scanner
+                <i class="fa-solid fa-book mr-2"></i> Mi Álbum
             </button>
             <button onclick="switchTab('trades')" id="nav-btn-trades" class="flex-1 py-3 text-center rounded-lg transition-all text-slate-400 hover:text-white hover:bg-white/5">
-                <i class="fa-solid fa-people-arrows mr-2"></i> Suksukat
+                <i class="fa-solid fa-people-arrows mr-2"></i> Intercambios
+            </button>
+            <button onclick="switchTab('profile')" id="nav-btn-profile" class="flex-1 py-3 text-center rounded-lg transition-all text-slate-400 hover:text-white hover:bg-white/5">
+                <i class="fa-solid fa-user-gear mr-2"></i> Mi Perfil
             </button>
         </nav>
 
-        <!-- UMUNA A PESTAÑA: ALBUM -->
+        <!-- PESTAÑA 1: ÁLBUM -->
         <section id="tab-album" class="space-y-4">
             <div class="bg-wc-panel p-4 rounded-xl border border-white/10 flex flex-col md:flex-row gap-4 justify-between items-center">
                 <div class="relative w-full md:w-80">
                     <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
-                    <input oninput="filterStickers()" id="sticker-search" type="text" placeholder="Agbirok iti pagilian (Kas iti: MEX 5)..." class="w-full pl-10 pr-4 py-2.5 bg-black/50 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-wc-neon transition-colors">
+                    <input oninput="filterStickers()" id="sticker-search" type="text" placeholder="Buscar estampa o país (Ej: MEX 5)..." class="w-full pl-10 pr-4 py-2.5 bg-black/50 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-wc-neon transition-colors">
                 </div>
                 
                 <div class="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 hide-scrollbar">
-                    <button onclick="setFilterStatus('all')" id="filter-status-all" class="px-4 py-2 text-xs font-bold rounded-lg bg-white/20 text-white whitespace-nowrap">Amin</button>
-                    <button onclick="setFilterStatus('owned')" id="filter-status-owned" class="px-4 py-2 text-xs font-bold rounded-lg bg-black/50 text-slate-400 border border-white/5 hover:text-white whitespace-nowrap">Adda Kaniak</button>
-                    <button onclick="setFilterStatus('missing')" id="filter-status-missing" class="px-4 py-2 text-xs font-bold rounded-lg bg-black/50 text-slate-400 border border-white/5 hover:text-white whitespace-nowrap">Kurang</button>
-                    <button onclick="setFilterStatus('duplicates')" id="filter-status-duplicates" class="px-4 py-2 text-xs font-bold rounded-lg bg-black/50 text-slate-400 border border-white/5 hover:text-white whitespace-nowrap">Naulit</button>
-                    
-                    <button onclick="confirmReset()" class="px-3 py-2 text-xs font-bold rounded-lg bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 ml-auto md:ml-2">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </button>
+                    <button onclick="setFilterStatus('all')" id="filter-status-all" class="px-4 py-2 text-xs font-bold rounded-lg bg-white/20 text-white whitespace-nowrap">Todas</button>
+                    <button onclick="setFilterStatus('owned')" id="filter-status-owned" class="px-4 py-2 text-xs font-bold rounded-lg bg-black/50 text-slate-400 border border-white/5 hover:text-white whitespace-nowrap"><i class="fa-solid fa-circle text-wc-neon text-[8px] mr-1"></i>Tengo</button>
+                    <button onclick="setFilterStatus('missing')" id="filter-status-missing" class="px-4 py-2 text-xs font-bold rounded-lg bg-black/50 text-slate-400 border border-white/5 hover:text-white whitespace-nowrap"><i class="fa-solid fa-circle text-red-500 text-[8px] mr-1"></i>Faltantes</button>
+                    <button onclick="setFilterStatus('duplicates')" id="filter-status-duplicates" class="px-4 py-2 text-xs font-bold rounded-lg bg-black/50 text-slate-400 border border-white/5 hover:text-white whitespace-nowrap"><i class="fa-solid fa-circle text-yellow-400 text-[8px] mr-1"></i>Repetidas</button>
                 </div>
             </div>
 
@@ -190,100 +176,123 @@
                     <h3 id="current-category-title" class="text-xl font-black text-white uppercase tracking-wide flex items-center gap-3">
                         <img id="current-category-flag" src="" class="w-8 h-6 rounded object-cover shadow-md hidden">
                         <i id="current-category-icon" class="fa-solid fa-star text-wc-neon hidden"></i>
-                        <span>SEKSION</span>
+                        <span>SECCIÓN</span>
                     </h3>
-                    <span class="text-[10px] text-wc-neon font-bold px-2 py-1 bg-wc-neon/10 rounded border border-wc-neon/20">
-                        Pindut: Adda Kaniak • 2 Segs: Naulit
+                    <span class="text-[10px] text-slate-400 font-bold px-2 py-1 bg-white/5 rounded border border-white/10">
+                        Toque: Tengo • Mantener: Repetida
                     </span>
                 </div>
                 <div id="stickers-grid" class="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9 gap-3"></div>
             </div>
         </section>
 
-        <!-- MAIKADUA A PESTAÑA: SCANNER IA MASIVO -->
-        <section id="tab-scanner" class="hidden">
-            <div class="bg-wc-panel rounded-2xl border border-white/10 p-6 max-w-2xl mx-auto space-y-6">
-                <div class="text-center space-y-3">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-wc-magenta to-wc-purple flex items-center justify-center mx-auto text-2xl shadow-[0_0_15px_rgba(228,0,70,0.5)]">
-                        <i class="fa-solid fa-images text-white"></i>
+        <!-- PESTAÑA 2: INTERCAMBIOS (Motor de Match) -->
+        <section id="tab-trades" class="hidden space-y-6">
+            <div class="bg-wc-panel p-6 rounded-2xl border border-white/10 space-y-5">
+                <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                    <div>
+                        <h3 class="text-lg font-black text-white uppercase"><i class="fa-solid fa-bolt text-wc-neon mr-2"></i> Motor de Match</h3>
+                        <p class="text-xs text-slate-400 mt-1">Encuentra coleccionistas compatibles automáticamente.</p>
                     </div>
-                    <h2 class="text-2xl font-black text-white uppercase">Nawadwad a Karga ti IA</h2>
-                    <p class="text-sm text-slate-400">Mangikarga iti adu a ladawan manipud iti galeria. Usigen ti IA no ania a tarheta ti naipigketen.</p>
+                    <button onclick="loadMarketplaceListings()" class="px-3 py-2 bg-gradient-to-r from-wc-purple to-wc-magenta text-white hover:opacity-90 text-xs font-bold rounded-lg transition-all shadow-lg">
+                        <i class="fa-solid fa-arrows-rotate mr-1"></i> Actualizar
+                    </button>
+                </div>
+                
+                <div id="marketplace-list-container" class="space-y-3 grid md:grid-cols-2 gap-4">
+                    <div class="text-center py-12 text-slate-500 col-span-full">
+                        <i class="fa-solid fa-people-arrows text-4xl mb-3 block opacity-50"></i>
+                        <p class="text-sm">Inicia sesión o sincroniza para buscar intercambios.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PESTAÑA 3: PERFIL Y HERRAMIENTAS (Gestión de Datos y Escáner) -->
+        <section id="tab-profile" class="hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Configuración de Intercambio -->
+                <div class="bg-wc-panel p-6 rounded-2xl border border-white/10 space-y-5">
+                    <h3 class="text-lg font-black text-white uppercase border-b border-white/10 pb-3"><i class="fa-solid fa-id-card text-wc-neon mr-2"></i> Perfil Público</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-xs font-bold text-slate-400 block mb-1">Nombre (Alias de Intercambio):</label>
+                            <input id="trade-user-alias" type="text" placeholder="Ej. Juan Pérez" class="w-full px-4 py-2.5 bg-black/50 border border-white/10 rounded-lg text-sm text-white focus:border-wc-magenta focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-400 block mb-1">Contacto (WhatsApp / Telegram):</label>
+                            <input id="trade-user-contact" type="text" placeholder="Ej. WA: +52 999..." class="w-full px-4 py-2.5 bg-black/50 border border-white/10 rounded-lg text-sm text-white focus:border-wc-magenta focus:outline-none">
+                        </div>
+                        <button onclick="publishToMarketplace()" class="w-full py-3 bg-gradient-to-r from-wc-neon to-green-500 text-black text-xs font-black uppercase tracking-wider rounded-xl shadow-lg hover:opacity-90 transition-all">
+                            <i class="fa-solid fa-cloud-arrow-up mr-2"></i> Publicar mis Faltantes/Repetidas
+                        </button>
+                    </div>
                 </div>
 
-                <div class="space-y-4">
-                    <div id="image-dropzone" class="border-2 border-dashed border-slate-600 rounded-2xl p-8 text-center hover:border-wc-magenta transition-colors cursor-pointer relative bg-black/20">
-                        <input type="file" id="camera-file-input" accept="image/*" multiple class="absolute inset-0 opacity-0 cursor-pointer">
-                        <div class="space-y-3 pointer-events-none">
-                            <i class="fa-solid fa-file-image text-5xl text-slate-400"></i>
-                            <div class="text-sm font-bold text-white">Piliem dagiti Ladawan iti Galeria</div>
-                            <p class="text-[10px] text-slate-500">Mabalin a mangpili iti adu a ladawan agpada</p>
+                <!-- Gestión de Base de Datos -->
+                <div class="bg-wc-panel p-6 rounded-2xl border border-white/10 space-y-5">
+                    <h3 class="text-lg font-black text-white uppercase border-b border-white/10 pb-3"><i class="fa-solid fa-database text-wc-magenta mr-2"></i> Gestión de Datos</h3>
+                    
+                    <div class="space-y-3">
+                        <div class="flex gap-3">
+                            <button onclick="exportCSV()" class="flex-1 py-3 bg-black/50 border border-white/10 hover:border-wc-neon text-white text-xs font-bold rounded-xl transition-all">
+                                <i class="fa-solid fa-download text-wc-neon mr-2"></i> Exportar (CSV)
+                            </button>
+                            <button onclick="document.getElementById('csv-file-input').click()" class="flex-1 py-3 bg-black/50 border border-white/10 hover:border-wc-magenta text-white text-xs font-bold rounded-xl transition-all">
+                                <i class="fa-solid fa-upload text-wc-magenta mr-2"></i> Importar (CSV)
+                            </button>
+                            <input type="file" id="csv-file-input" accept=".csv" class="hidden" onchange="importCSV(event)">
                         </div>
-                    </div>
-
-                    <div id="scanner-preview-container" class="hidden bg-black/40 p-4 rounded-xl border border-white/10 flex flex-col items-center space-y-4">
-                        <div class="relative w-full flex justify-center">
-                            <img id="scanner-img-preview" src="#" alt="Preview" class="max-h-64 rounded-lg object-contain shadow-md opacity-80">
-                            <div id="scanner-img-count" class="absolute top-2 right-2 bg-wc-magenta text-white text-xs font-black px-3 py-1 rounded-lg shadow-lg hidden">
-                                +3 Ladawan
-                            </div>
-                        </div>
-                        <div class="flex space-x-3 w-full">
-                            <button onclick="cancelScan()" class="flex-1 py-3 border border-slate-600 text-white text-sm font-bold rounded-xl hover:bg-white/5">Kanselaen</button>
-                            <button onclick="processImageWithAI()" id="btn-process-scan" class="flex-1 py-3 bg-gradient-to-r from-wc-magenta to-wc-purple text-white text-sm font-black rounded-xl shadow-lg hover:shadow-wc-magenta/50 transition-all">
-                                <i class="fa-solid fa-brain mr-2"></i> Usigen
+                        
+                        <div class="pt-4 border-t border-white/5">
+                            <button onclick="confirmReset()" class="w-full py-3 bg-red-500/10 border border-red-500/30 text-red-500 hover:bg-red-500 hover:text-white text-xs font-bold rounded-xl transition-all">
+                                <i class="fa-solid fa-triangle-exclamation mr-2"></i> Reiniciar Álbum Completo
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <div id="scanner-loading" class="hidden text-center py-8 space-y-4">
-                    <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-wc-neon border-t-transparent shadow-[0_0_10px_rgba(0,255,67,0.5)]"></div>
-                    <p class="text-sm font-bold text-wc-neon animate-pulse">Agur-uray, inusig ti Gemini AI...</p>
-                </div>
-
-                <div id="scanner-results" class="hidden space-y-4 bg-wc-neon/10 p-5 rounded-2xl border border-wc-neon/30">
-                    <h4 class="text-sm font-black text-wc-neon uppercase">Naduktalan a Naipigket a Tarheta:</h4>
-                    <div id="scanner-detected-list" class="flex flex-wrap gap-2 py-2"></div>
-                    <button onclick="acceptScannedStickers()" class="w-full py-3 bg-wc-neon text-black text-sm font-black rounded-xl hover:bg-green-400 transition-colors shadow-lg">
-                        <i class="fa-solid fa-check-double mr-2"></i> Irekord Amin iti Album ko
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- MAIKATLO A PESTAÑA: SUKSUKAT (INTERCAMBIOS) -->
-        <section id="tab-trades" class="hidden space-y-6">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="bg-wc-panel p-6 rounded-2xl border border-white/10 space-y-5 h-fit">
-                    <h3 class="text-lg font-black text-white uppercase border-b border-white/10 pb-3">Bariweswes ti Suksukat</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="text-xs font-bold text-slate-400 block mb-1">Nagan (Pribado):</label>
-                            <input id="trade-user-alias" type="text" placeholder="Kas iti: Juan Pérez" class="w-full px-4 py-2.5 bg-black/50 border border-white/10 rounded-lg text-sm text-white focus:border-wc-magenta focus:outline-none">
+                <!-- Escáner IA Masivo -->
+                <div class="bg-wc-panel p-6 rounded-2xl border border-white/10 md:col-span-2 space-y-5">
+                    <h3 class="text-lg font-black text-white uppercase border-b border-white/10 pb-3"><i class="fa-solid fa-camera-retro text-yellow-400 mr-2"></i> Carga Masiva IA</h3>
+                    <p class="text-xs text-slate-400">Sube fotos de tu álbum. La IA detectará automáticamente qué estampas tienes pegadas.</p>
+                    
+                    <div class="space-y-4 mt-4">
+                        <div id="image-dropzone" class="border-2 border-dashed border-slate-600 rounded-2xl p-6 text-center hover:border-wc-magenta transition-colors cursor-pointer relative bg-black/20">
+                            <input type="file" id="camera-file-input" accept="image/*" multiple class="absolute inset-0 opacity-0 cursor-pointer">
+                            <div class="space-y-2 pointer-events-none">
+                                <i class="fa-solid fa-file-image text-4xl text-slate-400"></i>
+                                <div class="text-sm font-bold text-white">Seleccionar Fotos de Galería</div>
+                            </div>
                         </div>
-                        <div>
-                            <label class="text-xs font-bold text-slate-400 block mb-1">Kontak (WhatsApp / Telegram):</label>
-                            <input id="trade-user-contact" type="text" placeholder="Kas iti: WA: +52 999..." class="w-full px-4 py-2.5 bg-black/50 border border-white/10 rounded-lg text-sm text-white focus:border-wc-magenta focus:outline-none">
+
+                        <div id="scanner-preview-container" class="hidden bg-black/40 p-4 rounded-xl border border-white/10 flex flex-col items-center space-y-4">
+                            <div class="relative w-full flex justify-center">
+                                <img id="scanner-img-preview" src="#" alt="Preview" class="max-h-48 rounded-lg object-contain shadow-md opacity-80">
+                                <div id="scanner-img-count" class="absolute top-2 right-2 bg-wc-magenta text-white text-xs font-black px-3 py-1 rounded-lg shadow-lg hidden">
+                                    +3 Fotos
+                                </div>
+                            </div>
+                            <div class="flex space-x-3 w-full">
+                                <button onclick="cancelScan()" class="flex-1 py-2 border border-slate-600 text-white text-sm font-bold rounded-xl hover:bg-white/5">Cancelar</button>
+                                <button onclick="processImageWithAI()" id="btn-process-scan" class="flex-1 py-2 bg-gradient-to-r from-wc-magenta to-wc-purple text-white text-sm font-black rounded-xl shadow-lg transition-all">
+                                    <i class="fa-solid fa-brain mr-2"></i> Analizar Lote
+                                </button>
+                            </div>
                         </div>
-                        <button onclick="publishToMarketplace()" class="w-full py-3 bg-gradient-to-r from-wc-purple to-wc-magenta text-white text-xs font-black uppercase tracking-wider rounded-xl shadow-lg hover:shadow-wc-magenta/40 transition-all">
-                            <i class="fa-solid fa-cloud-arrow-up mr-2"></i> I-post dagiti Kurang/Naulit
-                        </button>
                     </div>
-                </div>
 
-                <div class="lg:col-span-2 bg-wc-panel p-6 rounded-2xl border border-white/10 space-y-5">
-                    <div class="flex justify-between items-center border-b border-white/10 pb-3">
-                        <h3 class="text-lg font-black text-white uppercase">Nakasirib a Tumpong</h3>
-                        <button onclick="loadMarketplaceListings()" class="px-3 py-1.5 bg-white/10 text-white hover:bg-white/20 text-xs font-bold rounded-lg transition-colors">
-                            <i class="fa-solid fa-arrows-rotate mr-1"></i> Pabaruen
-                        </button>
+                    <div id="scanner-loading" class="hidden text-center py-6 space-y-3">
+                        <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-wc-neon border-t-transparent"></div>
+                        <p class="text-xs font-bold text-wc-neon animate-pulse">Procesando lote con IA...</p>
                     </div>
-                    <div id="marketplace-list-container" class="space-y-3">
-                        <div class="text-center py-12 text-slate-500">
-                            <i class="fa-solid fa-globe text-4xl mb-3 block opacity-50"></i>
-                            <p class="text-sm">Sumrek tapno masarakam dagiti kailian a kasuksukatmo.</p>
-                        </div>
+
+                    <div id="scanner-results" class="hidden space-y-4 bg-wc-neon/10 p-4 rounded-xl border border-wc-neon/30">
+                        <h4 class="text-sm font-black text-wc-neon">Estampas Pegadas Detectadas:</h4>
+                        <div id="scanner-detected-list" class="flex flex-wrap gap-2 py-2"></div>
+                        <button onclick="acceptScannedStickers()" class="w-full py-2.5 bg-wc-neon text-black text-sm font-black rounded-xl shadow-lg">
+                            <i class="fa-solid fa-check-double mr-2"></i> Agregar a mi Álbum
+                        </button>
                     </div>
                 </div>
             </div>
@@ -291,90 +300,114 @@
 
     </main>
 
-    <!-- Modals -->
+    <!-- Modal Motor de Match -->
+    <div id="match-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-wc-panel rounded-2xl border border-wc-neon/30 max-w-lg w-full shadow-2xl flex flex-col max-h-[90vh]">
+            <div class="p-4 border-b border-white/10 flex justify-between items-center bg-black/50 rounded-t-2xl">
+                <h3 class="text-lg font-black text-white"><i class="fa-solid fa-handshake text-wc-neon mr-2"></i> Match: <span id="match-user-name" class="text-wc-neon">Usuario</span></h3>
+                <button onclick="closeMatchModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            
+            <div class="p-5 space-y-6 overflow-y-auto">
+                <!-- Lo que YO necesito y ÉL tiene repetido -->
+                <div>
+                    <h4 class="text-sm font-black text-wc-neon uppercase border-b border-wc-neon/20 pb-2 mb-3">
+                        <i class="fa-solid fa-arrow-down mr-1"></i> Te sirven de él (<span id="match-me-sirven-count">0</span>)
+                    </h4>
+                    <p class="text-[10px] text-slate-400 mb-2">Faltantes tuyas que este coleccionista tiene repetidas.</p>
+                    <div id="match-me-sirven-list" class="flex flex-wrap gap-2"></div>
+                </div>
+
+                <!-- Lo que ÉL necesita y YO tengo repetido -->
+                <div>
+                    <h4 class="text-sm font-black text-yellow-400 uppercase border-b border-yellow-400/20 pb-2 mb-3">
+                        <i class="fa-solid fa-arrow-up mr-1"></i> Le sirven tuyas (<span id="match-le-sirven-count">0</span>)
+                    </h4>
+                    <p class="text-[10px] text-slate-400 mb-2">Faltantes suyas que tú tienes repetidas.</p>
+                    <div id="match-le-sirven-list" class="flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+
+            <div class="p-4 border-t border-white/10 bg-black/50 rounded-b-2xl">
+                <button onclick="confirmarIntercambio()" class="w-full py-3 bg-wc-neon text-black font-black rounded-xl shadow-lg hover:opacity-90">
+                    <i class="fa-brands fa-whatsapp mr-2 text-lg"></i> Contactar para Intercambio
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Reset -->
     <div id="reset-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-wc-panel rounded-2xl border border-red-500/30 max-w-sm w-full p-6 shadow-2xl text-center space-y-5">
             <div class="w-16 h-16 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center mx-auto text-3xl">
                 <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
             <div>
-                <h3 class="text-xl font-black text-white">I-reset ti Album?</h3>
-                <p class="text-sm text-slate-400 mt-2">Mapunas amin dagiti naurnongmo a tarheta ken dagiti naulit. Saan a mabalbaliw daytoy a tignay.</p>
+                <h3 class="text-xl font-black text-white">¿Reiniciar Álbum?</h3>
+                <p class="text-sm text-slate-400 mt-2">Esta acción borrará todas tus estampas obtenidas y repetidas. No se puede deshacer.</p>
             </div>
             <div class="flex space-x-3 pt-2">
-                <button onclick="closeResetModal()" class="flex-1 py-2.5 bg-white/10 text-white font-bold rounded-lg hover:bg-white/20">Kanselaen</button>
-                <button onclick="executeReset()" class="flex-1 py-2.5 bg-red-600 text-white font-black rounded-lg shadow-lg shadow-red-600/30">Wen, Punasen Amin</button>
+                <button onclick="closeResetModal()" class="flex-1 py-2.5 bg-white/10 text-white font-bold rounded-lg hover:bg-white/20">Cancelar</button>
+                <button onclick="executeReset()" class="flex-1 py-2.5 bg-red-600 text-white font-black rounded-lg shadow-lg shadow-red-600/30">Sí, Borrar Todo</button>
             </div>
         </div>
     </div>
 
-    <!-- Mobile Nav -->
-    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-wc-panel border-t border-white/10 px-4 py-2 flex justify-around items-center z-40 pb-safe">
-        <button onclick="switchTab('album')" class="mobile-nav-btn text-wc-neon flex flex-col items-center space-y-1 w-16">
-            <i class="fa-solid fa-book text-xl"></i>
-            <span class="text-[9px] font-black uppercase">Album</span>
+    <!-- Navegación Móvil Rápida -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-wc-panel border-t border-white/10 px-4 py-2 flex justify-around items-center z-40 pb-safe shadow-[0_-10px_20px_rgba(0,0,0,0.5)]">
+        <button onclick="switchTab('album')" class="mobile-nav-btn text-wc-neon flex flex-col items-center space-y-1 w-20 transition-colors">
+            <i class="fa-solid fa-house text-xl"></i>
+            <span class="text-[10px] font-black uppercase">Home</span>
         </button>
-        <button onclick="switchTab('scanner')" class="mobile-nav-btn text-slate-500 flex flex-col items-center space-y-1 w-16">
-            <i class="fa-solid fa-camera text-xl"></i>
-            <span class="text-[9px] font-bold uppercase">Scanner</span>
+        <button onclick="switchTab('trades')" class="mobile-nav-btn text-slate-500 flex flex-col items-center space-y-1 w-20 transition-colors">
+            <i class="fa-solid fa-handshake text-xl"></i>
+            <span class="text-[10px] font-bold uppercase">Cambios</span>
         </button>
-        <button onclick="switchTab('trades')" class="mobile-nav-btn text-slate-500 flex flex-col items-center space-y-1 w-16">
-            <i class="fa-solid fa-arrows-rotate text-xl"></i>
-            <span class="text-[9px] font-bold uppercase">Suksukat</span>
+        <button onclick="switchTab('profile')" class="mobile-nav-btn text-slate-500 flex flex-col items-center space-y-1 w-20 transition-colors">
+            <i class="fa-solid fa-user-gear text-xl"></i>
+            <span class="text-[10px] font-bold uppercase">Perfil</span>
         </button>
     </div>
 
     <script>
-        // Opisial a Grupos manipud iti pdf/panini - Naiyurnos 100% (GOD MODE)
+        // DATOS OFICIALES PANINI 2026
         const SECTIONS = {
-            'FWC': { title: 'Naipangpangruna a FWC', count: 12, flag: 'un', specialType: 'fwc' }, 
+            'FWC': { title: 'Especiales FWC', count: 12, flag: 'un', specialType: 'fwc' }, 
             'MYP': { title: 'MyPanini™', count: 1, flag: 'un', specialType: 'mypanini' }, 
             
-            // GRUPO A
             'MEX': { title: 'México', count: 20, flag: 'mx' }, 'RSA': { title: 'Sudáfrica', count: 20, flag: 'za' },
             'KOR': { title: 'Corea del Sur', count: 20, flag: 'kr' }, 'CZE': { title: 'Chequia', count: 20, flag: 'cz' },
             
-            // GRUPO B
             'CAN': { title: 'Canadá', count: 20, flag: 'ca' }, 'BIH': { title: 'Bosnia y Herzegovina', count: 20, flag: 'ba' },
             'QAT': { title: 'Qatar', count: 20, flag: 'qa' }, 'SUI': { title: 'Suiza', count: 20, flag: 'ch' },
             
-            // GRUPO C
             'BRA': { title: 'Brasil', count: 20, flag: 'br' }, 'MAR': { title: 'Marruecos', count: 20, flag: 'ma' },
             'HAI': { title: 'Haití', count: 20, flag: 'ht' }, 'SCO': { title: 'Escocia', count: 20, flag: 'gb-sct' },
             
-            // GRUPO D
             'USA': { title: 'Estados Unidos', count: 20, flag: 'us' }, 'PAR': { title: 'Paraguay', count: 20, flag: 'py' },
             'AUS': { title: 'Australia', count: 20, flag: 'au' }, 'TUR': { title: 'Turquía', count: 20, flag: 'tr' },
             
-            // GRUPO E
             'GER': { title: 'Alemania', count: 20, flag: 'de' }, 'CUW': { title: 'Curazao', count: 20, flag: 'cw' },
             'CIV': { title: 'Costa de Marfil', count: 20, flag: 'ci' }, 'ECU': { title: 'Ecuador', count: 20, flag: 'ec' },
             
-            // GRUPO F
             'NED': { title: 'Países Bajos', count: 20, flag: 'nl' }, 'JPN': { title: 'Japón', count: 20, flag: 'jp' },
             'SWE': { title: 'Suecia', count: 20, flag: 'se' }, 'TUN': { title: 'Túnez', count: 20, flag: 'tn' },
             
-            // GRUPO G
             'BEL': { title: 'Bélgica', count: 20, flag: 'be' }, 'EGY': { title: 'Egipto', count: 20, flag: 'eg' },
             'IRN': { title: 'Irán', count: 20, flag: 'ir' }, 'NZL': { title: 'Nueva Zelanda', count: 20, flag: 'nz' },
             
-            // GRUPO H
             'ESP': { title: 'España', count: 20, flag: 'es' }, 'CPV': { title: 'Cabo Verde', count: 20, flag: 'cv' },
             'KSA': { title: 'Arabia Saudita', count: 20, flag: 'sa' }, 'URU': { title: 'Uruguay', count: 20, flag: 'uy' },
             
-            // GRUPO I
             'FRA': { title: 'Francia', count: 20, flag: 'fr' }, 'SEN': { title: 'Senegal', count: 20, flag: 'sn' },
             'IRQ': { title: 'Irak', count: 20, flag: 'iq' }, 'NOR': { title: 'Noruega', count: 20, flag: 'no' },
             
-            // GRUPO J
             'ARG': { title: 'Argentina', count: 20, flag: 'ar' }, 'ALG': { title: 'Argelia', count: 20, flag: 'dz' },
             'AUT': { title: 'Austria', count: 20, flag: 'at' }, 'JOR': { title: 'Jordania', count: 20, flag: 'jo' },
             
-            // GRUPO K
-            'POR': { title: 'Portugal', count: 20, flag: 'pt' }, 'COD': { title: 'República Democrática del Congo', count: 20, flag: 'cd' },
+            'POR': { title: 'Portugal', count: 20, flag: 'pt' }, 'COD': { title: 'RD del Congo', count: 20, flag: 'cd' },
             'UZB': { title: 'Uzbekistán', count: 20, flag: 'uz' }, 'COL': { title: 'Colombia', count: 20, flag: 'co' },
             
-            // GRUPO L
             'ENG': { title: 'Inglaterra', count: 20, flag: 'gb-eng' }, 'CRO': { title: 'Croacia', count: 20, flag: 'hr' },
             'GHA': { title: 'Ghana', count: 20, flag: 'gh' }, 'PAN': { title: 'Panamá', count: 20, flag: 'pa' },
             
@@ -387,16 +420,16 @@
             marketplaceListings: []
         };
 
-        // Balo a key para mangilinis kadagiti na-corrupt nga impormasion
-        const LOCAL_STORAGE_KEY = 'panini26_master_godmode_v2';
-        const APP_ID = typeof __app_id !== 'undefined' ? __app_id : 'panini-2026-master-godmode-v2';
+        const LOCAL_STORAGE_KEY = 'panini26_stampa_engine';
+        const APP_ID = typeof __app_id !== 'undefined' ? __app_id : 'panini-stampa-engine';
+        let currentTradeContact = "";
 
         window.addEventListener('DOMContentLoaded', () => {
             initInventoryData(); loadLocalStorageData(); renderCategorySelector(); renderStickersGrid();
             updateDashboardMetrics(); initFirebaseConnection(); initScannerListeners();
         });
 
-        // Naituding a paset ti tarheta: 1=Eskudo, 2 agingga 12=Agay-ayam, 13=Ladawan ti Tim, 14 agingga 20=Agay-ayam
+        // 1=Escudo, 2 al 12=Jugador, 13=Equipo, 14 al 20=Jugador
         function initInventoryData() {
             for (const [prefix, sec] of Object.entries(SECTIONS)) {
                 for (let i = 1; i <= sec.count; i++) {
@@ -405,13 +438,13 @@
                     let label = '';
                     
                     if (sec.specialType === 'coca-cola') { type = 'coca-cola'; label = 'Fan Sticker'; } 
-                    else if (sec.specialType === 'mypanini') { type = 'mypanini'; label = 'Ladawam'; } 
-                    else if (sec.specialType === 'fwc') { type = 'special'; label = 'Pammalagip'; } 
-                    else if (i === 1) { type = 'badge'; label = 'Opisial nga Eskudo'; } 
-                    else if (i === 13) { type = 'team'; label = 'Ladawan ti Tim'; }
+                    else if (sec.specialType === 'mypanini') { type = 'mypanini'; label = 'Tu Foto'; } 
+                    else if (sec.specialType === 'fwc') { type = 'special'; label = 'Conmemorativa'; } 
+                    else if (i === 1) { type = 'badge'; label = 'Escudo Oficial'; } 
+                    else if (i === 13) { type = 'team'; label = 'Foto de Equipo'; }
                     else { 
                         type = 'player';
-                        label = 'Agay-ayam'; 
+                        label = 'Jugador'; 
                     }
 
                     state.inventory[key] = {
@@ -488,28 +521,49 @@
             }
         }
 
+        // UX: Tarjetas Interactivas con Estados de Color
         function renderStickersGrid() {
             const grid = document.getElementById('stickers-grid'); grid.innerHTML = '';
             const searchValue = document.getElementById('sticker-search').value.toLowerCase().trim();
             
             const list = Object.values(state.inventory).filter(item => {
                 const matchCategory = item.prefix === state.currentCategory; let matchStatus = true;
-                if (state.currentFilterStatus === 'owned') matchStatus = item.owned; else if (state.currentFilterStatus === 'missing') matchStatus = !item.owned; else if (state.currentFilterStatus === 'duplicates') matchStatus = item.duplicates > 0;
+                if (state.currentFilterStatus === 'owned') matchStatus = item.owned; 
+                else if (state.currentFilterStatus === 'missing') matchStatus = !item.owned; 
+                else if (state.currentFilterStatus === 'duplicates') matchStatus = item.duplicates > 0;
                 if (searchValue) return `${item.prefix} ${item.num} ${item.label}`.toLowerCase().includes(searchValue) && matchStatus;
                 return matchCategory && matchStatus;
             });
 
-            if (list.length === 0) { grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500 font-bold">Awan nasarakan a tarheta.</div>`; return; }
+            if (list.length === 0) { grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500 font-bold">No se encontraron estampas.</div>`; return; }
 
             list.forEach(item => {
                 const card = document.createElement('div');
-                let typeClass = '';
-                if(item.type === 'coca-cola') typeClass = item.owned ? 'coca-cola shadow-[0_0_15px_rgba(244,0,9,0.6)]' : 'coca-cola opacity-40 grayscale';
-                else if(item.type === 'mypanini') typeClass = item.owned ? 'mypanini shadow-[0_0_15px_rgba(0,242,254,0.6)]' : 'mypanini opacity-40 grayscale';
-                else if(item.shiny) typeClass = item.owned ? 'shiny shadow-[0_0_15px_rgba(255,215,0,0.6)]' : 'shiny opacity-40 grayscale';
-                else typeClass = item.owned ? 'owned bg-white' : '';
+                
+                // Lógica de Colores UI (Tengo = Verde, Repetida = Amarillo, Faltante = Rojo)
+                let borderClass = 'border-red-500/30';
+                let bgClass = 'bg-gradient-to-br from-[#2a1118] to-[#1a1a24]'; // Fondo rojizo (Faltante)
+                let textClass = 'text-white/50';
 
-                card.className = `sticker-card no-select rounded-xl p-2 aspect-[3/4.2] flex flex-col items-center justify-between cursor-pointer ${typeClass}`;
+                if (item.owned) {
+                    if (item.duplicates > 0) {
+                        borderClass = 'border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.2)]';
+                        bgClass = 'bg-gradient-to-br from-yellow-900/40 to-yellow-950/20'; // Amarillo (Repetida)
+                        textClass = 'text-yellow-400';
+                    } else {
+                        borderClass = 'border-wc-neon shadow-[0_0_15px_rgba(0,255,67,0.15)]';
+                        bgClass = 'bg-gradient-to-br from-green-900/30 to-[#1a1a24]'; // Verde (Tengo)
+                        textClass = 'text-white';
+                    }
+                }
+
+                // Clases especiales de efectos visuales combinadas
+                let specialEffects = '';
+                if(item.type === 'coca-cola' && item.owned) specialEffects = 'coca-cola';
+                if(item.type === 'mypanini' && item.owned) specialEffects = 'mypanini';
+                if(item.shiny && item.owned) specialEffects = 'shiny';
+
+                card.className = `sticker-card no-select rounded-xl p-2 aspect-[3/4.2] flex flex-col items-center justify-between cursor-pointer border ${borderClass} ${bgClass} ${specialEffects}`;
                 
                 let pressTimer;
                 let isDragging = false;
@@ -522,13 +576,13 @@
                 const startPress = (e) => {
                     isDragging = false;
                     if (e.type === 'touchstart') { startX = e.touches[0].clientX; startY = e.touches[0].clientY; }
-                    progressBar.style.opacity = '1'; progressBar.style.width = '100%'; progressBar.style.transition = 'width 2s linear';
+                    progressBar.style.opacity = '1'; progressBar.style.width = '100%'; progressBar.style.transition = 'width 1.5s linear';
                     pressTimer = setTimeout(() => {
                         if(!isDragging) {
                             handleLongPress(item.id);
                             progressBar.style.transition = 'none'; progressBar.style.width = '0%'; progressBar.style.opacity = '0';
                         }
-                    }, 2000);
+                    }, 1500);
                 };
 
                 const cancelPress = () => {
@@ -552,34 +606,32 @@
                 card.addEventListener('touchstart', startPress, {passive: true}); card.addEventListener('touchmove', onMove, {passive: true}); 
                 card.addEventListener('touchend', (e) => { cancelPress(); if(!isDragging) { e.preventDefault(); handleClick(item.id); } });
 
-                const badgeDup = item.duplicates > 0 ? `<div class="absolute -top-2 -right-2 bg-wc-magenta text-white text-[11px] font-black w-6 h-6 rounded-full flex items-center justify-center shadow-lg border-2 border-wc-dark z-20">+${item.duplicates}</div>` : '';
+                const badgeDup = item.duplicates > 0 ? `<div class="absolute -top-2 -right-2 bg-yellow-400 text-black text-[11px] font-black w-6 h-6 rounded-full flex items-center justify-center shadow-lg z-20">+${item.duplicates}</div>` : '';
 
-                // Dalus nga icono para agay-ayam (Awan parikot ti nagan)
                 let iconHtml = '';
-                if (item.type === 'coca-cola') iconHtml = '<i class="fa-solid fa-bottle-water text-3xl opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>';
-                else if (item.type === 'mypanini') iconHtml = '<i class="fa-solid fa-camera-retro text-3xl opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>';
-                else if (item.type === 'badge') iconHtml = '<i class="fa-solid fa-shield-halved text-3xl opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>';
-                else if (item.type === 'team') iconHtml = '<i class="fa-solid fa-users text-3xl opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>';
-                else if (item.type === 'special') iconHtml = '<i class="fa-solid fa-trophy text-4xl opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>';
+                if (item.type === 'coca-cola') iconHtml = `<i class="fa-solid fa-bottle-water text-3xl opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${textClass}"></i>`;
+                else if (item.type === 'mypanini') iconHtml = `<i class="fa-solid fa-camera-retro text-3xl opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${textClass}"></i>`;
+                else if (item.type === 'badge') iconHtml = `<i class="fa-solid fa-shield-halved text-3xl opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${textClass}"></i>`;
+                else if (item.type === 'team') iconHtml = `<i class="fa-solid fa-users text-3xl opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${textClass}"></i>`;
+                else if (item.type === 'special') iconHtml = `<i class="fa-solid fa-trophy text-4xl opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${textClass}"></i>`;
                 else {
-                    iconHtml = '<i class="fa-solid fa-user text-3xl opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>';
+                    iconHtml = `<i class="fa-solid fa-user text-3xl opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${textClass}"></i>`;
                 }
 
                 const flagUrl = item.flagCode !== 'un' ? `https://flagcdn.com/16x12/${item.flagCode}.png` : '';
-                let numColor = (item.owned && !item.shiny && item.type === 'player') ? 'text-black' : 'text-white';
-                if(item.type === 'badge' || item.type === 'special') numColor = 'text-[#4a2500]';
+                let numColor = item.owned && item.shiny ? 'text-[#4a2500]' : textClass;
 
                 card.innerHTML += `
                     ${badgeDup}
                     <div class="w-full flex justify-between items-start relative z-10 pointer-events-none">
-                        <span class="text-[9px] font-black tracking-widest ${numColor} opacity-70">${item.prefix}</span>
+                        <span class="text-[9px] font-black tracking-widest opacity-80 ${numColor}">${item.prefix}</span>
                         ${flagUrl ? `<img src="${flagUrl}" class="w-4 h-3 rounded-sm opacity-80 shadow-sm border border-black/10">` : ''}
                     </div>
                     ${iconHtml}
                     <div class="text-center relative z-10 mt-1 pointer-events-none">
                         <span class="text-3xl font-black block leading-none ${numColor}">${item.num}</span>
                     </div>
-                    <div class="text-[9px] font-bold text-center w-full uppercase tracking-tighter truncate mt-1 bg-black/30 rounded px-1 py-0.5 relative z-10 ${numColor} ${item.owned ? 'shadow-sm' : ''} pointer-events-none">${item.label}</div>
+                    <div class="text-[9px] font-bold text-center w-full uppercase tracking-tighter truncate mt-1 bg-black/30 rounded px-1 py-0.5 relative z-10 ${numColor} pointer-events-none">${item.label}</div>
                 `;
                 grid.appendChild(card);
             });
@@ -587,7 +639,7 @@
 
         function handleClick(id) {
             const item = state.inventory[id];
-            if (!item.owned) { item.owned = true; item.duplicates = 0; showToast(`Naala: ${id.replace('-', ' ')}`, 'success'); } 
+            if (!item.owned) { item.owned = true; item.duplicates = 0; showToast(`¡Estampa obtenida: ${id.replace('-', ' ')}!`, 'success'); } 
             else if (item.owned && item.duplicates === 0) { item.owned = false; } 
             else { item.duplicates--; }
             saveLocalStorageData(); renderCategorySelector(); renderStickersGrid();
@@ -597,14 +649,20 @@
             const item = state.inventory[id];
             if (!item.owned) { item.owned = true; item.duplicates = 0; } else { item.duplicates++; }
             if ('vibrate' in navigator) navigator.vibrate(50);
-            showToast(`Nainayon ti naulit: ${id.replace('-', ' ')}`, 'neutral');
+            showToast(`¡Añadida como repetida: ${id.replace('-', ' ')}!`, 'neutral');
             saveLocalStorageData(); renderCategorySelector(); renderStickersGrid();
         }
 
         function setFilterStatus(status) {
             state.currentFilterStatus = status;
             document.querySelectorAll('[id^="filter-status-"]').forEach(btn => { btn.className = "px-4 py-2 text-xs font-bold rounded-lg bg-black/50 text-slate-400 border border-white/5 hover:text-white whitespace-nowrap"; });
-            document.getElementById(`filter-status-${status}`).className = "px-4 py-2 text-xs font-bold rounded-lg bg-white/20 text-white whitespace-nowrap border border-white/40";
+            
+            let color = 'white';
+            if(status === 'owned') color = 'wc-neon';
+            if(status === 'missing') color = 'red-500';
+            if(status === 'duplicates') color = 'yellow-400';
+            
+            document.getElementById(`filter-status-${status}`).className = `px-4 py-2 text-xs font-bold rounded-lg bg-white/10 text-white whitespace-nowrap border border-${color}/50 shadow-[0_0_10px_rgba(255,255,255,0.1)]`;
             renderStickersGrid();
         }
         function filterStickers() { renderStickersGrid(); }
@@ -620,7 +678,7 @@
             document.getElementById('stats-missing').textContent = missing;
             document.getElementById('stats-duplicates').textContent = dups;
             document.getElementById('progress-text-pct').textContent = `${pct}%`;
-            document.getElementById('stats-missing-text').textContent = `Agkurang ka ti ${missing} a tarheta`;
+            document.getElementById('stats-missing-text').textContent = `Te faltan ${missing} estampas para el 100%`;
             document.getElementById('progress-circle-bar').setAttribute('stroke-dasharray', `${pct}, 100`);
             updateAchievements(); 
         }
@@ -637,11 +695,11 @@
             const ccOwned = Object.values(state.inventory).filter(i => i.type === 'coca-cola' && i.owned).length;
 
             const achievements = [
-                { id: 'novato', title: 'Baro iti album', req: pct > 0.05, icon: 'fa-seedling', color: 'text-emerald-400' },
-                { id: 'experto', title: 'Eksperto ti album', req: pct > 0.50, icon: 'fa-star', color: 'text-amber-400' },
-                { id: 'campeon', title: 'Kampyeon ti album', req: pct === 1, icon: 'fa-trophy', color: 'text-yellow-300' },
-                { id: 'equipos12', title: '12 a Pagilian', req: completedTeams >= 12, icon: 'fa-flag', color: 'text-blue-400' },
-                { id: 'equipos36', title: '36 a Pagilian', req: completedTeams >= 36, icon: 'fa-font-awesome', color: 'text-purple-400' },
+                { id: 'novato', title: 'Novato Coleccionista', req: pct > 0.05, icon: 'fa-seedling', color: 'text-emerald-400' },
+                { id: 'experto', title: 'Experto de Álbum', req: pct > 0.50, icon: 'fa-star', color: 'text-amber-400' },
+                { id: 'campeon', title: 'Campeón Mundial', req: pct === 1, icon: 'fa-trophy', color: 'text-yellow-300' },
+                { id: 'equipos12', title: '12 Selecciones', req: completedTeams >= 12, icon: 'fa-flag', color: 'text-blue-400' },
+                { id: 'equipos36', title: '36 Selecciones', req: completedTeams >= 36, icon: 'fa-font-awesome', color: 'text-purple-400' },
                 { id: 'cc_fan', title: 'Fan Coca-Cola', req: ccOwned >= 5, icon: 'fa-bottle-water', color: 'text-red-500' }
             ];
 
@@ -651,10 +709,61 @@
                 div.innerHTML = `
                     <i class="fa-solid ${ach.icon} text-3xl mb-2 ${ach.color}"></i>
                     <span class="text-[9px] font-bold text-white leading-tight">${ach.title}</span>
-                    <span class="text-[8px] mt-1 ${ach.req ? 'text-wc-neon' : 'text-slate-500'}">${ach.req ? 'NALUKTAN' : 'NAKASERA'}</span>
+                    <span class="text-[8px] mt-1 ${ach.req ? 'text-wc-neon' : 'text-slate-500'}">${ach.req ? 'DESBLOQUEADO' : 'BLOQUEADO'}</span>
                 `;
                 container.appendChild(div);
             });
+        }
+
+        // --- IMPORTACIÓN / EXPORTACIÓN CSV ---
+        function exportCSV() {
+            let csv = "ID,Cantidad\n";
+            for (const [id, item] of Object.entries(state.inventory)) {
+                let qty = item.owned ? 1 + item.duplicates : 0;
+                csv += `${id},${qty}\n`;
+            }
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", "mis_estampas_panini_2026.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast("Backup exportado correctamente.", "success");
+        }
+
+        function importCSV(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const lines = e.target.result.split('\n');
+                let updatedCount = 0;
+                for (let i = 1; i < lines.length; i++) {
+                    const parts = lines[i].split(',');
+                    if (parts.length >= 2) {
+                        const id = parts[0].trim();
+                        const qty = parseInt(parts[1].trim());
+                        if (state.inventory[id] && !isNaN(qty)) {
+                            if (qty > 0) {
+                                state.inventory[id].owned = true;
+                                state.inventory[id].duplicates = qty - 1;
+                            } else {
+                                state.inventory[id].owned = false;
+                                state.inventory[id].duplicates = 0;
+                            }
+                            updatedCount++;
+                        }
+                    }
+                }
+                saveLocalStorageData();
+                renderCategorySelector();
+                renderStickersGrid();
+                showToast(`¡Se actualizaron ${updatedCount} estampas desde el CSV!`, 'success');
+                event.target.value = ''; // Reset input
+            };
+            reader.readAsText(file);
         }
 
         function confirmReset() { document.getElementById('reset-modal').classList.remove('hidden'); }
@@ -662,10 +771,125 @@
         function executeReset() {
             Object.values(state.inventory).forEach(item => { item.owned = false; item.duplicates = 0; });
             saveLocalStorageData(); renderCategorySelector(); renderStickersGrid();
-            closeResetModal(); showToast('Na-reset ti album.', 'success');
+            closeResetModal(); showToast('El álbum ha sido reiniciado a cero.', 'success');
         }
 
-        // --- 3. NAWADWAD A KARGA TI IA ---
+        // --- MOTOR DE MATCH (INTERCAMBIOS INTELIGENTES) ---
+        function calcularMatch(miFaltantes, misRepetidas, otroFaltantes, otroRepetidas) {
+            // Usando Sets para eficiencia O(N) como lo solicitaste
+            const setMisFaltantes = new Set(miFaltantes);
+            const setMisRepetidas = new Set(misRepetidas);
+            const setOtroFaltantes = new Set(otroFaltantes);
+            const setOtroRepetidas = new Set(otroRepetidas);
+
+            // Estampas que yo necesito y el otro tiene disponibles (Intersect)
+            const meSirven = [...setMisFaltantes].filter(id => setOtroRepetidas.has(id));
+            
+            // Estampas que yo tengo y el otro necesita (Intersect)
+            const leSirven = [...setMisRepetidas].filter(id => setOtroFaltantes.has(id));
+
+            return { meSirven, leSirven };
+        }
+
+        function openMatchModal(aliasOtro, contacto, otroFaltantes, otroRepetidas) {
+            const misFaltantes = Object.keys(state.inventory).filter(id => !state.inventory[id].owned);
+            const misRepetidas = Object.keys(state.inventory).filter(id => state.inventory[id].duplicates > 0);
+
+            const result = calcularMatch(misFaltantes, misRepetidas, otroFaltantes, otroRepetidas);
+            currentTradeContact = contacto;
+
+            document.getElementById('match-user-name').textContent = aliasOtro;
+            document.getElementById('match-me-sirven-count').textContent = result.meSirven.length;
+            document.getElementById('match-le-sirven-count').textContent = result.leSirven.length;
+
+            const mapBadge = (id, colors) => `<span class="px-2 py-1 ${colors} rounded shadow border text-xs font-black tracking-wider">${id}</span>`;
+            
+            document.getElementById('match-me-sirven-list').innerHTML = result.meSirven.length > 0 
+                ? result.meSirven.map(id => mapBadge(id, 'bg-wc-neon/20 text-wc-neon border-wc-neon/50')).join('') 
+                : '<span class="text-slate-500 text-xs italic">No tiene ninguna estampa que te falte.</span>';
+
+            document.getElementById('match-le-sirven-list').innerHTML = result.leSirven.length > 0 
+                ? result.leSirven.map(id => mapBadge(id, 'bg-yellow-400/20 text-yellow-400 border-yellow-400/50')).join('') 
+                : '<span class="text-slate-500 text-xs italic">No tienes repetidas que le sirvan.</span>';
+
+            document.getElementById('match-modal').classList.remove('hidden');
+        }
+
+        function closeMatchModal() { document.getElementById('match-modal').classList.add('hidden'); }
+        
+        function confirmarIntercambio() {
+            closeMatchModal();
+            if(currentTradeContact && currentTradeContact.toLowerCase().includes('wa')) {
+                showToast("Abriendo WhatsApp...", "success");
+                // Lógica futura para redirección WA
+            } else {
+                showToast("¡Solicitud de contacto lista!", "success");
+            }
+        }
+
+        // --- CARGA DE LISTADO DEL MERCADO (FIREBASE / MOCK) ---
+        async function loadMarketplaceListings() {
+            const container = document.getElementById('marketplace-list-container');
+            container.innerHTML = '<div class="text-center py-12 col-span-full"><div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-wc-neon border-t-transparent"></div></div>';
+
+            if (!state.firebase.isConnected) {
+                // Mockup en caso de no conectar la Base de Datos para mostrar funcionalidad local
+                setTimeout(() => {
+                    const mockUsers = [
+                        { userId: 'u1', alias: 'Alejandro_MX', contact: 'WA', missing: ['MEX-1', 'ARG-10', 'BRA-2'], repeats: ['USA-5', 'MEX-5', 'GER-1', 'MEX-12', 'BRA-1'] },
+                        { userId: 'u2', alias: 'Sofía_Stampa', contact: 'WA', missing: ['MEX-5', 'GER-1'], repeats: ['ARG-10', 'FRA-3'] }
+                    ];
+                    renderMarketplace(mockUsers);
+                }, 800);
+                return;
+            }
+
+            try {
+                const querySnapshot = await window.FirebaseSDK.getDocs(window.FirebaseSDK.collection(state.firebase.db, 'artifacts', APP_ID, 'public', 'data', 'trades'));
+                const listings = [];
+                querySnapshot.forEach((doc) => {
+                    if (doc.id !== state.firebase.userId) listings.push(doc.data());
+                });
+                renderMarketplace(listings);
+            } catch (e) {
+                container.innerHTML = '<div class="text-center text-red-500 py-8 col-span-full font-bold">Error al conectar con el servidor de intercambios.</div>';
+            }
+        }
+
+        function renderMarketplace(listings) {
+            const container = document.getElementById('marketplace-list-container');
+            if(listings.length === 0) {
+                container.innerHTML = '<div class="text-center py-12 text-slate-500 col-span-full">No hay coleccionistas activos ahora mismo.</div>';
+                return;
+            }
+
+            const misFaltantes = new Set(Object.keys(state.inventory).filter(id => !state.inventory[id].owned));
+            
+            // Ordenar coleccionistas por la cantidad de estampas útiles que tienen para mi (Match Score)
+            const listMapeada = listings.map(user => {
+                const susRepetidas = new Set(user.repeats || []);
+                const meSirven = [...misFaltantes].filter(id => susRepetidas.has(id)).length;
+                return { ...user, matchScore: meSirven };
+            }).sort((a, b) => b.matchScore - a.matchScore);
+
+            container.innerHTML = listMapeada.map(user => `
+                <div class="bg-black/30 border border-white/5 rounded-xl p-4 flex flex-col justify-between hover:border-wc-magenta/50 transition-colors shadow-sm relative overflow-hidden">
+                    ${user.matchScore > 0 ? `<div class="absolute top-0 right-0 bg-wc-neon text-black text-[10px] font-black px-3 py-1 rounded-bl-xl shadow-[0_0_10px_rgba(0,255,67,0.5)]">¡MATCH ${user.matchScore}!</div>` : ''}
+                    <div class="mb-3">
+                        <h4 class="font-black text-white text-md flex items-center"><i class="fa-solid fa-user-circle text-slate-500 mr-2"></i> ${user.alias}</h4>
+                        <p class="text-xs text-slate-400 mt-2 font-medium">
+                            <span class="text-wc-neon inline-block mr-2"><i class="fa-solid fa-layer-group mr-1"></i>${(user.repeats || []).length} repetidas</span>
+                            <span class="text-red-400 inline-block"><i class="fa-solid fa-magnifying-glass mr-1"></i>Busca ${(user.missing || []).length}</span>
+                        </p>
+                    </div>
+                    <button onclick='openMatchModal("${user.alias}", "${user.contact}", ${JSON.stringify(user.missing || [])}, ${JSON.stringify(user.repeats || [])})' class="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-bold rounded-lg transition-colors">
+                        Verificar Compatibilidad
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // --- CÁMARA IA MASIVA ---
         let currentFilesData = []; 
         let scannedStickers = []; 
         const apiKey = ""; 
@@ -681,22 +905,13 @@
                     files.forEach(file => {
                         const reader = new FileReader();
                         reader.onload = (event) => {
-                            currentFilesData.push({
-                                mimeType: file.type || "image/jpeg",
-                                data: event.target.result.split(',')[1]
-                            });
+                            currentFilesData.push({ mimeType: file.type || "image/jpeg", data: event.target.result.split(',')[1] });
                             loaded++;
                             if(loaded === files.length) {
                                 document.getElementById('scanner-img-preview').src = 'data:' + currentFilesData[0].mimeType + ';base64,' + currentFilesData[0].data;
-                                
                                 const badge = document.getElementById('scanner-img-count');
-                                if(files.length > 1) {
-                                    badge.textContent = `+${files.length - 1} Ladawan`;
-                                    badge.classList.remove('hidden');
-                                } else {
-                                    badge.classList.add('hidden');
-                                }
-
+                                if(files.length > 1) { badge.textContent = `+${files.length - 1} Fotos`; badge.classList.remove('hidden'); } 
+                                else { badge.classList.add('hidden'); }
                                 document.getElementById('image-dropzone').classList.add('hidden');
                                 document.getElementById('scanner-preview-container').classList.remove('hidden');
                             }
@@ -721,56 +936,28 @@
             document.getElementById('scanner-loading').classList.remove('hidden');
 
             try {
-                // Bilin a maipaay iti Gemini AI (español para kadi maitunos ti AI)
                 const promptText = `
-Eres un sistema experto de visión artificial de nivel Dios, analizando el Álbum Panini Mundial 2026.
+Eres un sistema experto de visión artificial analizando el Álbum Panini Mundial 2026.
 Tu tarea es devolver los identificadores de los espacios que YA TIENEN una estampa física pegada.
-Ignora los espacios en blanco que muestran números de referencia grandes impresos en el papel.
-
-La estructura oficial de TODO país (20 estampas) es:
-1: Escudo
-2 al 12: Jugador
-13: Equipo (Alineación)
-14 al 20: Jugador
-
-Identifica el país por el escudo o las siglas en la cabecera (Ej: MEX, BRA, BIH).
-Devuelve estrictamente un arreglo JSON combinando Prefijo y Número (ej. "MEX-1", "BIH-13", "ARG-20") de las estampas PEGADAS.`;
+Ignora los recuadros blancos vacíos.
+Identifica el país por el escudo o las siglas en la cabecera (Ej: MEX, BRA).
+Devuelve estrictamente un arreglo JSON combinando Prefijo y Número (ej. "MEX-1", "ARG-20") de las estampas PEGADAS.`;
 
                 const promptParts = [{ text: promptText }];
-                currentFilesData.forEach(fileObj => {
-                    promptParts.push({ inlineData: fileObj });
-                });
+                currentFilesData.forEach(fileObj => promptParts.push({ inlineData: fileObj }));
 
                 const payload = {
                     contents: [{ role: "user", parts: promptParts }],
-                    generationConfig: {
-                        responseMimeType: "application/json",
-                        responseSchema: {
-                            type: "OBJECT",
-                            properties: {
-                                detected: {
-                                    type: "ARRAY",
-                                    items: { type: "STRING" }
-                                }
-                            }
-                        }
-                    }
+                    generationConfig: { responseMimeType: "application/json", responseSchema: { type: "OBJECT", properties: { detected: { type: "ARRAY", items: { type: "STRING" } } } } }
                 };
 
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
                 });
 
                 const result = await response.json(); 
-                
                 let parsed = { detected: [] };
-                try {
-                    const rawText = result.candidates[0].content.parts[0].text;
-                    parsed = JSON.parse(rawText);
-                } catch (e) {
-                    console.error("Biddut a mangiproseso iti JSON:", e);
-                }
+                try { parsed = JSON.parse(result.candidates[0].content.parts[0].text); } catch (e) {}
 
                 const validScanned = (parsed.detected && Array.isArray(parsed.detected)) ? parsed.detected.filter(id => state.inventory[id]) : [];
                 scannedStickers = [...new Set(validScanned)];
@@ -780,14 +967,12 @@ Devuelve estrictamente un arreglo JSON combinando Prefijo y Número (ej. "MEX-1"
                 const list = document.getElementById('scanner-detected-list'); list.innerHTML = '';
 
                 if (scannedStickers.length === 0) { 
-                    list.innerHTML = `<span class="text-xs text-wc-magenta font-bold">Awan ti naduktalan a naipigket a tarheta.</span>`;
+                    list.innerHTML = `<span class="text-xs text-wc-magenta font-bold">No se detectaron estampas nuevas pegadas en este lote.</span>`;
                 } else { 
                     scannedStickers.forEach(id => { list.innerHTML += `<span class="px-3 py-1 bg-wc-neon text-black font-black text-xs rounded-lg shadow-sm">${id.replace('-',' ')} <i class="fa-solid fa-check ml-1"></i></span>`; }); 
                 }
             } catch (err) { 
-                console.error("AI Error:", err);
-                showToast("Biddut iti koneksion. Padasen manen.", "danger"); 
-                cancelScan(); 
+                showToast("Error de conexión IA. Intenta de nuevo.", "danger"); cancelScan(); 
             }
         }
 
@@ -795,10 +980,10 @@ Devuelve estrictamente un arreglo JSON combinando Prefijo y Número (ej. "MEX-1"
             if (scannedStickers.length === 0) { cancelScan(); return; }
             scannedStickers.forEach(id => { state.inventory[id].owned = true; });
             saveLocalStorageData(); renderCategorySelector(); renderStickersGrid();
-            showToast(`Narehistro ti ${scannedStickers.length} a tarheta!`, 'success'); cancelScan(); switchTab('album');
+            showToast(`¡Se agregaron ${scannedStickers.length} estampas a tu álbum!`, 'success'); cancelScan(); switchTab('album');
         }
 
-        // --- 4. FIREBASE ---
+        // --- FIREBASE ---
         async function initFirebaseConnection() {
             if (typeof __firebase_config === 'undefined') return;
             try {
@@ -814,7 +999,7 @@ Devuelve estrictamente un arreglo JSON combinando Prefijo y Número (ej. "MEX-1"
                         if (user.isAnonymous) { document.getElementById('btn-google-login').classList.remove('hidden'); document.getElementById('user-profile-badge').classList.add('hidden');
                         } else {
                             document.getElementById('btn-google-login').classList.add('hidden'); document.getElementById('user-profile-badge').classList.remove('hidden');
-                            document.getElementById('user-name').textContent = user.displayName || 'Bariweswes'; document.getElementById('user-avatar').src = user.photoURL || 'https://ui-avatars.com/api/?name=C&background=00ff43&color=000';
+                            document.getElementById('user-name').textContent = user.displayName || 'Coleccionista'; document.getElementById('user-avatar').src = user.photoURL || 'https://ui-avatars.com/api/?name=C&background=00ff43&color=000';
                             if(!document.getElementById('trade-user-alias').value) document.getElementById('trade-user-alias').value = user.displayName || '';
                         }
                         loadUserCloudInventory();
@@ -823,7 +1008,7 @@ Devuelve estrictamente un arreglo JSON combinando Prefijo y Número (ej. "MEX-1"
             } catch (err) {}
         }
 
-        async function loginWithGoogle() { try { await window.FirebaseSDK.signInWithPopup(state.firebase.auth, new window.FirebaseSDK.GoogleAuthProvider()); showToast("Naisilpo ti account", "success"); } catch (err) { showToast("Biddut a mangisilpo", "danger"); } }
+        async function loginWithGoogle() { try { await window.FirebaseSDK.signInWithPopup(state.firebase.auth, new window.FirebaseSDK.GoogleAuthProvider()); showToast("¡Cuenta vinculada correctamente!", "success"); } catch (err) { showToast("Error al vincular cuenta", "danger"); } }
 
         async function loadUserCloudInventory() {
             if (!state.firebase.isConnected) return;
@@ -851,34 +1036,40 @@ Devuelve estrictamente un arreglo JSON combinando Prefijo y Número (ej. "MEX-1"
             }, 3000);
         }
 
-        // --- 5. SUKSUKAT (INTERCAMBIOS) ---
+        // --- PUBLICAR INTERCAMBIOS ---
         async function publishToMarketplace() {
-            if (!state.firebase.isConnected) { showToast("Sumilsilpo...", "neutral"); return; }
-            const alias = document.getElementById('trade-user-alias').value.trim() || 'Awan naganna'; const contact = document.getElementById('trade-user-contact').value.trim();
-            if (!contact) { showToast("Ikabil ti kontak mo", "danger"); return; }
+            if (!state.firebase.isConnected) { showToast("Sincronizando...", "neutral"); return; }
+            const alias = document.getElementById('trade-user-alias').value.trim() || 'Coleccionista Anónimo'; const contact = document.getElementById('trade-user-contact').value.trim();
+            if (!contact) { showToast("Ingresa un medio de contacto.", "danger"); return; }
             try {
                 const missing = Object.values(state.inventory).filter(i => !i.owned).map(i => i.id); const repeats = Object.values(state.inventory).filter(i => i.duplicates > 0).map(i => i.id);
                 await window.FirebaseSDK.setDoc(window.FirebaseSDK.doc(state.firebase.db, 'artifacts', APP_ID, 'public', 'data', 'trades', state.firebase.userId), { userId: state.firebase.userId, alias, contact, missing, repeats, ts: Date.now() });
-                showToast("Naipost!", "success"); loadMarketplaceListings();
-            } catch (e) { showToast("Biddut a mangipost", "danger"); }
+                showToast("¡Inventario público actualizado!", "success"); switchTab('trades'); loadMarketplaceListings();
+            } catch (e) { showToast("Error al publicar en la nube.", "danger"); }
         }
 
         function switchTab(tabId) {
-            ['album', 'scanner', 'trades'].forEach(id => {
-                document.getElementById(`tab-${id}`).classList.add('hidden'); document.getElementById(`nav-btn-${id}`).className = "flex-1 py-3 text-center rounded-lg transition-all text-slate-400 hover:text-white hover:bg-white/5";
+            ['album', 'trades', 'profile'].forEach(id => {
+                const sec = document.getElementById(`tab-${id}`); if(sec) sec.classList.add('hidden');
+                const btnDesk = document.getElementById(`nav-btn-${id}`); if(btnDesk) btnDesk.className = "flex-1 py-3 text-center rounded-lg transition-all text-slate-400 hover:text-white hover:bg-white/5";
             });
             document.querySelectorAll('.mobile-nav-btn').forEach(btn => { btn.classList.replace('text-wc-neon', 'text-slate-500'); btn.querySelector('span').classList.replace('font-black', 'font-bold'); });
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-            const activeWeb = document.getElementById(`nav-btn-${tabId}`); if(activeWeb) activeWeb.className = "flex-1 py-3 text-center rounded-lg transition-all bg-wc-purple text-white shadow-lg";
-            const mobileBtns = document.querySelectorAll('.mobile-nav-btn'); const idx = tabId === 'album' ? 0 : tabId === 'scanner' ? 1 : 2;
+            
+            const activeSec = document.getElementById(`tab-${tabId}`); if(activeSec) activeSec.classList.remove('hidden');
+            const activeDesk = document.getElementById(`nav-btn-${tabId}`); if(activeDesk) activeDesk.className = "flex-1 py-3 text-center rounded-lg transition-all bg-wc-purple text-white shadow-lg";
+            
+            const mobileBtns = document.querySelectorAll('.mobile-nav-btn'); const idx = tabId === 'album' ? 0 : tabId === 'trades' ? 1 : 2;
             if(mobileBtns[idx]) { mobileBtns[idx].classList.replace('text-slate-500', 'text-wc-neon'); mobileBtns[idx].querySelector('span').classList.replace('font-bold', 'font-black'); }
+            
+            if(tabId === 'trades') loadMarketplaceListings();
         }
 
         function showToast(msg, type='success') {
             const container = document.getElementById('toast-container'); const toast = document.createElement('div');
             const colors = { success: 'bg-wc-neon text-black', danger: 'bg-red-500 text-white', neutral: 'bg-white text-black' };
-            toast.className = `p-3 rounded-lg shadow-xl font-bold text-xs transform transition-all duration-300 translate-y-2 opacity-0 ${colors[type]}`; toast.textContent = msg; container.appendChild(toast);
-            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10); setTimeout(() => { toast.classList.add('translate-y-2', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 3000);
+            toast.className = `p-3 rounded-lg shadow-xl font-bold text-xs transform transition-all duration-300 translate-y-2 opacity-0 flex items-center justify-between ${colors[type]}`; 
+            toast.innerHTML = `<span>${msg}</span> <i class="fa-solid fa-bell text-opacity-50"></i>`; container.appendChild(toast);
+            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10); setTimeout(() => { toast.classList.add('translate-y-2', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 3500);
         }
     </script>
 </body>
